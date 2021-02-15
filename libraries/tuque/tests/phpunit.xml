@@ -1,0 +1,18 @@
+<phpunit>
+  <php>
+    <const name="FEDORAURL" value="http://localhost:8080/fedora"/>
+    <const name="FEDORAUSER" value="fedoraAdmin"/>
+    <const name="FEDORAPASS" value="islandora"/>
+    <const name="TEST_PNG_URL" value="http://islandora.ca/testfiles/tuque/test.png"/>
+    <const name="TEST_XML_URL" value="http://islandora.ca/testfiles/tuque/woo.xml"/>
+    <const name="LOC_HTTP_URL" value="http://www.loc.gov/standards/mods/v3/modsejournal.xml"/>
+    <const name="LOC_HTTPS_URL" value="https://www.loc.gov/standards/mods/v3/modsejournal.xml"/>
+  </php>
+  <logging>
+    <log type="coverage-html" target="../build/coverage" title="Tuque"
+         charset="UTF-8" yui="true" highlight="true"
+         lowUpperBound="35" highLowerBound="70"/>
+    <log type="coverage-clover" target="../build/logs/clover.xml"/>
+    <log type="junit" target="../build/logs/junit.xml" logIncompleteSkipped="false"/>
+  </logging>
+</phpunit>

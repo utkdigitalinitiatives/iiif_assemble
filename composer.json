@@ -1,0 +1,29 @@
+{
+    "name": "mat/iiif_assemble",
+    "authors": [
+        {
+            "name": "Mat Jordan",
+            "email": "mat@utk.edu"
+        },
+        {
+            "name": "Paul Cummins",
+            "email": "paulc7@utk.edu"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/"
+        }
+    },
+    "require": {
+        "composer/installers": "~1.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^2.8.0"
+    },
+    "scripts": {
+        "test": [
+            "phpcs"
+        ]
+    }
+}
