@@ -16,7 +16,8 @@
         }
     },
     "require": {
-        "php-curl-class/php-curl-class": "^8.9"
+        "php-curl-class/php-curl-class": "^8.9",
+        "vlucas/phpdotenv": "^5.3"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^2.8.0"
