@@ -37,29 +37,10 @@ class Manifest
 
     private function getManifest($pid)
     {
-        // add this to a .env
-        $fedora_url = "http://localhost:8080/fedora";
-        $username = "fedoraAdmin";
-        $password = "fedoraAdmin";
 
-        // build this dynamically based on dsid and pid
-        $object = implode('%3A', $pid);
-        $request = $fedora_url . '/objects/' . $object . '/datastreams/MODS/content?format=xml';
+        $mods = $this->getDatastream($pid, 'MODS');
 
-        // note, this above requires a pid of thing:1 to exist
-
-        // make this part of class/method
-        $curl = new Curl();
-        $curl->verbose();
-        $curl->setBasicAuthentication($username, $password);
-        $curl->get($request);
-
-        if ($curl->error) {
-            echo 'Error: ' . $curl->errorCode . ': ' . $curl->errorMessage . "\n";
-        } else {
-            $data = $curl->response;
-            print json_encode($data);
-        }
+        print json_encode($mods);
 
 //        $result = $pid;
 //
@@ -77,6 +58,40 @@ class Manifest
     {
         $response['status_code_header'] = 'HTTP/1.1 404 Not Found';
         $response['body'] = null;
+        return $response;
+    }
+
+    private function getDatastream($pid, $datastream)
+    {
+
+        // add this to a .env
+        $fedora_url = $_ENV['FEDORA_URL'];
+        $username = $_ENV['FEDORA_USER'];
+        $password = $_ENV['FEDORA_PASS'];
+
+        // build this dynamically based on dsid and pid
+        $object = implode('%3A', $pid);
+
+        // build the request
+        $request = $fedora_url . '/objects/';
+        $request .= $object;
+        $request .= '/datastreams/';
+        $request .= $datastream;
+        $request .= '/content?format=xml';
+
+        $curl = new Curl();
+        $curl->verbose();
+        $curl->setBasicAuthentication($username, $password);
+        $curl->get($request);
+
+        if ($curl->error) {
+            $response = $curl->errorCode . ': ' . $curl->errorMessage;
+        } else {
+            $response = $curl->response;
+        }
+
+        $curl->close();
+
         return $response;
     }
 }

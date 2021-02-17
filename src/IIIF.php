@@ -2,6 +2,8 @@
 
 namespace Src;
 
+use Curl\Curl;
+
 class IIIF {
 
     public function __construct()
