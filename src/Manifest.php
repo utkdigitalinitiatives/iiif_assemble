@@ -30,8 +30,6 @@ class Manifest
                 break;
         }
 
-        header($response['status_code_header']);
-
         if ($response['body']) {
             echo $response['body'];
         }
@@ -39,25 +37,38 @@ class Manifest
 
     private function getManifest($pid)
     {
+        // add this to a .env
         $fedora_url = "http://localhost:8080/fedora";
         $username = "fedoraAdmin";
         $password = "fedoraAdmin";
 
-        $request = $fedora_url . '/objects/thing:1/datastreams/MODS/content?format=xml';
+        // build this dynamically based on dsid and pid
+        $object = implode('%3A', $pid);
+        $request = $fedora_url . '/objects/' . $object . '/datastreams/MODS/content?format=xml';
 
+        // note, this above requires a pid of thing:1 to exist
+
+        // make this part of class/method
         $curl = new Curl();
         $curl->verbose();
-        $curl->setBasicAuthentication('fedoraAdmin', 'fedoraAdmin');
+        $curl->setBasicAuthentication($username, $password);
         $curl->get($request);
 
-        $result = $pid;
-
-        if (!$result) {
-            return $this->notFoundResponse();
+        if ($curl->error) {
+            echo 'Error: ' . $curl->errorCode . ': ' . $curl->errorMessage . "\n";
+        } else {
+            $data = $curl->response;
+            print json_encode($data);
         }
 
-        $response['status_code_header'] = 'HTTP/1.1 200 OK';
-        $response['body'] = json_encode($result);
+//        $result = $pid;
+//
+//        if (!$result) {
+//            return $this->notFoundResponse();
+//        }
+
+//        $response['status_code_header'] = 'HTTP/1.1 200 OK';
+//        $response['body'] = json_encode($result);
 
 //        return $response;
     }
