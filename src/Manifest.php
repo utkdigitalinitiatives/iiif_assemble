@@ -2,10 +2,12 @@
 
 namespace Src;
 
-use Src\IIIF;
-use Src\FedoraObject;
+use Curl\Curl;
 
-class Manifest {
+error_reporting(E_ALL);
+
+class Manifest
+{
 
     private $requestMethod;
     private $persistentIdentifier;
@@ -37,9 +39,16 @@ class Manifest {
 
     private function getManifest($pid)
     {
+        $fedora_url = "http://localhost:8080/fedora";
+        $username = "fedoraAdmin";
+        $password = "fedoraAdmin";
 
-//        $object = New FedoraObject($pid);
-//        $result = New IIIF($object);
+        $request = $fedora_url . '/objects/thing:1/datastreams/MODS/content?format=xml';
+
+        $curl = new Curl();
+        $curl->verbose();
+        $curl->setBasicAuthentication('fedoraAdmin', 'fedoraAdmin');
+        $curl->get($request);
 
         $result = $pid;
 
@@ -50,7 +59,7 @@ class Manifest {
         $response['status_code_header'] = 'HTTP/1.1 200 OK';
         $response['body'] = json_encode($result);
 
-        return $response;
+//        return $response;
     }
 
     private function notFoundResponse()
