@@ -2,14 +2,21 @@
 
 namespace Src;
 
-use Curl\Curl;
-
 class IIIF {
 
-    public function __construct()
-    {
+    private $xml;
 
-        // help us do things to presentation 3 spec
+    public function __construct($xml)
+    {
+        $this->xml = $xml;
+
+    }
+
+    public static function initManifest () {
+
+    }
+
+    public static function buildLabel ($mods) {
 
     }
 

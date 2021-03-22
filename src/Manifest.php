@@ -23,44 +23,37 @@ class Manifest
 
         switch ($this->requestMethod) {
             case 'GET':
-                $response = $this->getManifest($this->persistentIdentifier);
+                $response = self::getManifest();
                 break;
             default:
-                $response = $this->notFoundResponse();
+                $response = self::noFoundResponse();
                 break;
         }
 
-        if ($response['body']) {
-            echo $response['body'];
+        if (!$response) {
+            return $this->noFoundResponse();
         }
 
+        print $response;
+
     }
 
-    private function getManifest($pid)
+    private function getManifest()
     {
 
-        $mods = Request::getDatastream('MODS', $pid);
+        $mods = Request::getDatastream('MODS', $this->persistentIdentifier, 'xml');
+        $iiif = json_encode($mods);
 
-        print json_encode($mods);
-
-//        $result = $pid;
-//
-//        if (!$result) {
-//            return $this->notFoundResponse();
-//        }
-
-//        $response['status_code_header'] = 'HTTP/1.1 200 OK';
-//        $response['body'] = json_encode($result);
-
-//        return $response;
+        return $iiif;
 
     }
 
-    private function notFoundResponse()
+    private function noFoundResponse()
     {
 
         $response['status_code_header'] = 'HTTP/1.1 404 Not Found';
         $response['body'] = null;
+
         return $response;
 
     }

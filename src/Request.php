@@ -6,26 +6,11 @@ use Curl\Curl;
 
 class Request{
 
-    public static function getDatastream ($dsid, $pid) {
-
-        // add this to a .env
-        $fedora_url = $_ENV['FEDORA_URL'];
-        $username = $_ENV['FEDORA_USER'];
-        $password = $_ENV['FEDORA_PASS'];
-
-        // build this dynamically based on dsid and pid
-        $object = implode('%3A', $pid);
-
-        // build the request
-        $request = $fedora_url . '/objects/';
-        $request .= $object;
-        $request .= '/datastreams/';
-        $request .= $dsid;
-        $request .= '/content?format=xml';
+    private static function processRequest ($request) {
 
         $curl = new Curl();
         $curl->verbose();
-        $curl->setBasicAuthentication($username, $password);
+        $curl->setBasicAuthentication($_ENV['FEDORA_USER'], $_ENV['FEDORA_PASS']);
         $curl->get($request);
 
         if ($curl->error) {
@@ -37,6 +22,24 @@ class Request{
         $curl->close();
 
         return $response;
+
+    }
+
+    public static function getDatastream ($dsid, $pid, $format = null) {
+
+        $object = implode('%3A', $pid);
+
+        $request = $_ENV['FEDORA_URL'] . '/objects/';
+        $request .= $object;
+        $request .= '/datastreams/';
+        $request .= $dsid;
+        $request .= '/content';
+
+        if ($format) :
+            $request .= '?format=' . $format;
+        endif;
+
+        return self::processRequest($request);
 
     }
 
