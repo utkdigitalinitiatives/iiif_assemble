@@ -6,7 +6,7 @@ use Curl\Curl;
 
 class Request{
 
-    private static function processRequest ($request) {
+    private static function fedoraRequest ($request) {
 
         $curl = new Curl();
         $curl->verbose();
@@ -39,7 +39,7 @@ class Request{
             $request .= '?format=' . $format;
         endif;
 
-        return self::processRequest($request);
+        return self::fedoraRequest($request);
 
     }
 

@@ -40,11 +40,12 @@ class Manifest
 
     private function getManifest()
     {
+        $contentModel = 'audio';
 
         $mods = Request::getDatastream('MODS', $this->persistentIdentifier, 'xml');
-        $iiif = json_encode($mods);
+        $iiif = new IIIF($mods, $contentModel);
 
-        return $iiif;
+        return $iiif->buildManifest();
 
     }
 
