@@ -34,6 +34,11 @@ class IIIF {
 
     public function buildMetadata () {
 
+        $alternativeTitle = self::getLabelValuePair(
+            'Alternative Title',
+            $this->mods->titleInfo->title
+        );
+
         $identifier = self::getLabelValuePair(
             'Publication Identifier',
             $this->mods->identifier
@@ -50,6 +55,7 @@ class IIIF {
         );
 
         return (object) [
+            $alternativeTitle,
             $identifier,
             $tableOfContents,
             $date

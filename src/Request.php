@@ -4,7 +4,7 @@ namespace Src;
 
 use Curl\Curl;
 
-class Request{
+class Request {
 
     private static function fedoraRequest ($request) {
 
@@ -27,10 +27,8 @@ class Request{
 
     public static function getDatastream ($dsid, $pid, $format = null) {
 
-        $object = implode('%3A', $pid);
-
         $request = $_ENV['FEDORA_URL'] . '/objects/';
-        $request .= $object;
+        $request .= implode('%3A', $pid);
         $request .= '/datastreams/';
         $request .= $dsid;
         $request .= '/content';
