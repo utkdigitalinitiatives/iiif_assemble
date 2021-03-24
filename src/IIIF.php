@@ -4,28 +4,27 @@ namespace Src;
 
 class IIIF {
 
-    private $mods;
+    private $xpath;
     private $model;
     private $id;
 
     public function __construct($mods, $model)
     {
 
-        $this->mods = $mods;
+        $this->xpath = new XPath($mods->asXml());
         $this->model = $model;
         $this->id = 'https//:' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 
     }
 
-    public function buildManifest () {
-
-//        print_r ($this->mods);
+    public function buildManifest ()
+    {
 
         $manifest['@context'] = 'https://iiif.io/api/presentation/3/context.json';
         $manifest['id'] = $this->id;
         $manifest['type'] = 'Manifest';
-        $manifest['label'] = self::getLanguageArray($this->mods->titleInfo->title);
-        $manifest['summary'] = self::getLanguageArray($this->mods->abstract);
+        $manifest['label'] = self::getLanguageArray($this->xpath->query("//titleInfo"));
+        $manifest['summary'] = self::getLanguageArray($this->xpath->query("//abstract"));
         $manifest['metadata'] = self::buildMetadata();
 
         return json_encode($manifest);
@@ -36,26 +35,26 @@ class IIIF {
 
         $alternativeTitle = self::getLabelValuePair(
             'Alternative Title',
-            $this->mods->titleInfo->title
+            $this->xpath->query("//titleInfo")
         );
 
         $identifier = self::getLabelValuePair(
             'Publication Identifier',
-            $this->mods->identifier
+            $this->xpath->query("//abstract")
         );
 
         $tableOfContents = self::getLabelValuePair(
             'Table of Contents',
-            $this->mods->tableOfContents
+            $this->xpath->query("//tableOfContents")
         );
 
         $date = self::getLabelValuePair(
             'Date',
-            $this->mods->originInfo->dateCreated
+            $this->xpath->query("//dateCreated")
         );
 
         return (object) [
-            $alternativeTitle,
+//            $alternativeTitle,
             $identifier,
             $tableOfContents,
             $date

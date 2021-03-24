@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mods xmlns="http://www.loc.gov/mods/v3"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mods="http://www.loc.gov/mods/v3"
+    version="3.5">
+    <identifier type="local">Andrea_Ludden_2_6_17_RNC014</identifier>
+    <titleInfo>
+        <title>Andrea Ludden oral history, February 6, 2017</title>
+    </titleInfo>
+    <titleInfo>
+        <title type="alternative">Andrea Ludden oral history interview</title>
+    </titleInfo>
+    <abstract>APPL interview with Andrea Ludden, administrator of the Salt &amp; Pepper 
+        Museum and Gatlinburg resident. Ludden discusses the the time prior to leaving 
+        her home, the evacuation experience, and the return to Gatlinburg to assess damages. 
+        Ludden recalls the community efforts that brought people together after the Chimney 
+        Tops II Wildfires. This quote touches on some of the interview's main themes: 
+        "After this, I didn't realize how connected we were in the community."</abstract>
+    <tableOfContents>The Day of the Fire -- Community center -- Evacuation -- The Following Days -- Loss -- Restarting</tableOfContents>
+    <originInfo>
+        <dateCreated>February 6, 2017</dateCreated>
+        <dateCreated encoding="edtf">2017-02-06</dateCreated>
+        <place>
+            <placeTerm>Gatlinburg (Tenn.)</placeTerm>
+        </place>
+    </originInfo>
+    <physicalDescription>
+        <form authority="aat" valueURI="http://vocab.getty.edu/aat/300026392">interviews</form>
+    </physicalDescription>
+    <name>
+        <namePart>Ludden, Andrea</namePart>
+        <role>
+            <roleTerm authority="marcrelator" valueURI="http://id.loc.gov/vocabulary/relators/ive">Interviewee</roleTerm>
+        </role>
+    </name>
+    <name>
+        <namePart>Temple, Kenton</namePart>
+        <role>
+            <roleTerm authority="marcrelator" valueURI="http://id.loc.gov/vocabulary/relators/ivr">Interviewer</roleTerm>
+        </role>
+    </name>
+    <name>
+        <namePart>McDonald, Karen</namePart>
+        <role>
+            <roleTerm authority="marcrelator" valueURI="http://id.loc.gov/vocabulary/relators/ivr">Interviewer</roleTerm>
+        </role>
+    </name>
+    <subject>
+        <topic>Individuals/families suffering losses</topic>
+    </subject>
+    <subject authority="lcsh" valueURI="http://id.loc.gov/authorities/subjects/sh85045925">
+        <topic>Evacuation of civilians</topic>
+    </subject>
+    <subject>
+        <geographic>Cherry Street, Gatlinburg</geographic>
+        <cartographics>
+            <coordinates>35.7157072, -83.5020143</coordinates>
+        </cartographics>
+    </subject>
+    <subject>
+        <geographic>Pigeon Forge (?) Community Center</geographic>
+        <cartographics>
+            <coordinates>35.8062593, -83.5847141</coordinates>
+        </cartographics>
+    </subject>
+    <subject>
+        <geographic>Rocky Top Sports World</geographic>
+        <cartographics>
+            <coordinates>35.7330294, -83.447498</coordinates>
+        </cartographics>
+    </subject>
+    <typeOfResource>sound recording-nonmusical</typeOfResource>
+    <language>
+        <languageTerm type="text" authority="iso639-2b">English</languageTerm>
+    </language>
+    <recordInfo>
+        <recordContentSource valueURI="http://id.loc.gov/authorities/names/n2011077349">Anna Porter Public Library</recordContentSource>
+    </recordInfo>
+    <accessCondition type="use and reproduction" xlink:href="http://rightsstatements.org/vocab/InC/1.0/">In Copyright</accessCondition>
+    <extension>
+        <pbcoreDescriptionDocument xmlns:pbcore="http://www.pbcore.org/PBCore/PBCoreNamespace.html" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.pbcore.org/PBCore/PBCoreNamespace.html https://raw.githubusercontent.com/WGBH/PBCore_2.1/master/pbcore-2.1.xsd">
+            <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014</pbcore:pbcoreIdentifier>
+            <pbcore:pbcoreTitle>Andrea Ludden oral history, February 6, 2017</pbcore:pbcoreTitle>
+            <pbcore:pbcoreDescription>APPL interview with Andrea Ludden, administrator of the Salt &amp; Pepper 
+                Museum and Gatlinburg resident. Ludden discusses the the time prior to leaving 
+                her home, the evacuation experience, and the return to Gatlinburg to assess damages. 
+                Ludden recalls the community efforts that brought people together after the Chimney 
+                Tops II Wildfires. This quote touches on some of the interview's main themes: 
+                "After this, I didn't realize how connected we were in the community."</pbcore:pbcoreDescription>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Interview Questions" startTime="44" endTime="1248">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_Q1</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>Can you start at the beginning when you knew something was different?</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Question 1</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Interview Questions" startTime="1248" endTime="1674">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_Q2</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>So it took all that time to get to the hotel?</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Question 2</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Interview Questions" startTime="1674" endTime="2240">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_Q3</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>Were these people that stayed there?</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Question 3</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Interview Questions" startTime="2240">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_Q4</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>What happened to the family at the end of the street? Did their house burn?</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Question 4</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="geographic" startTime="60" endTime="731">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_G1</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>Cherry Street, Gatlinburg</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Interviewee discusses Cherry Street, Gatlinburg.</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="geographic" startTime="781" endTime="801">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_G2</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>Pigeon Forge (?) Community Center</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Interviewee discusses Pigeon Forge (?) Community Center.</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="geographic" startTime="801" endTime="956">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_G3</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>Rocky Top Sports World</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Interviewee discusses Rocky Top Sports World.</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Chapters" startTime="0" endTime="451">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_C1</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>The Day of the Fire</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>The Day of the Fire chapter.</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Chapters" startTime="451" endTime="1208">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_C2</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>Community Center</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Community Center chapter.</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Chapters" startTime="1208" endTime="1660">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_C3</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>Evacuation</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Evacuation chapter.</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Chapters" startTime="1660" endTime="1867">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_C4</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>The Following Days</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>The Following Days chapter.</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Chapters" startTime="1867" endTime="2350">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_C5</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>Loss</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Loss chapter.</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+            <pbcore:pbcorePart partType="iiif" partTypeAnnotation="Chapters" startTime="1255" endTime="1355">
+                <pbcore:pbcoreIdentifier>Andrea_Ludden_2_6_17_RNC014_C6</pbcore:pbcoreIdentifier>
+                <pbcore:pbcoreTitle>Restarting</pbcore:pbcoreTitle>
+                <pbcore:pbcoreDescription>Restarting chapter.</pbcore:pbcoreDescription>
+            </pbcore:pbcorePart>
+        </pbcoreDescriptionDocument>
+    </extension>
+</mods>
