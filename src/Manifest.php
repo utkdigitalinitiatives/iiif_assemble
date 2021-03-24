@@ -45,6 +45,8 @@ class Manifest
         $mods = Request::getDatastream('MODS', $this->persistentIdentifier, 'xml');
         $iiif = new IIIF($mods, $contentModel);
 
+//        print_r ($mods);
+
         return $iiif->buildManifest();
 
     }

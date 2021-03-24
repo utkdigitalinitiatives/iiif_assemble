@@ -24,16 +24,22 @@ class XPath
 
     public function query ($expression) {
 
+        $expression = '//' . $expression;
+
         if($this->ns) {
-            $this->xpath->registerNamespace("ns", $this->ns);
+            $this->xpath->registerNamespace('ns', $this->ns);
             $nodes = $this->xpath->query(str_replace('//', '//ns:', $expression));
         } else {
             $nodes = $this->xpath->query($expression);
         }
 
-//        print_r ($nodes);
+        $values = null;
 
-        return $nodes[0]->nodeValue;
+        foreach ($nodes as $key => $node) :
+            $values[$key] = $nodes[$key]->nodeValue;
+        endforeach;
+
+        return $values;
 
     }
 
