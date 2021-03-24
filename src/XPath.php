@@ -8,7 +8,7 @@ use DOMXPath;
 class XPath
 {
 
-    private $xpath;
+    private $domxpath;
     private $ns;
 
     public function __construct($xml)
@@ -17,7 +17,7 @@ class XPath
         $doc = new DOMDocument();
         $doc->loadXML($xml);
 
-        $this->xpath = new DOMXPath($doc);
+        $this->domxpath = new DOMXPath($doc);
         $this->ns = $doc->documentElement->namespaceURI;
 
     }
@@ -27,10 +27,10 @@ class XPath
         $expression = '//' . $expression;
 
         if($this->ns) {
-            $this->xpath->registerNamespace('ns', $this->ns);
-            $nodes = $this->xpath->query(str_replace('//', '//ns:', $expression));
+            $this->domxpath->registerNamespace('ns', $this->ns);
+            $nodes = $this->domxpath->query(str_replace('//', '//ns:', $expression));
         } else {
-            $nodes = $this->xpath->query($expression);
+            $nodes = $this->domxpath->query($expression);
         }
 
         $values = null;
