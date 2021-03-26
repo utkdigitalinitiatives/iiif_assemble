@@ -7,7 +7,7 @@ class IIIF {
     private $pid;
     private $xpath;
     private $model;
-    private $id;
+    private $url;
 
     public function __construct($pid, $mods, $model)
     {
@@ -15,7 +15,14 @@ class IIIF {
         $this->pid = $pid;
         $this->xpath = new XPath($mods->asXml());
         $this->model = $model;
-        $this->id = 'https//:' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+
+        if (isset($_SERVER['HTTPS'])) :
+            $protocol = "https://";
+        else :
+            $protocol = "http://";
+        endif;
+
+        $this->url = $protocol . $_SERVER["HTTP_HOST"];
 
     }
 
@@ -24,7 +31,7 @@ class IIIF {
 
 
         $manifest['@context'] = 'https://iiif.io/api/presentation/3/context.json';
-        $manifest['id'] = $this->id;
+        $manifest['id'] = $this->url . $_SERVER["REQUEST_URI"];
         $manifest['type'] = 'Manifest';
         $manifest['label'] = self::getLanguageArray($this->xpath->globalQuery('titleInfo[not(@*)]'));
         $manifest['summary'] = self::getLanguageArray($this->xpath->globalQuery('abstract'));
@@ -95,7 +102,7 @@ class IIIF {
 
     public function buildThumbnail ($dsid, $size) {
 
-        $uri = 'https://digital.lib.utk.edu/iiif/2/';
+        $uri = $this->url . '/iiif/2/';
         $uri .= 'collections~islandora~object~' . implode('%3A', $this->pid);
         $uri .= '~datastream~' . $dsid;
         $uri .= '~view/full/!' . $size[0] . ',' . $size[1];
