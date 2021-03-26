@@ -22,14 +22,12 @@ class XPath
 
     }
 
-    public function globalQuery ($expression)
+    public function query ($expression, $global = false)
     {
-
-        $expression = '//' . $expression;
 
         if ($this->ns) {
             $this->domxpath->registerNamespace('ns', $this->ns);
-            $nodes = $this->domxpath->query(str_replace('//', '//ns:', $expression));
+            $nodes = $this->domxpath->query('ns:' . $expression);
         } else {
             $nodes = $this->domxpath->query($expression);
         }
