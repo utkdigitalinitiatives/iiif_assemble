@@ -14,7 +14,7 @@ class Manifest
     {
 
         $this->requestMethod = $requestMethod;
-        $this->persistentIdentifier = implode('%3A', $persistentIdentifier);
+        $this->persistentIdentifier = $persistentIdentifier;
 
     }
 
@@ -23,7 +23,7 @@ class Manifest
 
         switch ($this->requestMethod) {
             case 'GET':
-                $response = self::getManifest();
+                $response = self::theManifest();
                 break;
             default:
                 $response = self::noFoundResponse();
@@ -34,23 +34,105 @@ class Manifest
 
     }
 
-    private function getManifest()
+    private function theManifest()
+    {
+        if (self::manifestAvailable()) {
+            $manifest = self::getManifest();
+        } else {
+            $manifest = self::buildManifest();
+        }
+
+        return $manifest;
+
+    }
+
+    private function buildManifest()
     {
 
-        $contentModel = Request::getObjectModels($this->persistentIdentifier);
+        $persistentIdentifier = implode('%3A', $this->persistentIdentifier);
+        $contentModel = Request::getObjectModels($persistentIdentifier);
 
         if ($contentModel['status'] === 200) :
-            $mods = Request::getDatastream('MODS', $this->persistentIdentifier);
+            $mods = Request::getDatastream('MODS', $persistentIdentifier);
         else :
             return json_encode($contentModel);
         endif;
 
         if ($mods['status'] === 200) :
-            $iiif = new IIIF($this->persistentIdentifier, $mods['body'], $contentModel);
-            return $iiif->buildManifest();
+            $iiif = new IIIF($persistentIdentifier, $mods['body'], $contentModel);
+            $presentation = $iiif->buildPresentation();
+            self::cacheManifest($presentation);
+            return $presentation;
         else :
             return json_encode($mods);
         endif;
+
+    }
+
+    private function manifestAvailable ()
+    {
+
+        $namespace = self::getNamespacePath();
+        $filename = self::getManifestPath($namespace) . '/manifest.json';
+        $expires = 86400;
+
+        if (file_exists($filename)) {
+            if (time() < filemtime($filename) + $expires) :
+                return true;
+            else :
+                return false;
+            endif;
+        } else {
+            return false;
+        }
+
+    }
+
+    private function getManifest ()
+    {
+
+        $namespace = self::getNamespacePath();
+        $filename = self::getManifestPath($namespace) . '/manifest.json';
+
+        return file_get_contents($filename);
+
+    }
+
+    private function cacheManifest ($manifest)
+    {
+
+        $namespace = self::getNamespacePath();
+        if (!is_dir($namespace)) {
+            mkdir($namespace);
+        }
+
+        $id = self::getManifestPath($namespace);
+        if (!is_dir($id)) {
+            mkdir($id);
+        }
+
+        $path = $id . '/manifest.json';
+
+        file_put_contents($path, $manifest);
+//        file_put_contents($path . '/timestamp.json', self::getTimestamp());
+
+        return true;
+
+    }
+
+    private function removeExpired ($id)
+    {
+
+        return true;
+
+    }
+
+    private function getTimestamp()
+    {
+
+        return (object) [
+            'timestamp' => time()
+        ];
 
     }
 
@@ -61,6 +143,21 @@ class Manifest
         $response['body'] = null;
 
         return $response;
+
+    }
+
+    private function getNamespacePath ()
+    {
+
+        return '../cache/' . $this->persistentIdentifier[0];
+
+    }
+
+
+    private function getManifestPath ($container)
+    {
+
+        return $container . '/' . $this->persistentIdentifier[1];
 
     }
 

@@ -20,9 +20,8 @@ class IIIF {
 
     }
 
-    public function buildManifest ()
+    public function buildPresentation ()
     {
-
 
         $manifest['@context'] = 'https://iiif.io/api/presentation/3/context.json';
         $manifest['id'] = $this->url . $_SERVER["REQUEST_URI"];
