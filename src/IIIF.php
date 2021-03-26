@@ -16,13 +16,7 @@ class IIIF {
         $this->xpath = new XPath($mods->asXml());
         $this->model = $model;
 
-        if (isset($_SERVER['HTTPS'])) :
-            $protocol = "https://";
-        else :
-            $protocol = "http://";
-        endif;
-
-        $this->url = $protocol . $_SERVER["HTTP_HOST"];
+        $this->url = Utility::getBaseUrl();
 
     }
 
