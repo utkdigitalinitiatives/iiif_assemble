@@ -27,7 +27,7 @@ class IIIF {
         $manifest['label'] = self::getLanguageArray($this->xpath->globalQuery('titleInfo[not(@*)]'));
         $manifest['summary'] = self::getLanguageArray($this->xpath->globalQuery('abstract'));
         $manifest['metadata'] = self::buildMetadata();
-        $manifest['rights'] = self::buildRights($this->xpath->differentQuery('access'));
+        $manifest['rights'] = self::buildRights();
 
         return json_encode($manifest);
 
@@ -64,9 +64,22 @@ class IIIF {
 
     }
 
-    public function buildRights ($string) {
+    public function buildRights () {
 
-        return $string;
+        $accessCondition = $this->xpath->queryElement('accessCondition');
+
+        foreach ($accessCondition as $node) :
+            foreach ($node->attributes as $attribute) :
+                if ($attribute->nodeName === 'xlink:href')
+                    $rights = $attribute->nodeValue;
+            endforeach;
+        endforeach;
+
+        if  (isset($rights)) :
+            return $rights;
+        else :
+            return null;
+        endif;
 
     }
 

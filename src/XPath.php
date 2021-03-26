@@ -44,7 +44,19 @@ class XPath
 
     }
 
+    public function queryElement ($expression)
+    {
 
+        if ($this->ns) {
+            $this->domxpath->registerNamespace('ns', $this->ns);
+            $nodes = $this->domxpath->query('ns:' . $expression);
+        } else {
+            $nodes = $this->domxpath->query($expression);
+        }
+
+        return $nodes;
+
+    }
 
     public function differentQuery ($expression) {
 
