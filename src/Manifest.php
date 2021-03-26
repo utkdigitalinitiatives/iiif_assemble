@@ -114,7 +114,6 @@ class Manifest
         $path = $id . '/manifest.json';
 
         file_put_contents($path, $manifest);
-//        file_put_contents($path . '/timestamp.json', self::getTimestamp());
 
         return true;
 
@@ -124,15 +123,6 @@ class Manifest
     {
 
         return true;
-
-    }
-
-    private function getTimestamp()
-    {
-
-        return (object) [
-            'timestamp' => time()
-        ];
 
     }
 
