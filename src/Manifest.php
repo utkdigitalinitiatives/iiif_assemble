@@ -40,9 +40,8 @@ class Manifest
 
     private function getManifest()
     {
-        $contentModel = 'audio';
-
-        $mods = Request::getDatastream('MODS', $this->persistentIdentifier, 'xml');
+        $contentModel = Request::getObjectModels($this->persistentIdentifier);
+        $mods = Request::getDatastream('MODS', $this->persistentIdentifier);
         $iiif = new IIIF($mods, $contentModel);
 
 //        print_r ($mods);

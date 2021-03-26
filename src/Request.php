@@ -25,7 +25,22 @@ class Request {
 
     }
 
-    public static function getDatastream ($dsid, $pid, $format = null) {
+    public static function getObjectModels ($pid, $format = 'XML') {
+
+        $request = $_ENV['FEDORA_URL'] . '/objects/';
+        $request .= implode('%3A', $pid);
+
+        if ($format) :
+            $request .= '?format=' . $format;
+        endif;
+
+        $response = self::fedoraRequest($request);
+
+        return $response->objModels;
+
+    }
+
+    public static function getDatastream ($dsid, $pid, $format = 'XML') {
 
         $request = $_ENV['FEDORA_URL'] . '/objects/';
         $request .= implode('%3A', $pid);
