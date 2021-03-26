@@ -42,7 +42,7 @@ class Manifest
     {
         $contentModel = Request::getObjectModels($this->persistentIdentifier);
         $mods = Request::getDatastream('MODS', $this->persistentIdentifier);
-        $iiif = new IIIF($mods, $contentModel);
+        $iiif = new IIIF($this->persistentIdentifier, $mods, $contentModel);
 
 //        print_r ($mods);
 

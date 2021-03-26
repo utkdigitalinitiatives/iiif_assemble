@@ -4,13 +4,15 @@ namespace Src;
 
 class IIIF {
 
+    private $pid;
     private $xpath;
     private $model;
     private $id;
 
-    public function __construct($mods, $model)
+    public function __construct($pid, $mods, $model)
     {
 
+        $this->pid = $pid;
         $this->xpath = new XPath($mods->asXml());
         $this->model = $model;
         $this->id = 'https//:' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -28,6 +30,7 @@ class IIIF {
         $manifest['summary'] = self::getLanguageArray($this->xpath->globalQuery('abstract'));
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
+        $manifest['thumbnail'] = self::buildThumbnail('TN', array(200, 200));
 
         return json_encode($manifest);
 
@@ -75,11 +78,33 @@ class IIIF {
             endforeach;
         endforeach;
 
-        if  (isset($rights)) :
+        if (isset($rights)) :
             return $rights;
         else :
             return null;
         endif;
+
+    }
+
+    public function buildThumbnail ($dsid, $size) {
+
+        $uri = 'https://digital.lib.utk.edu/iiif/2/';
+        $uri .= 'collections~islandora~object~' . implode('%3A', $this->pid);
+        $uri .= '~datastream~' . $dsid;
+        $uri .= '~view/full/!' . $size[0] . ',' . $size[1];
+        $uri .= '/1/default.jpg';
+
+        $format = "image/jpeg";
+
+        return [
+            (object) [
+                'id' => $uri,
+                'type' => "Image",
+                'format' => $format,
+                'width' => $size[0],
+                'height' => $size[1]
+            ]
+        ];
 
     }
 
