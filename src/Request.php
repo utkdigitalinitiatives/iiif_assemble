@@ -22,6 +22,8 @@ class Request {
             $response['body'] = $curl->response;
         }
 
+        usleep(50000);
+
         return $response;
 
     }
