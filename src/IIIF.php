@@ -97,7 +97,7 @@ class IIIF {
     public function buildThumbnail ($dsid, $size) {
 
         $uri = $this->url . '/iiif/2/';
-        $uri .= 'collections~islandora~object~' . implode('%3A', $this->pid);
+        $uri .= 'collections~islandora~object~' . $this->pid;
         $uri .= '~datastream~' . $dsid;
         $uri .= '~view/full/!' . $size[0] . ',' . $size[1];
         $uri .= '/1/default.jpg';

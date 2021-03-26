@@ -14,7 +14,7 @@ class Manifest
     {
 
         $this->requestMethod = $requestMethod;
-        $this->persistentIdentifier = $persistentIdentifier;
+        $this->persistentIdentifier = implode('%3A', $persistentIdentifier);
 
     }
 
