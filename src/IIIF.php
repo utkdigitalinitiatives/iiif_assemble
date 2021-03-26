@@ -18,13 +18,13 @@ class IIIF {
     }
 
     public function buildManifest ()
-    {
+
 
         $manifest['@context'] = 'https://iiif.io/api/presentation/3/context.json';
         $manifest['id'] = $this->id;
         $manifest['type'] = 'Manifest';
-        $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@*)]'));
-        $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'));
+        $manifest['label'] = self::getLanguageArray($this->xpath->globalQuery('titleInfo[not(@*)]'));
+        $manifest['summary'] = self::getLanguageArray($this->xpath->globalQuery('abstract'));
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights($this->xpath->differentQuery('access'));
 
@@ -36,22 +36,22 @@ class IIIF {
 
         $alternativeTitle = self::getLabelValuePair(
             'Alternative Title',
-            $this->xpath->query('titleInfo[@type="alternative"]')
+            $this->xpath->globalQuery('titleInfo[@type="alternative"]')
         );
 
         $identifier = self::getLabelValuePair(
             'Publication Identifier',
-            $this->xpath->query('identifier')
+            $this->xpath->globalQuery('identifier')
         );
 
         $tableOfContents = self::getLabelValuePair(
             'Table of Contents',
-            $this->xpath->query('tableOfContents')
+            $this->xpath->globalQuery('tableOfContents')
         );
 
         $date = self::getLabelValuePair(
             'Date',
-            $this->xpath->query('dateCreated')
+            $this->xpath->globalQuery('dateCreated')
         );
 
         return (object) [

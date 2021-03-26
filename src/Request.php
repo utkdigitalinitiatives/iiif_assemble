@@ -36,7 +36,7 @@ class Request {
 
         $response = self::fedoraRequest($request);
 
-        return $response->objModels;
+        return $response->objModels;Re
 
     }
 

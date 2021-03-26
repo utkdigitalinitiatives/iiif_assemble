@@ -22,7 +22,7 @@ class XPath
 
     }
 
-    public function query ($expression)
+    public function globalQuery ($expression)
     {
 
         $expression = '//' . $expression;
