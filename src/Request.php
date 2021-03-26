@@ -13,13 +13,14 @@ class Request {
         $curl->setBasicAuthentication($_ENV['FEDORA_USER'], $_ENV['FEDORA_PASS']);
         $curl->get($request);
 
-        if ($curl->error) {
-            $response = $curl->errorCode . ': ' . $curl->errorMessage;
-        } else {
-            $response = $curl->response;
-        }
+        $response['request'] = $request;
+        $response['status'] = $curl->httpStatusCode;
 
-        $curl->close();
+        if ($curl->error) {
+            $response['body'] = $curl->errorCode . ': ' . $curl->errorMessage;
+        } else {
+            $response['body'] = $curl->response;
+        }
 
         return $response;
 
@@ -34,9 +35,7 @@ class Request {
             $request .= '?format=' . $format;
         endif;
 
-        $response = self::fedoraRequest($request);
-
-        return $response->objModels;
+        return self::fedoraRequest($request);
 
     }
 

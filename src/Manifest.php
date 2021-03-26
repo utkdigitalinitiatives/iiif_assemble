@@ -30,23 +30,27 @@ class Manifest
                 break;
         }
 
-        if (!$response) {
-            return $this->noFoundResponse();
-        }
-
         print $response;
 
     }
 
     private function getManifest()
     {
+
         $contentModel = Request::getObjectModels($this->persistentIdentifier);
-        $mods = Request::getDatastream('MODS', $this->persistentIdentifier);
-        $iiif = new IIIF($this->persistentIdentifier, $mods, $contentModel);
 
-//        print_r ($mods);
+        if ($contentModel['status'] === 200) :
+            $mods = Request::getDatastream('MODS', $this->persistentIdentifier);
+        else :
+            return json_encode($contentModel);
+        endif;
 
-        return $iiif->buildManifest();
+        if ($mods['status'] === 200) :
+            $iiif = new IIIF($this->persistentIdentifier, $mods['body'], $contentModel);
+            return $iiif->buildManifest();
+        else :
+            return json_encode($mods);
+        endif;
 
     }
 
