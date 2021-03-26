@@ -30,6 +30,7 @@ class IIIF {
         $manifest['summary'] = self::getLanguageArray($this->xpath->globalQuery('abstract'));
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
+        $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail('TN', array(200, 200));
 
         return json_encode($manifest);
@@ -83,6 +84,12 @@ class IIIF {
         else :
             return null;
         endif;
+
+    }
+
+    public function buildProvider () {
+
+        return null;
 
     }
 
