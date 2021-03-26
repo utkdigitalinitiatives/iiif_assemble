@@ -22,11 +22,12 @@ class XPath
 
     }
 
-    public function query ($expression) {
+    public function query ($expression)
+    {
 
         $expression = '//' . $expression;
 
-        if($this->ns) {
+        if ($this->ns) {
             $this->domxpath->registerNamespace('ns', $this->ns);
             $nodes = $this->domxpath->query(str_replace('//', '//ns:', $expression));
         } else {
@@ -40,6 +41,14 @@ class XPath
         endforeach;
 
         return $values;
+
+    }
+
+
+
+    public function differentQuery ($expression) {
+
+        return $expression;
 
     }
 

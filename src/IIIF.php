@@ -26,6 +26,7 @@ class IIIF {
         $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@*)]'));
         $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'));
         $manifest['metadata'] = self::buildMetadata();
+        $manifest['rights'] = self::buildRights($this->xpath->differentQuery('access'));
 
         return json_encode($manifest);
 
@@ -59,6 +60,12 @@ class IIIF {
             $tableOfContents,
             $date
         ];
+
+    }
+
+    public function buildRights ($string) {
+
+        return $string;
 
     }
 
