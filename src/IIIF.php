@@ -18,6 +18,7 @@ class IIIF {
     }
 
     public function buildManifest ()
+    {
 
 
         $manifest['@context'] = 'https://iiif.io/api/presentation/3/context.json';
