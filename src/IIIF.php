@@ -26,12 +26,14 @@ class IIIF {
         $manifest['@context'] = 'https://iiif.io/api/presentation/3/context.json';
         $manifest['id'] = $this->url . $_SERVER["REQUEST_URI"];
         $manifest['type'] = 'Manifest';
-        $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@*)]'));
-        $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'));
+        $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@*)]'), 'value');
+        $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'), 'value');
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail('TN', array(200, 200));
+        $manifest['items'] = self::buildItems();
+        $manifest['structures'] = self::buildStructures();
 
         return json_encode($manifest);
 
@@ -68,7 +70,7 @@ class IIIF {
             endif;
         endforeach;
 
-        return (object) $sets;
+        return $sets;
 
     }
 
@@ -119,12 +121,24 @@ class IIIF {
 
     }
 
+    public function buildItems () {
+
+        return null;
+
+    }
+
+    public function buildStructures () {
+
+        return null;
+
+    }
+
     public function getLabelValuePair ($label, $value) {
 
         if ($value !== null) {
             return (object) [
-                'label' => self::getLanguageArray($label),
-                'value' => self::getLanguageArray($value)
+                'label' => self::getLanguageArray($label, 'label'),
+                'value' => self::getLanguageArray($value, 'value')
             ];
         } else {
             return null;
@@ -132,7 +146,11 @@ class IIIF {
 
     }
 
-    public function getLanguageArray ($string, $language = 'en') {
+    public function getLanguageArray ($string, $type, $language = 'en') {
+
+        if ($type === 'label') :
+            $string = [$string];
+        endif;
 
         return (object) [
             $language => $string
