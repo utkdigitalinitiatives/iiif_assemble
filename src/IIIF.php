@@ -39,32 +39,36 @@ class IIIF {
 
     public function buildMetadata () {
 
-        $alternativeTitle = self::getLabelValuePair(
-            'Alternative Title',
-            $this->xpath->query('titleInfo[@type="alternative"]')
+        $alternativeTitle = $this->xpath->query('titleInfo[@type="alternative"]');
+        $identifier = $this->xpath->query('identifier');
+        $tableOfContents = $this->xpath->query('tableOfContents');
+        $date = $this->xpath->query('dateCreated');
+
+        $metadata = array(
+            'Alternative Title' => $alternativeTitle,
+            'Publication Identifier' => $identifier,
+            'Table of Contents' => $tableOfContents,
+            'Date' => $date
         );
 
-        $identifier = self::getLabelValuePair(
-            'Publication Identifier',
-            $this->xpath->query('identifier')
-        );
+        return self::validateMetadata($metadata);
 
-        $tableOfContents = self::getLabelValuePair(
-            'Table of Contents',
-            $this->xpath->query('tableOfContents')
-        );
+    }
 
-        $date = self::getLabelValuePair(
-            'Date',
-            $this->xpath->query('dateCreated')
-        );
+    public function validateMetadata ($array) {
 
-        return (object) [
-            $alternativeTitle,
-            $identifier,
-            $tableOfContents,
-            $date
-        ];
+        $sets = array();
+
+        foreach ($array as $label => $value) :
+            if ($value !== null) :
+                $sets[] = self::getLabelValuePair(
+                    $label,
+                    $value
+                );
+            endif;
+        endforeach;
+
+        return (object) $sets;
 
     }
 
@@ -117,10 +121,14 @@ class IIIF {
 
     public function getLabelValuePair ($label, $value) {
 
-        return (object) [
-            'label' => self::getLanguageArray($label),
-            'value' => self::getLanguageArray($value)
-        ];
+        if ($value !== null) {
+            return (object) [
+                'label' => self::getLanguageArray($label),
+                'value' => self::getLanguageArray($value)
+            ];
+        } else {
+            return null;
+        }
 
     }
 
