@@ -6,11 +6,15 @@ use Curl\Curl;
 
 class Request {
 
-    private static function fedoraRequest ($request) {
+    private static function curlRequest ($request, $fedora = true) {
 
         $curl = new Curl();
         $curl->verbose();
-        $curl->setBasicAuthentication($_ENV['FEDORA_USER'], $_ENV['FEDORA_PASS']);
+
+        if ($fedora) :
+            $curl->setBasicAuthentication($_ENV['FEDORA_USER'], $_ENV['FEDORA_PASS']);
+        endif;
+
         $curl->get($request);
 
         $response['request'] = $request;
@@ -28,6 +32,18 @@ class Request {
 
     }
 
+    public static function responseStatus ($uri, $status = 200) {
+
+        $response = self::curlRequest($uri, false);
+
+        if ($response['status'] === $status) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     public static function getObjectModels ($pid, $format = 'XML') {
 
         $request = $_ENV['FEDORA_URL'] . '/objects/' . $pid;
@@ -36,7 +52,7 @@ class Request {
             $request .= '?format=' . $format;
         endif;
 
-        return self::fedoraRequest($request);
+        return self::curlRequest($request);
 
     }
 
@@ -51,7 +67,7 @@ class Request {
             $request .= '?format=' . $format;
         endif;
 
-        return self::fedoraRequest($request);
+        return self::curlRequest($request);
 
     }
 

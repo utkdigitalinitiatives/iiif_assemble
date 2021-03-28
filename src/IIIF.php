@@ -167,23 +167,37 @@ class IIIF {
 
     }
 
+    public function getItemURI ($primary, $fallback) {
+
+        if (Request::responseStatus($primary)) :
+            $uri = $primary;
+        else :
+            $uri = $fallback;
+        endif;
+
+        return $uri;
+
+    }
+
     public function determinePaintingDetails () {
 
         $item = array();
-        $iiifImage = self::getIIIFImageURI('OBJ', array(1000, 1000));
         $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ';
 
         $model = Utility::xmlToArray($this->model);
 
         if (in_array('info:fedora/islandora:sp_basic_image', $model)) :
-            $item['id'] = $iiifImage;
+            $iiifImage = self::getIIIFImageURI('OBJ', array(1000, 1000));
+            $item['id'] = self::getItemURI($iiifImage, $datastream);
             $item['type'] = "Image";
             $item['format'] = "image/jpeg";
         elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
+            $imageServer = false;
             $item['id'] = $datastream;
             $item['type'] = "Sound";
             $item['format'] = "audio/mpeg";
         elseif (in_array('info:fedora/islandora:sp-videoCModel', $model)) :
+            $imageServer = false;
             $item['id'] = $datastream;
             $item['type'] = "Video";
             $item['format'] = "video/mpeg";
