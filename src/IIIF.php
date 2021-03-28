@@ -196,6 +196,11 @@ class IIIF {
             $item['id'] = self::getItemURI($iiifImage, $datastream);
             $item['type'] = "Image";
             $item['format'] = "image/jpeg";
+        elseif (in_array('info:fedora/islandora:sp_pageCModel', $model)) :
+            $iiifImage = self::getIIIFImageURI('OBJ', array(1000, 1000));
+            $item['id'] = self::getItemURI($iiifImage, $datastream);
+            $item['type'] = "Image";
+            $item['format'] = "image/jpeg";
         elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
             $item['id'] = $datastream;
             $item['type'] = "Sound";
