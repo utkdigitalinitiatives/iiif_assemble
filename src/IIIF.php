@@ -203,7 +203,7 @@ class IIIF {
         elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
             $item['id'] = $datastream;
             $item['type'] = "Video";
-            $item['format'] = "video/mpeg";
+            $item['format'] = "video/mp4";
         else :
             $item['id'] = null;
             $item['type'] = null;
