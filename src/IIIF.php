@@ -186,6 +186,8 @@ class IIIF {
 
         $model = Utility::xmlToArray($this->model);
 
+        print_r ($model);
+
         if (in_array('info:fedora/islandora:sp_basic_image', $model)) :
             $iiifImage = self::getIIIFImageURI('OBJ', array(1000, 1000));
             $item['id'] = self::getItemURI($iiifImage, $datastream);
@@ -197,12 +199,10 @@ class IIIF {
             $item['type'] = "Image";
             $item['format'] = "image/jpeg";
         elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
-            $imageServer = false;
             $item['id'] = $datastream;
             $item['type'] = "Sound";
             $item['format'] = "audio/mpeg";
         elseif (in_array('info:fedora/islandora:sp-videoCModel', $model)) :
-            $imageServer = false;
             $item['id'] = $datastream;
             $item['type'] = "Video";
             $item['format'] = "video/mpeg";
