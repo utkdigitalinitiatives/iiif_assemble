@@ -22,9 +22,10 @@ class IIIF {
 
     public function buildPresentation ()
     {
+        $id = $this->url . $_SERVER["REQUEST_URI"];
 
         $manifest['@context'] = 'https://iiif.io/api/presentation/3/context.json';
-        $manifest['id'] = $this->url . $_SERVER["REQUEST_URI"];
+        $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
         $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@*)]'), 'value');
         $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'), 'value');
@@ -32,7 +33,7 @@ class IIIF {
         $manifest['rights'] = self::buildRights();
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail('TN', array(200, 200));
-        $manifest['items'] = self::buildItems();
+        $manifest['items'] = self::buildItems($id);
         $manifest['structures'] = self::buildStructures();
 
         return json_encode($manifest);
@@ -121,9 +122,49 @@ class IIIF {
 
     }
 
-    public function buildItems () {
+    public function buildItems ($uri) {
 
-        return null;
+        $canvas = $uri . '/canvas';
+
+        return [
+            (object) [
+                "id" => $canvas,
+                "type" => 'Canvas',
+                "height" => 360,
+                "width" => 640,
+                "duration" => 500,
+                "items" => [self::paintCanvas($canvas)]
+            ]
+        ];
+
+    }
+
+    public function paintCanvas ($target) {
+
+        $page = $target . '/page';
+
+        return (object) [
+            "id" => $page,
+            "type" => 'AnnotationPage',
+            "items" => [
+                (object) [
+                    "id" => $page . '/annotation',
+                    "type" => 'Annotation',
+                    "motivation" => "painting",
+                    "body" => [
+                        (object) [
+                            "id" => $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ',
+                            "type" => "Video",
+                            "height" => 360,
+                            "width" => 640,
+                            "duration" => 500,
+                            "format" => "audio/mpeg"
+                        ]
+                    ],
+                    "target" => $target
+                ]
+            ]
+        ];
 
     }
 
