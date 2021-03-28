@@ -14,7 +14,7 @@ class IIIF {
 
         $this->pid = $pid;
         $this->xpath = new XPath($mods->asXml());
-        $this->model = $model;
+        $this->model = $model['body']->objModels->model;
 
         $this->url = Utility::getBaseUrl();
 
@@ -102,17 +102,11 @@ class IIIF {
 
     public function buildThumbnail ($dsid, $size) {
 
-        $uri = $this->url . '/iiif/2/';
-        $uri .= 'collections~islandora~object~' . $this->pid;
-        $uri .= '~datastream~' . $dsid;
-        $uri .= '~view/full/!' . $size[0] . ',' . $size[1];
-        $uri .= '/1/default.jpg';
-
         $format = "image/jpeg";
 
         return [
             (object) [
-                'id' => $uri,
+                'id' => self::getIIIFImageURI($dsid, $size),
                 'type' => "Image",
                 'format' => $format,
                 'width' => $size[0],
@@ -122,6 +116,20 @@ class IIIF {
 
     }
 
+    public function getIIIFImageURI ($dsid, $size) {
+
+        $uri = $this->url . '/iiif/2/';
+        $uri .= 'collections~islandora~object~' . $this->pid;
+        $uri .= '~datastream~' . $dsid;
+        $uri .= '~view/full/!' . $size[0] . ',' . $size[1];
+        $uri .= '/1/default.jpg';
+
+        return $uri;
+
+    }
+
+
+
     public function buildItems ($uri) {
 
         $canvas = $uri . '/canvas';
@@ -130,16 +138,16 @@ class IIIF {
             (object) [
                 "id" => $canvas,
                 "type" => 'Canvas',
-                "height" => 360,
+                "height" => 640,
                 "width" => 640,
                 "duration" => 500,
-                "items" => [self::paintCanvas($canvas)]
+                "items" => [self::preparePage($canvas)]
             ]
         ];
 
     }
 
-    public function paintCanvas ($target) {
+    public function preparePage ($target) {
 
         $page = $target . '/page';
 
@@ -151,18 +159,55 @@ class IIIF {
                     "id" => $page . '/annotation',
                     "type" => 'Annotation',
                     "motivation" => "painting",
-                    "body" => [
-                        (object) [
-                            "id" => $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ',
-                            "type" => "Video",
-                            "height" => 360,
-                            "width" => 640,
-                            "duration" => 500,
-                            "format" => "audio/mpeg"
-                        ]
-                    ],
+                    "body" => self::paintCanvas(),
                     "target" => $target
                 ]
+            ]
+        ];
+
+    }
+
+    public function determinePaintingDetails () {
+
+        $item = array();
+        $iiifImage = self::getIIIFImageURI('OBJ', array(1000, 1000));
+        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ';
+
+        $model = Utility::xmlToArray($this->model);
+
+        if (in_array('info:fedora/islandora:sp_basic_image', $model)) :
+            $item['id'] = $iiifImage;
+            $item['type'] = "Image";
+            $item['format'] = "image/jpeg";
+        elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
+            $item['id'] = $datastream;
+            $item['type'] = "Sound";
+            $item['format'] = "audio/mpeg";
+        elseif (in_array('info:fedora/islandora:sp-videoCModel', $model)) :
+            $item['id'] = $datastream;
+            $item['type'] = "Video";
+            $item['format'] = "video/mpeg";
+        else :
+            $item['id'] = null;
+            $item['type'] = null;
+            $item['format'] = null;
+        endif;
+
+        return $item;
+    }
+
+    public function paintCanvas () {
+
+        $item = self::determinePaintingDetails();
+
+        return [
+            (object) [
+                "id" => $item['id'],
+                "type" => $item['type'],
+                "height" => 640,
+                "width" => 640,
+                "duration" => 500,
+                "format" => $item['format']
             ]
         ];
 
