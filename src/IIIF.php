@@ -169,8 +169,11 @@ class IIIF {
 
         if (Request::responseStatus($primary)) :
             $response = Request::responseBody($primary);
-            $response ->type = "Image";
-            $body = $response;
+            $body['id'] = $response->{'@id'};
+            $body['type'] = "Image";
+            $body['width'] = $response->width;
+            $body['height'] = $response->height;
+            $body['format'] = "image/jpeg";
         else :
             $body['id'] = $fallback;
             $body['type'] = "Image";
