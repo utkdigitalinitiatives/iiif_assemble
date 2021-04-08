@@ -109,7 +109,7 @@ class IIIF {
 
         return [
             (object) [
-                self::getItemBody($iiifImage, $datastream)
+                //self::getItemBody($iiifImage, $datastream)
             ]
         ];
 

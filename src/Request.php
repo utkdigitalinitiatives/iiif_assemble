@@ -45,7 +45,7 @@ class Request {
     }
 
     public static function responseBody($uri) {
-        
+
         $response = self::curlRequest($uri, false);
         return $response['body'];
 
