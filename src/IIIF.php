@@ -168,7 +168,9 @@ class IIIF {
     public function getItemBody ($primary, $fallback) {
 
         if (Request::responseStatus($primary)) :
-            $body = Request::responseBody($primary);
+            $response = Request::responseBody($primary);
+            print_r ($response);
+            $body = null;
         else :
             $body['id'] = $fallback;
             $body['type'] = "Image";
