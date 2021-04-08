@@ -46,12 +46,14 @@ class IIIF {
         $identifier = $this->xpath->query('identifier');
         $tableOfContents = $this->xpath->query('tableOfContents');
         $date = $this->xpath->query('dateCreated');
+        $extent = $this->xpath->query('physicalDescription/extent');
 
         $metadata = array(
             'Alternative Title' => $alternativeTitle,
             'Publication Identifier' => $identifier,
             'Table of Contents' => $tableOfContents,
-            'Date' => $date
+            'Date' => $date,
+            'Extent' => $extent
         );
 
         return self::validateMetadata($metadata);
@@ -100,29 +102,25 @@ class IIIF {
 
     }
 
-    public function buildThumbnail ($dsid, $size) {
+    public function buildThumbnail ($dsid) {
 
-        $format = "image/jpeg";
+        $iiifImage = self::getIIIFImageURI($dsid);
+        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/' . $dsid;
 
         return [
             (object) [
-                'id' => self::getIIIFImageURI($dsid, $size),
-                'type' => "Image",
-                'format' => $format,
-                'width' => $size[0],
-                'height' => $size[1]
+                self::getItemBody($iiifImage, $datastream)
             ]
         ];
 
     }
 
-    public function getIIIFImageURI ($dsid, $size) {
+    public function getIIIFImageURI ($dsid) {
 
         $uri = $this->url . '/iiif/2/';
         $uri .= 'collections~islandora~object~' . $this->pid;
         $uri .= '~datastream~' . $dsid;
-        $uri .= '~view/full/!' . $size[0] . ',' . $size[1];
-        $uri .= '/0/default.jpg';
+        $uri .= '/info.json';
 
         return $uri;
 
@@ -167,47 +165,52 @@ class IIIF {
 
     }
 
-    public function getItemURI ($primary, $fallback) {
+    public function getItemBody ($primary, $fallback) {
 
         if (Request::responseStatus($primary)) :
-            $uri = $primary;
+            $body = Request::responseStatus($primary);
         else :
-            $uri = $fallback;
+            $body['id'] = $fallback;
+            $body['type'] = "Image";
+            $body['width'] = 1000;
+            $body['height'] = 1000;
+            $body['format'] = "image/jpeg";
         endif;
 
-        return $uri;
+        return $body;
 
     }
 
-    public function determinePaintingDetails () {
+    public function determinePaintingDetails ($model) {
 
         $item = array();
+
         $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ';
 
-        $model = Utility::xmlToArray($this->model);
-
         if (in_array('info:fedora/islandora:sp_basic_image', $model)) :
-            $iiifImage = self::getIIIFImageURI('OBJ', array(1000, 1000));
-            $item['id'] = self::getItemURI($iiifImage, $datastream);
+            $iiifImage = self::getIIIFImageURI('OBJ');
+            $item['id'] = self::getItemBody($iiifImage, $datastream);
             $item['type'] = "Image";
             $item['format'] = "image/jpeg";
         elseif (in_array('info:fedora/islandora:sp_large_image_cmodel', $model)) :
-            $iiifImage = self::getIIIFImageURI('OBJ', array(1000, 1000));
-            $item['id'] = self::getItemURI($iiifImage, $datastream);
-            $item['type'] = "Image";
-            $item['format'] = "image/jpeg";
+            $iiifImage = self::getIIIFImageURI('OBJ');
+            $item = self::getItemBody($iiifImage, $datastream);
         elseif (in_array('info:fedora/islandora:pageCModel', $model)) :
-            $iiifImage = self::getIIIFImageURI('OBJ', array(1000, 1000));
-            $item['id'] = self::getItemURI($iiifImage, $datastream);
-            $item['type'] = "Image";
-            $item['format'] = "image/jpeg";
+            $iiifImage = self::getIIIFImageURI('OBJ');
+            $item = self::getItemBody($iiifImage, $datastream);
         elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
             $item['id'] = $datastream;
             $item['type'] = "Sound";
+            $item['width'] = 640;
+            $item['height'] = 640;
+            $item['duration'] = 500;
             $item['format'] = "audio/mpeg";
         elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
             $item['id'] = $datastream;
             $item['type'] = "Video";
+            $item['width'] = 640;
+            $item['height'] = 640;
+            $item['duration'] = 500;
             $item['format'] = "video/mp4";
         else :
             $item['id'] = null;
@@ -220,17 +223,12 @@ class IIIF {
 
     public function paintCanvas () {
 
-        $item = self::determinePaintingDetails();
+
+        $model = Utility::xmlToArray($this->model);
+        $item = self::determinePaintingDetails($model);
 
         return [
-            (object) [
-                "id" => $item['id'],
-                "type" => $item['type'],
-                "height" => 640,
-                "width" => 640,
-                "duration" => 500,
-                "format" => $item['format']
-            ]
+            (object) $item
         ];
 
     }

@@ -44,6 +44,12 @@ class Request {
 
     }
 
+    public static function responseBody($uri) {
+
+        return self::curlRequest($uri, false);
+
+    }
+
     public static function getObjectModels ($pid, $format = 'XML') {
 
         $request = $_ENV['FEDORA_URL'] . '/objects/' . $pid;
