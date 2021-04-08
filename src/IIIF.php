@@ -174,6 +174,11 @@ class IIIF {
             $body['width'] = "1000";
             $body['height'] = "1000";
             $body['format'] = "image/jpeg";
+            $body['service'] = (object) [
+                '@id' => $response->{'@id'},
+                '@context' => $response->{'@context'},
+                'profile' => $response->profile,
+            ];
         else :
             $body['id'] = $fallback;
             $body['type'] = "Image";
