@@ -169,7 +169,7 @@ class IIIF {
 
         if (Request::responseStatus($primary)) :
             $response = Request::responseBody($primary);
-            $body['id'] = $response->{'@id'};
+            $body['id'] = $response->{'@id'} . '/full/full/0/default.jpg';
             $body['type'] = "Image";
             $body['width'] = $response->width;
             $body['height'] = $response->height;
