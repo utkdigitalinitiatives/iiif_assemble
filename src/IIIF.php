@@ -136,8 +136,8 @@ class IIIF {
             (object) [
                 "id" => $canvas,
                 "type" => 'Canvas',
-                "height" => 640,
-                "width" => 640,
+                "height" => 1000,
+                "width" => 1000,
                 "duration" => 500,
                 "items" => [self::preparePage($canvas)]
             ]
@@ -171,8 +171,8 @@ class IIIF {
             $response = Request::responseBody($primary);
             $body['id'] = $response->{'@id'} . '/full/full/0/default.jpg';
             $body['type'] = "Image";
-            $body['width'] = $response->width;
-            $body['height'] = $response->height;
+            $body['width'] = "1000";
+            $body['height'] = "1000";
             $body['format'] = "image/jpeg";
         else :
             $body['id'] = $fallback;
@@ -206,15 +206,15 @@ class IIIF {
         elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
             $item['id'] = $datastream;
             $item['type'] = "Sound";
-            $item['width'] = 640;
-            $item['height'] = 640;
+            $item['width'] = 1000;
+            $item['height'] = 1000;
             $item['duration'] = 500;
             $item['format'] = "audio/mpeg";
         elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
             $item['id'] = $datastream;
             $item['type'] = "Video";
-            $item['width'] = 640;
-            $item['height'] = 640;
+            $item['width'] = 1000;
+            $item['height'] = 1000;
             $item['duration'] = 500;
             $item['format'] = "video/mp4";
         else :
