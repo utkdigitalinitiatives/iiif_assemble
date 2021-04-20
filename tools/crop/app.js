@@ -47,7 +47,7 @@ areaSelect.on('change', function() {
     $('#urlArea').html(
         '<a href="' + url + '" target=_blank>' + url + '</a>'
     ),
-    $('#region').html(
+    $('#region').val(
         region.join(',')
     )
 });
