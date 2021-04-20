@@ -102,16 +102,52 @@ class IIIF {
 
     }
 
-    public function buildThumbnail ($dsid) {
+    public function buildThumbnail ($dsid, $size) {
 
-        $iiifImage = self::getIIIFImageURI($dsid);
-        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/' . $dsid;
+        $item = array();
 
-        return [
-            (object) [
-                //self::getItemBody($iiifImage, $datastream)
-            ]
-        ];
+        $model = Utility::xmlToArray($this->model);
+
+        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ';
+
+        if (in_array('info:fedora/islandora:sp_basic_image', $model)) :
+            $iiifImage = self::getIIIFImageURI('OBJ');
+            $item['id'] = self::getItemBody($iiifImage, $datastream);
+            $item['type'] = "Image";
+            $item['format'] = "image/jpeg";
+
+        elseif (in_array('info:fedora/islandora:sp_large_image_cmodel', $model)) :
+            $iiifImage = self::getIIIFImageURI('OBJ');
+            $item['id'] = self::getItemBody($iiifImage, $datastream);
+            $item['type'] = "Image";
+            $item['format'] = "image/jpeg";
+
+        elseif (in_array('info:fedora/islandora:pageCModel', $model)) :
+            $iiifImage = self::getIIIFImageURI('OBJ');
+            $item['id'] = self::getItemBody($iiifImage, $datastream);
+            $item['type'] = "Image";
+            $item['format'] = "image/jpeg";
+
+        elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
+            $iiifImage = self::getIIIFImageURI('TN');
+            $item['id'] = self::getItemBody($iiifImage, $datastream);
+            $item['type'] = "Image";
+            $item['format'] = "image/jpeg";
+
+        elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
+            $iiifImage = self::getIIIFImageURI('TN');
+            $item['id'] = self::getItemBody($iiifImage, $datastream);
+            $item['type'] = "Image";
+            $item['format'] = "image/jpeg";
+
+        else :
+            $item['id'] = null;
+            $item['type'] = null;
+            $item['format'] = null;
+
+        endif;
+
+        return $item;
 
     }
 
@@ -202,12 +238,15 @@ class IIIF {
             $item['id'] = self::getItemBody($iiifImage, $datastream);
             $item['type'] = "Image";
             $item['format'] = "image/jpeg";
+
         elseif (in_array('info:fedora/islandora:sp_large_image_cmodel', $model)) :
             $iiifImage = self::getIIIFImageURI('OBJ');
             $item = self::getItemBody($iiifImage, $datastream);
+
         elseif (in_array('info:fedora/islandora:pageCModel', $model)) :
             $iiifImage = self::getIIIFImageURI('OBJ');
             $item = self::getItemBody($iiifImage, $datastream);
+
         elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
             $item['id'] = $datastream;
             $item['type'] = "Sound";
@@ -215,6 +254,7 @@ class IIIF {
             $item['height'] = 1000;
             $item['duration'] = 500;
             $item['format'] = "audio/mpeg";
+
         elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
             $item['id'] = $datastream;
             $item['type'] = "Video";
@@ -222,17 +262,19 @@ class IIIF {
             $item['height'] = 1000;
             $item['duration'] = 500;
             $item['format'] = "video/mp4";
+
         else :
             $item['id'] = null;
             $item['type'] = null;
             $item['format'] = null;
+
         endif;
 
         return $item;
+
     }
 
     public function paintCanvas () {
-
 
         $model = Utility::xmlToArray($this->model);
         $item = self::determinePaintingDetails($model);
@@ -240,7 +282,6 @@ class IIIF {
         return [
             (object) $item
         ];
-
     }
 
     public function buildStructures () {
@@ -258,6 +299,7 @@ class IIIF {
             ];
         } else {
             return null;
+
         }
 
     }
@@ -267,7 +309,7 @@ class IIIF {
         if ($type === 'label') :
             $string = [$string];
         endif;
-        
+
         return (object) [
             $language => $string
         ];
