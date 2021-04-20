@@ -12,7 +12,7 @@ if (pid != '' && pid != null) {
     baseUrl = external + '/info.json';
 } else {
     baseUrl = 'https://digital.lib.utk.edu/iiif/2/collections~islandora~object~collections:mugwump~datastream~FEATURED/info.json';
-    alert('Usage Guide \n\nFor internal Islandora items, input URL as "/assemble/tools/crop/?pid=namespace:id" \nex: https://digital.lib.utk.edu/assemble/tools/crop/?pid=collections:mugwump \n\nFor external items, input URL as "/assemble/tools/crop/?external=URI" \nex: https://digital.lib.utk.edu/assemble/tools/crop/?external=https://cdm16281.contentdm.oclc.org/digital/iiif/p16281coll20/34/info.json \n\n');
+    alert('Usage Guide \n\nFor internal Islandora items, input URL as "/assemble/tools/crop/?pid=namespace:id" \nex: https://digital.lib.utk.edu/assemble/tools/crop/?pid=collections:mugwump \n\nFor external items, input URL as "/assemble/tools/crop/?external=URI" \nex: https://digital.lib.utk.edu/assemble/tools/crop/?external=https://cdm16281.contentdm.oclc.org/digital/iiif/p16281coll20/34/ \n\n');
 }
 
 var map = L.map('map', {
