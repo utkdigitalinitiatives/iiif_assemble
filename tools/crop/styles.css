@@ -17,3 +17,18 @@ html, body, #map{
     left: 50%;
     z-index: 100000;
 }
+
+#region {
+    background-color: rgba(255, 255, 255, 0.5);
+    font-family: sans-serif;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 100000;
+    font-size: 1em;
+    font-weight: 700;
+    padding: 1em;
+    background-color: white;
+}

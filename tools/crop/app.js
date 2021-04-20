@@ -46,6 +46,9 @@ areaSelect.on('change', function() {
     var url = baseUrl + '/' + region.join(',') + '/!1000,1000/0/default.jpg';
     $('#urlArea').html(
         '<a href="' + url + '" target=_blank>' + url + '</a>'
+    ),
+    $('#region').html(
+        region.join(',')
     )
 });
 
