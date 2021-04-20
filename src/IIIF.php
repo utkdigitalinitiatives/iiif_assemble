@@ -106,12 +106,15 @@ class IIIF {
 
         $item = array();
 
-        $model = Utility::xmlToArray($this->model);
+        $dsid = self::getThumbnailDatastream();
+        $iiifImage = self::getIIIFImageURI($dsid);
 
-        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ';
+        if (Request::responseStatus($iiifImage)) :
+            $item['id'] = $iiifImage;
+        else :
+            $item['id'] = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/' . $dsid;
+        endif;
 
-        $iiifImage = self::getIIIFImageURI('TN');
-        $item['id'] = $datastream;
         $item['type'] = "Image";
         $item['format'] = "image/jpeg";
         $item['width'] = $width;
@@ -119,6 +122,22 @@ class IIIF {
 
         return $item;
 
+    }
+
+    public function getThumbnailDatastream () {
+
+        $model = Utility::xmlToArray($this->model);
+
+        if (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
+            $id = 'TN';
+        elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
+            $id = 'TN';
+        else :
+            $id = 'OBJ';
+        endif;
+
+        return $id;
+        
     }
 
     public function getIIIFImageURI ($dsid) {
