@@ -1,23 +1,27 @@
 var pid = 'galston%3A700';
 var queryString = window.location.search;
 var urlParams = new URLSearchParams(queryString);
-var populatePid = urlParams.get('pid');
+var pid = urlParams.get('pid');
+var external = urlParams.get('external');
 
-if (populatePid != '') {
-    pid = populatePid;
+var baseUrl = '';
+
+if (pid != '' && pid != null) {
+    baseUrl = 'https://digital.lib.utk.edu/iiif/2/collections~islandora~object~' + populatePid + '~datastream~OBJ/info.json';
+} else if (external != ''&& external != null) {
+    baseUrl = external + '/info.json';
 } else {
-    pid = null;
-    alert('No PID  is currently set.');
+    baseUrl = 'https://digital.lib.utk.edu/iiif/2/collections~islandora~object~collections:mugwump~datastream~FEATURED/info.json';
+    alert('Usage Guide \n\nFor internal Islandora items, input URL as "/assemble/tools/crop/?pid=namespace:id" \nex: https://digital.lib.utk.edu/assemble/tools/crop/?pid=collections:mugwump \n\nFor external items, input URL as "/assemble/tools/crop/?external=URI" \nex: https://digital.lib.utk.edu/assemble/tools/crop/?external=https://cdm16281.contentdm.oclc.org/digital/iiif/p16281coll20/34/info.json \n\n');
 }
 
-var baseUrl = 'https://digital.lib.utk.edu/iiif/2/collections~islandora~object~' + pid + '~datastream~OBJ';
 var map = L.map('map', {
     center: [0, 0],
     crs: L.CRS.Simple,
     zoom: 0,
 });
 
-var iiifLayer = L.tileLayer.iiif(baseUrl + '/info.json', {
+var iiifLayer = L.tileLayer.iiif(baseUrl, {
     tileSize: 512
 }).addTo(map);
 
