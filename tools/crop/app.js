@@ -1,4 +1,16 @@
-var baseUrl = 'https://digital.lib.utk.edu/iiif/2/collections~islandora~object~galston%3A700~datastream~OBJ';
+var pid = 'galston%3A700';
+var queryString = window.location.search;
+var urlParams = new URLSearchParams(queryString);
+var populatePid = urlParams.get('pid');
+
+if (populatePid != '') {
+    pid = populatePid;
+} else {
+    pid = null;
+    alert('No PID  is currently set.');
+}
+
+var baseUrl = 'https://digital.lib.utk.edu/iiif/2/collections~islandora~object~' + pid + '~datastream~OBJ';
 var map = L.map('map', {
     center: [0, 0],
     crs: L.CRS.Simple,
@@ -10,7 +22,7 @@ var iiifLayer = L.tileLayer.iiif(baseUrl + '/info.json', {
 }).addTo(map);
 
 var areaSelect = L.areaSelect({
-    width:100, height:100
+    width:300, height:300
 });
 
 areaSelect.addTo(map);
@@ -31,8 +43,17 @@ areaSelect.on('change', function() {
         Math.floor((max.x - min.x) * xRatio),
         Math.floor((min.y - max.y) * yRatio)
     ];
-    var url = baseUrl + '/' + region.join(',') + '/full/0/default.jpg';
+    var url = baseUrl + '/' + region.join(',') + '/!1000,1000/0/default.jpg';
     $('#urlArea').html(
         '<a href="' + url + '" target=_blank>' + url + '</a>'
     )
 });
+
+function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
