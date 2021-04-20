@@ -32,7 +32,7 @@ class IIIF {
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
         $manifest['provider'] = self::buildProvider();
-        $manifest['thumbnail'] = self::buildThumbnail('TN', array(200, 200));
+        $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
         $manifest['structures'] = self::buildStructures();
 
@@ -102,7 +102,7 @@ class IIIF {
 
     }
 
-    public function buildThumbnail ($dsid, $size) {
+    public function buildThumbnail ($width, $height) {
 
         $item = array();
 
@@ -110,42 +110,12 @@ class IIIF {
 
         $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ';
 
-        if (in_array('info:fedora/islandora:sp_basic_image', $model)) :
-            $iiifImage = self::getIIIFImageURI('OBJ');
-            $item['id'] = self::getItemBody($iiifImage, $datastream);
-            $item['type'] = "Image";
-            $item['format'] = "image/jpeg";
-
-        elseif (in_array('info:fedora/islandora:sp_large_image_cmodel', $model)) :
-            $iiifImage = self::getIIIFImageURI('OBJ');
-            $item['id'] = self::getItemBody($iiifImage, $datastream);
-            $item['type'] = "Image";
-            $item['format'] = "image/jpeg";
-
-        elseif (in_array('info:fedora/islandora:pageCModel', $model)) :
-            $iiifImage = self::getIIIFImageURI('OBJ');
-            $item['id'] = self::getItemBody($iiifImage, $datastream);
-            $item['type'] = "Image";
-            $item['format'] = "image/jpeg";
-
-        elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
-            $iiifImage = self::getIIIFImageURI('TN');
-            $item['id'] = self::getItemBody($iiifImage, $datastream);
-            $item['type'] = "Image";
-            $item['format'] = "image/jpeg";
-
-        elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
-            $iiifImage = self::getIIIFImageURI('TN');
-            $item['id'] = self::getItemBody($iiifImage, $datastream);
-            $item['type'] = "Image";
-            $item['format'] = "image/jpeg";
-
-        else :
-            $item['id'] = null;
-            $item['type'] = null;
-            $item['format'] = null;
-
-        endif;
+        $iiifImage = self::getIIIFImageURI('TN');
+        $item['id'] = $datastream;
+        $item['type'] = "Image";
+        $item['format'] = "image/jpeg";
+        $item['width'] = $width;
+        $item['height'] = $height;
 
         return $item;
 
