@@ -1,23 +1,34 @@
+
 # IIIF Assemble
 
-This small app WILL assemble and serve a IIIF Presentation API 3.0 manifest from a Fedora 3.8 object. The routing follows a pattern of  
+This app WILL assemble and serve a IIIF Presentation API 3.0 manifest from a Fedora 3.8 object with a MODS datastream. The routing follows a pattern of  
 `/assemble/manifest/{namepsace}/{id}` where `namespace` is a string and `id` is positive integer.
 
-The example route of `/assemble/manifest/rfta/1` will correlate to **rfta:1**
+<img src="https://digital.lib.utk.edu/iiif/2/collections~islandora~object~calahan%3A3~datastream~OBJ/full/!320,320/0/default.jpg" alt="Postcard, Landmarks of the Desert, to Mr. C N Calahan, undated : page 1" />
 
-@todo 
-- all things IIIF
-- tests
-- cleanup?
-- automating some of the testing steps
+The example route of `/assemble/manifest/calahan/3` will correlate to **calahan:3**, ex: https://digital.lib.utk.edu/assemble/manifest/calahan/3
+
+## Notes and To Dos
+
+Note: This is not production ready.
+
+
+### Notes
+- This only outputs manifests and metadata fields mapped for boutique purposes. This is not currently intended as an access tool for all our collections in the wild.
+- This currently does not create collection lists of multiple items.
+- This generator caches a manifest for 24 Hours. If metadata or OBJ datastreams are updated, the directory for the manifest must be cleared at `./cache/namespace/id`
+
+### To Do
+- Currently this does not map *provider* or *structure* per IIIF Presentation API 3.0 specifications.
+- Though possible at some point, this generator has no current way creating a manifest with referenced annotation lists.
 
 ## Requirements
 
 - PHP 7
 - Composer
-- Fedora 3.8 as a working a referencable installation
+- Fedora 3.8
  
-## Setup
+## UT Libraries Developer Setup
 
 For easiest testing and development, use with the custom Islandora vagrant, [utk_digital](https://github.com/utkdigitalinitiatives/utk_digital). Currently, you must use a feature branch **iiif_assemble** if using this way.
 This application can be used independent the *utk_digital* vagrant and Islandora 7, though testing this way is more difficult and currently not outlined.
@@ -30,7 +41,6 @@ upon `vagrant up` in *Step 4* of **Setup**.
 
 1. `git clone git@github.com:utkdigitalinitiatives/utk_digital.git`
 2. `cd utk_digital`
-3. `git checkout iiif_assemble`
 4. `vagrant up`
 
 ### Add the collection record
@@ -82,5 +92,3 @@ Then restart the `httpd` service.
 ```
 sudo systemctl restart httpd
 ```
-
-**Should be good!**
