@@ -146,9 +146,11 @@ class IIIF {
         $item['width'] = $width;
         $item['height'] = $height;
 
-        return (object) [
+        return [
+            (object) [
                 $item
-            ];
+            ]
+        ];
 
     }
 
