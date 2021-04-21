@@ -208,10 +208,7 @@ class IIIF {
                     "id" => $page . '/annotation',
                     "type" => 'Annotation',
                     "motivation" => "painting",
-                    "body" =>
-                        (object) [
-                            self::paintCanvas(),
-                        ],
+                    "body" => self::paintCanvas(),
                     "target" => $target
                 ]
             ]
@@ -253,9 +250,7 @@ class IIIF {
 
         if (in_array('info:fedora/islandora:sp_basic_image', $model)) :
             $iiifImage = self::getIIIFImageURI('OBJ');
-            $item['id'] = self::getItemBody($iiifImage, $datastream);
-            $item['type'] = "Image";
-            $item['format'] = "image/jpeg";
+            $item = self::getItemBody($iiifImage, $datastream);
 
         elseif (in_array('info:fedora/islandora:sp_large_image_cmodel', $model)) :
             $iiifImage = self::getIIIFImageURI('OBJ');
@@ -297,7 +292,9 @@ class IIIF {
         $model = Utility::xmlToArray($this->model);
         $item = self::determinePaintingDetails($model);
 
-        return $item;
+        return (object) [
+            $item
+        ];
     }
 
     public function buildStructures () {
