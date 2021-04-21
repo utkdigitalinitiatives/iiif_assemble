@@ -32,7 +32,7 @@ class IIIF {
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
         $manifest['provider'] = self::buildProvider();
-        $manifest['thumbnail'] = self::buildThumbnail(200, 200);
+//        $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
 
         return json_encode($manifest);
