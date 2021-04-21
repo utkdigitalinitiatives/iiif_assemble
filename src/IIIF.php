@@ -101,12 +101,12 @@ class IIIF {
             (object) [
                 "id" => 'https://www.lib.utk.edu/about/',
                 "type" => 'Agent',
-                "label" => self::getLanguageArray('University of Tennessee, Knoxville. Libraries', 'value'),
+                "label" => self::getLanguageArray('University of Tennessee, Knoxville. Libraries', 'label'),
                 "homepage" => [
                     (object) [
                         "id" => 'https://www.lib.utk.edu/',
                         "type" => 'Text',
-                        "label" => self::getLanguageArray('University of Tennessee Libraries Homepage', 'value'),
+                        "label" => self::getLanguageArray('University of Tennessee Libraries Homepage', 'label'),
                         "format" =>  'text/html'
                     ]
                 ],
@@ -117,7 +117,7 @@ class IIIF {
                         "format" =>  'image/jpeg',
                         "service" => (object) [
                             '@id' => 'https://utkdigitalinitiatives.github.io/iiif-level-0/ut_libraries_centered/info.json',
-                            '@context' => 'http://iiif.io/api/image/2/context.json',
+                            '@context' => ['http://iiif.io/api/image/2/context.json'],
                             'profile' => 'http://iiif.io/api/image/2/level0.json',
                         ]
                     ]
