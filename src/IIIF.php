@@ -115,10 +115,12 @@ class IIIF {
                         "id" => 'https://utkdigitalinitiatives.github.io/iiif-level-0/ut_libraries_centered/full/full/0/default.jpg',
                         "type" => 'Image',
                         "format" =>  'image/jpeg',
-                        "service" => (object) [
+                        "service" => [
+                            (object) [
                             '@id' => 'https://utkdigitalinitiatives.github.io/iiif-level-0/ut_libraries_centered/info.json',
                             '@context' => ['http://iiif.io/api/image/2/context.json'],
                             'profile' => 'http://iiif.io/api/image/2/level0.json',
+                            ]
                         ]
                     ]
                 ]
