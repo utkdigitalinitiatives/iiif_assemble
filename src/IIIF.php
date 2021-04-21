@@ -117,9 +117,9 @@ class IIIF {
                         "format" =>  'image/jpeg',
                         "service" => [
                             (object) [
-                            '@id' => 'https://utkdigitalinitiatives.github.io/iiif-level-0/ut_libraries_centered/info.json',
-                            '@context' => ['http://iiif.io/api/image/2/context.json'],
-                            'profile' => 'http://iiif.io/api/image/2/level0.json',
+                                '@id' => 'https://utkdigitalinitiatives.github.io/iiif-level-0/ut_libraries_centered/info.json',
+                                '@context' => ['http://iiif.io/api/image/2/context.json'],
+                                'profile' => 'http://iiif.io/api/image/2/level0.json',
                             ]
                         ]
                     ]
@@ -209,7 +209,10 @@ class IIIF {
                     "id" => $page . '/annotation',
                     "type" => 'Annotation',
                     "motivation" => "painting",
-                    "body" => self::paintCanvas(),
+                    "body" =>
+                        (object) [
+                            self::paintCanvas(),
+                        ],
                     "target" => $target
                 ]
             ]
