@@ -226,7 +226,7 @@ class IIIF {
             $body['service'] = (object) [
                 '@id' => $response->{'@id'},
                 '@context' => $response->{'@context'},
-                'profile' => $response->profile,
+                'profile' => $response->profile[0],
             ];
         else :
             $body['id'] = $fallback;
