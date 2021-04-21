@@ -147,9 +147,7 @@ class IIIF {
         $item['height'] = $height;
 
         return [
-            (object) [
-                $item
-            ]
+            $item
         ];
 
     }
