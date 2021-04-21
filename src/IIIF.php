@@ -24,7 +24,7 @@ class IIIF {
     {
         $id = $this->url . $_SERVER["REQUEST_URI"];
 
-        $manifest['@context'] = 'https://iiif.io/api/presentation/3/context.json';
+        $manifest['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
         $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="Alternative")]'), 'value');
