@@ -290,9 +290,7 @@ class IIIF {
         $model = Utility::xmlToArray($this->model);
         $item = self::determinePaintingDetails($model);
 
-        return (object) [
-            $item
-        ];
+        return $item;
     }
 
     public function buildStructures () {
