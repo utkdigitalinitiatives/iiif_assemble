@@ -34,7 +34,6 @@ class IIIF {
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
-        $manifest['structures'] = self::buildStructures();
 
         return json_encode($manifest);
 
