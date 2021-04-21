@@ -203,6 +203,7 @@ class IIIF {
             "type" => 'AnnotationPage',
             "items" => [
                 (object) [
+                    "@context" => 'https://iiif.io/api/presentation/3/context.json',
                     "id" => $page . '/annotation',
                     "type" => 'Annotation',
                     "motivation" => "painting",
