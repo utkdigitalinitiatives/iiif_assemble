@@ -188,7 +188,7 @@ class IIIF {
                 "type" => 'Canvas',
                 "height" => 1000,
                 "width" => 1000,
-                "duration" => 500,
+//                "duration" => 500,
                 "items" => [self::preparePage($canvas)]
             ]
         ];
@@ -293,9 +293,7 @@ class IIIF {
         $model = Utility::xmlToArray($this->model);
         $item = self::determinePaintingDetails($model);
 
-        return [
-            (object) $item
-        ];
+        return $item;
     }
 
     public function buildStructures () {
