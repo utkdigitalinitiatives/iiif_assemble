@@ -31,8 +31,8 @@ class IIIF {
         $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'), 'value');
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
-//        $manifest['provider'] = self::buildProvider();
-//        $manifest['thumbnail'] = self::buildThumbnail(200, 200);
+        $manifest['provider'] = self::buildProvider();
+        $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
 
         return json_encode($manifest);
