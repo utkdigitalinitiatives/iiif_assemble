@@ -42,7 +42,7 @@ class IIIF {
     public function buildMetadata () {
 
         $alternativeTitle = $this->xpath->query('titleInfo[@type="alternative"]');
-        $identifier = $this->xpath->query('identifier[@type="issn" or @type="isbn"]');
+        $identifier = $this->xpath->query('identifier');
         $tableOfContents = $this->xpath->query('tableOfContents');
         $date = $this->xpath->query('dateCreated');
         $extent = $this->xpath->query('physicalDescription/extent');
