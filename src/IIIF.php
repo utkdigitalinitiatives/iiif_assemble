@@ -98,7 +98,30 @@ class IIIF {
 
     public function buildProvider () {
 
-        return null;
+        return [
+            (object) [
+                "id" => 'https://www.lib.utk.edu/about/',
+                "type" => 'Agent',
+                "label" => self::getLanguageArray('University of Tennessee, Knoxville. Libraries', 'value'),
+                "homepage" => [
+                    (object) [
+                        "id" => 'https://www.lib.utk.edu/',
+                        "type" => 'Text',
+                        "label" => self::getLanguageArray('University of Tennessee Libraries Homepage', 'value'),
+                        "format" =>  'text/html'
+                    ]
+                ],
+                "logo" => [
+                    (object) [
+                        "id" => 'https://utkdigitalinitiatives.github.io/iiif-level-0/ut_libraries_centered/full/full/0/default.jpg',
+                        "type" => 'Image',
+                        "format" =>  'image/jpeg',
+                        "height" => 334,
+                        "width" => 484,
+                    ]
+                ]
+            ]
+        ];
 
     }
 
@@ -137,7 +160,7 @@ class IIIF {
         endif;
 
         return $id;
-        
+
     }
 
     public function getIIIFImageURI ($dsid) {
