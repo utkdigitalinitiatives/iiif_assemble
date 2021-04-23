@@ -37,7 +37,7 @@ class Manifest
     private function theManifest()
     {
         if (self::manifestAvailable()) {
-            $manifest = self::buildManifest();
+            $manifest = self::getManifest();
         } else {
             $manifest = self::buildManifest();
         }
