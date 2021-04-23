@@ -226,7 +226,7 @@ class IIIF {
             $body['format'] = "image/jpeg";
             $body['service'] = (object) [
                 '@id' => $response->{'@id'},
-                '@context' => $response->{'@context'},
+                '@type' => $response->{'@context'},
                 'profile' => $response->profile[0],
             ];
         else :
