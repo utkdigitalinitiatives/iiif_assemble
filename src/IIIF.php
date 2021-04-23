@@ -31,6 +31,7 @@ class IIIF {
         $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'), 'value');
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
+        $manifest['requiredStatement'] = self::buildRequiredStatement();
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
@@ -92,6 +93,12 @@ class IIIF {
         else :
             return null;
         endif;
+
+    }
+
+    public function buildRequiredStatement () {
+
+        return null;
 
     }
 
