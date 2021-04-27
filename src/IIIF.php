@@ -211,11 +211,11 @@ class IIIF {
         else :
 
             $iiifImage = self::getIIIFImageURI('OBJ');
-            $iiifImageResponse = Request::responseStatus($iiifImage);
 
             if (Request::responseStatus($iiifImage)) :
-                $canvas[0]->width = $iiifImageResponse->width;
-                $canvas[0]->height = $iiifImageResponse->height;
+                $responseImageBody = Request::responseBody($iiifImage);
+                $canvas[0]->width = $responseImageBody->width;
+                $canvas[0]->height = $responseImageBody->height;
             else :
                 $canvas[0]->height = 640;
                 $canvas[0]->width = 360;
