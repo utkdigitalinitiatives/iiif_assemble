@@ -217,7 +217,7 @@ class IIIF {
                     "id" => $page . '/annotation',
                     "type" => 'Annotation',
                     "motivation" => "painting",
-                    "body" => self::paintCanvas(),
+                    "body" => [self::paintCanvas()],
                     "target" => $target
                 ]
             ]
