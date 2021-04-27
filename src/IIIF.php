@@ -196,20 +196,34 @@ class IIIF {
 
         $canvasId = $uri . '/canvas';
 
-
         $canvas = [
             (object) [
                 "id" => $canvasId,
-                "type" => 'Canvas',
-                "height" => 1000,
-                "width" => 1000,
-                "items" => [self::preparePage($canvasId)]
+                "type" => 'Canvas'
             ]
         ];
 
         if (in_array($this->type, ['Sound','Video'])) :
+            $canvas[0]->height = 640;
+            $canvas[0]->width = 360;
             $canvas[0]->duration = self::getDuration();
+
+        else :
+
+            $iiifImage = self::getIIIFImageURI('OBJ');
+            $iiifImageResponse = Request::responseStatus($iiifImage);
+
+            if (Request::responseStatus($iiifImage)) :
+                $canvas[0]->width = $iiifImageResponse->width;
+                $canvas[0]->height = $iiifImageResponse->height;
+            else :
+                $canvas[0]->height = 640;
+                $canvas[0]->width = 360;
+            endif;
+
         endif;
+
+        $canvas[0]->items = [self::preparePage($canvasId)];
 
         return $canvas;
 
@@ -242,8 +256,8 @@ class IIIF {
             $response = Request::responseBody($primary);
             $body['id'] = $response->{'@id'} . '/full/full/0/default.jpg';
             $body['type'] = "Image";
-            $body['width'] = "1000";
-            $body['height'] = "1000";
+            $body['width'] = $response->width;
+            $body['height'] = $response->height;;
             $body['format'] = "image/jpeg";
             $body['service'] = (object) [
                 '@id' => $response->{'@id'},
@@ -275,16 +289,16 @@ class IIIF {
         elseif ($this->type === 'Sound') :
             $item['id'] = $datastream;
             $item['type'] = "Sound";
-            $item['width'] = 1000;
-            $item['height'] = 1000;
+            $item['width'] = 640;
+            $item['height'] = 360;
             $item['duration'] = self::getDuration();
             $item['format'] = "audio/mpeg";
 
         elseif ($this->type === 'Video') :
             $item['id'] = $datastream;
             $item['type'] = "Video";
-            $item['width'] = 1000;
-            $item['height'] = 1000;
+            $item['width'] = 640;
+            $item['height'] = 360;
             $item['duration'] = self::getDuration();
             $item['format'] = "video/mp4";
 
@@ -319,6 +333,7 @@ class IIIF {
                     "label" => self::getLanguageArray('Table of Contents', 'label'),
                     "items" => self::buildRange($pbcore, $id)
                     ];
+
             endif;
 
         } else {
@@ -336,7 +351,10 @@ class IIIF {
             $partType = $part->getAttribute('partType');
 
             if ($partType === 'iiif') :
-                $partType = $part->getAttribute('partTypeAnnotation');
+                $partTypeAnnotation = $part->getAttribute('partTypeAnnotation');
+
+//                print $partTypeAnnotation;
+
             endif;
 
         endforeach;
