@@ -2,6 +2,9 @@
 
 namespace Src;
 
+use DOMDocument;
+use DOMXPath;
+
 class IIIF {
 
     private $pid;
@@ -39,7 +42,9 @@ class IIIF {
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
 
-        return json_encode($manifest);
+        $presentation = self::buildStructures($manifest);
+
+        return json_encode($presentation);
 
     }
 
@@ -293,9 +298,25 @@ class IIIF {
         return $item;
     }
 
-    public function buildStructures () {
+    public function buildStructures ($manifest) {
 
-        return null;
+        if (is_array($this->xpath->query('extension'))) {
+
+            $doc = new DOMDocument;
+            $doc->loadXML($this->mods);
+            $pbcore = $doc->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcorePart');
+
+            if (is_object($pbcore)) :
+                foreach ($pbcore as $part) :
+                    // print_r ($part);
+                endforeach;
+            endif;
+
+        } else {
+
+        }
+
+        return $manifest;
 
     }
 
