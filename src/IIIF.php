@@ -6,7 +6,7 @@ class IIIF {
 
     private $pid;
     private $xpath;
-    private $model;
+    private $type;
     private $url;
 
     public function __construct($pid, $mods, $model)
@@ -14,7 +14,7 @@ class IIIF {
 
         $this->pid = $pid;
         $this->xpath = new XPath($mods->asXml());
-        $this->model = $model['body']->objModels->model;
+        $this->type = self::determineTypeByModel($model['body']->objModels->model);
 
         $this->url = Utility::getBaseUrl();
 
@@ -41,7 +41,7 @@ class IIIF {
     }
 
     public function buildMetadata () {
-        
+
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
@@ -161,11 +161,9 @@ class IIIF {
 
     public function getThumbnailDatastream () {
 
-        $model = Utility::xmlToArray($this->model);
-
-        if (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
+        if ($this->type === 'Sound') :
             $id = 'TN';
-        elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
+        elseif ($this->type === 'Video') :
             $id = 'TN';
         else :
             $id = 'OBJ';
@@ -186,22 +184,26 @@ class IIIF {
 
     }
 
-
-
     public function buildItems ($uri) {
 
-        $canvas = $uri . '/canvas';
+        $canvasId = $uri . '/canvas';
 
-        return [
+
+        $canvas = [
             (object) [
-                "id" => $canvas,
+                "id" => $canvasId,
                 "type" => 'Canvas',
                 "height" => 1000,
                 "width" => 1000,
-//                "duration" => 500,
-                "items" => [self::preparePage($canvas)]
+                "items" => [self::preparePage($canvasId)]
             ]
         ];
+
+        if (in_array($this->type, ['Sound','Video'])) :
+            $canvas[0]->duration = self::getDuration();
+        endif;
+
+        return $canvas;
 
     }
 
@@ -252,38 +254,30 @@ class IIIF {
 
     }
 
-    public function determinePaintingDetails ($model) {
+    public function paintCanvas () {
 
         $item = array();
 
         $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ';
 
-        if (in_array('info:fedora/islandora:sp_basic_image', $model)) :
+        if ($this->type === 'Image') :
             $iiifImage = self::getIIIFImageURI('OBJ');
             $item = self::getItemBody($iiifImage, $datastream);
 
-        elseif (in_array('info:fedora/islandora:sp_large_image_cmodel', $model)) :
-            $iiifImage = self::getIIIFImageURI('OBJ');
-            $item = self::getItemBody($iiifImage, $datastream);
-
-        elseif (in_array('info:fedora/islandora:pageCModel', $model)) :
-            $iiifImage = self::getIIIFImageURI('OBJ');
-            $item = self::getItemBody($iiifImage, $datastream);
-
-        elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
+        elseif ($this->type === 'Sound') :
             $item['id'] = $datastream;
             $item['type'] = "Sound";
             $item['width'] = 1000;
             $item['height'] = 1000;
-            $item['duration'] = 500;
+            $item['duration'] = self::getDuration();
             $item['format'] = "audio/mpeg";
 
-        elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
+        elseif ($this->type === 'Video') :
             $item['id'] = $datastream;
             $item['type'] = "Video";
             $item['width'] = 1000;
             $item['height'] = 1000;
-            $item['duration'] = 500;
+            $item['duration'] = self::getDuration();
             $item['format'] = "video/mp4";
 
         else :
@@ -292,15 +286,6 @@ class IIIF {
             $item['format'] = null;
 
         endif;
-
-        return $item;
-
-    }
-
-    public function paintCanvas () {
-
-        $model = Utility::xmlToArray($this->model);
-        $item = self::determinePaintingDetails($model);
 
         return $item;
     }
@@ -334,6 +319,32 @@ class IIIF {
         return (object) [
             $language => $string
         ];
+
+    }
+
+    private static function getDuration () {
+        return 500;
+    }
+
+    private static function determineTypeByModel ($islandoraModel) {
+
+        $model = Utility::xmlToArray($islandoraModel);
+
+        if (in_array('info:fedora/islandora:sp_basic_image', $model)) :
+            $type = "Image";
+        elseif (in_array('info:fedora/islandora:sp_large_image_cmodel', $model)) :
+            $type = "Image";
+        elseif (in_array('info:fedora/islandora:pageCModel', $model)) :
+            $type = "Image";
+        elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
+            $type = "Sound";
+        elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
+            $type = "Video";
+        else :
+            $type = "Image";
+        endif;
+
+        return $type;
 
     }
 
