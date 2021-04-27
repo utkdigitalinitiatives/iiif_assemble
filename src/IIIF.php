@@ -41,26 +41,20 @@ class IIIF {
     }
 
     public function buildMetadata () {
-
-        $alternativeTitle = $this->xpath->query('titleInfo[@type="alternative"]');
-        $identifier = $this->xpath->query('identifier');
-        $tableOfContents = $this->xpath->query('tableOfContents');
-        $date = $this->xpath->query('dateCreated');
-        $extent = $this->xpath->query('physicalDescription/extent');
-
+        
         $metadata = array(
-            'Alternative Title' => $alternativeTitle,
-            'Table of Contents' => $tableOfContents,
+            'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
+            'Table of Contents' => $this->xpath->query('tableOfContents'),
             'Role Term' => null,
             'Publisher' => null,
-            'Date' => $date,
+            'Date' => $this->xpath->query('dateCreated'),
             'Publication Date' => null,
             'Form' => null,
-            'Extent' => $extent,
+            'Extent' => $this->xpath->query('physicalDescription/extent'),
             'Topic' => null,
             'Coverage' => null,
             'Time Period' => null,
-            'Publication Identifier' => $identifier
+            'Publication Identifier' => $this->xpath->query('identifier')
         );
 
         return self::validateMetadata($metadata);
