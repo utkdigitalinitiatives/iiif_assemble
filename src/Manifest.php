@@ -37,7 +37,7 @@ class Manifest
     private function theManifest()
     {
         if (self::manifestAvailable()) {
-            $manifest = self::buildManifest();
+            $manifest = self::getManifest();
         } else {
             $manifest = self::buildManifest();
         }
@@ -76,7 +76,9 @@ class Manifest
         $filename = self::getManifestPath($namespace) . '/manifest.json';
         $expires = 86400;
 
-        if (file_exists($filename)) {
+        if (isset($_GET['update']) && $_GET['update'] === '1') {
+            return false;
+        } else if (file_exists($filename)) {
             if (time() < filemtime($filename) + $expires) :
                 return true;
             else :
