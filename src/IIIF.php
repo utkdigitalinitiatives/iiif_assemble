@@ -35,7 +35,6 @@ class IIIF {
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
-        $manifest['timestamp'] = Utility::setTimestamp();
 
         return json_encode($manifest);
 
