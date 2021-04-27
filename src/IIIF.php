@@ -28,7 +28,7 @@ class IIIF {
 
     public function buildPresentation ()
     {
-        $id = $this->url . $_SERVER["REQUEST_URI"];
+        $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
 
         $manifest['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
         $manifest['id'] = $id;
@@ -42,7 +42,7 @@ class IIIF {
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
 
-        $presentation = self::buildStructures($manifest);
+        $presentation = self::buildStructures($manifest, $id);
 
         return json_encode($presentation);
 
@@ -298,7 +298,7 @@ class IIIF {
         return $item;
     }
 
-    public function buildStructures ($manifest) {
+    public function buildStructures ($manifest, $uri) {
 
         if (is_array($this->xpath->query('extension'))) {
 
@@ -306,10 +306,19 @@ class IIIF {
             $doc->loadXML($this->mods);
             $pbcore = $doc->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcorePart');
 
+//            print_r($this->mods);
+//            print_r($pbcore);
+
             if (is_object($pbcore)) :
-                foreach ($pbcore as $part) :
-                    // print_r ($part);
-                endforeach;
+
+                $id = $uri . '/range';
+
+                $manifest['structures'] = (object) [
+                    "id"    => $id,
+                    "type" => "Range",
+                    "label" => self::getLanguageArray('Table of Contents', 'label'),
+                    "items" => self::buildRange($pbcore, $id)
+                    ];
             endif;
 
         } else {
@@ -317,6 +326,22 @@ class IIIF {
         }
 
         return $manifest;
+
+    }
+
+    public function buildRange ($parts, $uri) {
+
+        foreach ($parts as $part) :
+
+            $partType = $part->getAttribute('partType');
+
+            if ($partType === 'iiif') :
+                $partType = $part->getAttribute('partTypeAnnotation');
+            endif;
+
+        endforeach;
+
+        return null;
 
     }
 
