@@ -71,7 +71,7 @@ class Request {
         $request .= '/content';
 
         if ($format) :
-            $request;
+            $request .= '?format=' . $format;
         endif;
 
         return self::curlRequest($request);
