@@ -24,6 +24,18 @@ class Utility {
         return $out;
     }
 
+    public static function setTimestamp ()
+    {
+
+        $date = date('Y-m-d\TH:i:sP');
+
+        return (object) [
+            'ISO8601' => $date,
+            'unix' => strtotime($date)
+            ];
+
+    }
+
 }
 
 ?>
