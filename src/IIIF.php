@@ -98,7 +98,10 @@ class IIIF {
 
     public function buildRequiredStatement () {
 
-        return null;
+        return (object) [
+            'label' => self::getLanguageArray('Attribution', 'label'),
+            'value' => self::getLanguageArray(['University of Tennessee, Knoxville. Libraries'], 'value')
+        ];
 
     }
 
