@@ -50,10 +50,17 @@ class IIIF {
 
         $metadata = array(
             'Alternative Title' => $alternativeTitle,
-            'Publication Identifier' => $identifier,
             'Table of Contents' => $tableOfContents,
+            'Role Term' => null,
+            'Publisher' => null,
             'Date' => $date,
-            'Extent' => $extent
+            'Publication Date' => null,
+            'Form' => null,
+            'Extent' => $extent,
+            'Topic' => null,
+            'Coverage' => null,
+            'Time Period' => null,
+            'Publication Identifier' => $identifier
         );
 
         return self::validateMetadata($metadata);
