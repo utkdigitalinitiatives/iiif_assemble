@@ -23,7 +23,7 @@ class Request {
         if ($curl->error) {
             $response['body'] = $curl->errorCode . ': ' . $curl->errorMessage;
         } else {
-            $response['body'] = $curl->response;
+            $response['body'] = $curl->rawResponse;
         }
 
         usleep(50000);
@@ -51,7 +51,7 @@ class Request {
 
     }
 
-    public static function getObjectModels ($pid, $format = 'XML') {
+    public static function getObjects($pid, $format = 'XML') {
 
         $request = $_ENV['FEDORA_URL'] . '/objects/' . $pid;
 
@@ -71,7 +71,7 @@ class Request {
         $request .= '/content';
 
         if ($format) :
-            $request .= '?format=' . $format;
+            $request;
         endif;
 
         return self::curlRequest($request);

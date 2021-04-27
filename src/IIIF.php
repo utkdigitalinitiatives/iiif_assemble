@@ -9,12 +9,15 @@ class IIIF {
     private $type;
     private $url;
 
-    public function __construct($pid, $mods, $model)
+    public function __construct($pid, $mods, $object)
     {
 
+        $model = simplexml_load_string($object['body'])->objModels->model;
+
         $this->pid = $pid;
-        $this->xpath = new XPath($mods->asXml());
-        $this->type = self::determineTypeByModel($model['body']->objModels->model);
+        $this->mods = $mods;
+        $this->xpath = new XPath($mods);
+        $this->type = self::determineTypeByModel($model);
 
         $this->url = Utility::getBaseUrl();
 

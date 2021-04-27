@@ -50,16 +50,16 @@ class Manifest
     {
 
         $persistentIdentifier = implode('%3A', $this->persistentIdentifier);
-        $contentModel = Request::getObjectModels($persistentIdentifier);
+        $object = Request::getObjects($persistentIdentifier);
 
-        if ($contentModel['status'] === 200) :
+        if ($object['status'] === 200) :
             $mods = Request::getDatastream('MODS', $persistentIdentifier);
         else :
-            return json_encode($contentModel);
+            return json_encode($object);
         endif;
 
         if ($mods['status'] === 200) :
-            $iiif = new IIIF($persistentIdentifier, $mods['body'], $contentModel);
+            $iiif = new IIIF($persistentIdentifier, $mods['body'], $object);
             $presentation = $iiif->buildPresentation();
             self::cacheManifest($presentation);
             return $presentation;
