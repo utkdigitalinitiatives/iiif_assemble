@@ -213,7 +213,7 @@ class IIIF {
             $iiifImage = self::getIIIFImageURI('OBJ');
 
             if (Request::responseStatus($iiifImage)) :
-                $responseImageBody = Request::responseBody($iiifImage);
+                $responseImageBody = json_decode(Request::responseBody($iiifImage));
 
                 print_r ($responseImageBody);
 
