@@ -214,6 +214,9 @@ class IIIF {
 
             if (Request::responseStatus($iiifImage)) :
                 $responseImageBody = Request::responseBody($iiifImage);
+
+                print_r ($responseImageBody);
+
                 $canvas[0]->width = $responseImageBody->width;
                 $canvas[0]->height = $responseImageBody->height;
             else :
