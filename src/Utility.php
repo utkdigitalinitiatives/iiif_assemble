@@ -24,6 +24,16 @@ class Utility {
         return $out;
     }
 
+    public static function sanitizeLabel ($string)
+    {
+
+        $output = mb_strtolower($string);
+        $output = str_replace(' ', '-', $output);
+
+        return $output;
+
+    }
+
     public static function setTimestamp ()
     {
 

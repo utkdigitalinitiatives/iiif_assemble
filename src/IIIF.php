@@ -346,20 +346,42 @@ class IIIF {
 
     public function buildRange ($parts, $uri) {
 
-        foreach ($parts as $part) :
+        $ranges = [];
+        $unique = [];
+
+        foreach ($parts as $key => $part) :
 
             $partType = $part->getAttribute('partType');
 
             if ($partType === 'iiif') :
-                $partTypeAnnotation = $part->getAttribute('partTypeAnnotation');
 
-//                print $partTypeAnnotation;
+                $partTypeAnnotation = $part->getAttribute('partTypeAnnotation');
+                $range = Utility::sanitizeLabel($partTypeAnnotation);
+
+                $unique[$key] = $range;
+                $set = array_unique($unique);
+
+                foreach($set as $key => $value) :
+                    if ($value === $range) :
+                        $rangeKey = $key;
+                    endif;
+                endforeach;
+
+                $ranges[$rangeKey]['type'] = 'Range';
+                $ranges[$rangeKey]['id'] = $uri . '/' . $range;
+                $ranges[$rangeKey]['label'] = self::getLanguageArray($partTypeAnnotation, 'label');
+                $ranges[$rangeKey]['items'][] = (object) [
+                    'type' => 'Range',
+                    'id' => $uri . '/' . $range . '/' . $key,
+                    'label' => self::getLanguageArray('this thing', 'label'),
+                    'items' => 'this'
+                ];
 
             endif;
 
         endforeach;
 
-        return null;
+        return array_values($ranges);
 
     }
 
