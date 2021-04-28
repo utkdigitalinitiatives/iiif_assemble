@@ -214,9 +214,6 @@ class IIIF {
 
             if (Request::responseStatus($iiifImage)) :
                 $responseImageBody = json_decode(Request::responseBody($iiifImage));
-
-                print_r ($responseImageBody);
-
                 $canvas[0]->width = $responseImageBody->width;
                 $canvas[0]->height = $responseImageBody->height;
             else :
@@ -256,7 +253,7 @@ class IIIF {
     public function getItemBody ($primary, $fallback) {
 
         if (Request::responseStatus($primary)) :
-            $response = Request::responseBody($primary);
+            $response = json_decode(Request::responseBody($primary));
             $body['id'] = $response->{'@id'} . '/full/full/0/default.jpg';
             $body['type'] = "Image";
             $body['width'] = $response->width;
