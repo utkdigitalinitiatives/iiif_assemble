@@ -320,9 +320,6 @@ class IIIF {
             $doc->loadXML($this->mods);
             $pbcore = $doc->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcorePart');
 
-//            print_r($this->mods);
-//            print_r($pbcore);
-
             if (is_object($pbcore)) :
 
                 $id = $uri . '/range';
@@ -331,7 +328,7 @@ class IIIF {
                     "id"    => $id,
                     "type" => "Range",
                     "label" => self::getLanguageArray('Table of Contents', 'label'),
-                    "items" => self::buildRange($pbcore, $id)
+                    "items" => self::buildRange($pbcore, $id, $uri . '/canvas')
                     ];
 
             endif;
@@ -344,21 +341,25 @@ class IIIF {
 
     }
 
-    public function buildRange ($parts, $uri) {
+    public function buildRange ($parts, $uri, $canvas) {
 
         $ranges = [];
         $unique = [];
 
-        foreach ($parts as $key => $part) :
+        foreach ($parts as $index => $part) :
 
             $partType = $part->getAttribute('partType');
 
             if ($partType === 'iiif') :
 
+                $label = $part->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcoreTitle');
+                $startTime = $part->getAttribute('startTime');
+                $endTime = $part->getAttribute('endTime');
+
                 $partTypeAnnotation = $part->getAttribute('partTypeAnnotation');
                 $range = Utility::sanitizeLabel($partTypeAnnotation);
 
-                $unique[$key] = $range;
+                $unique[$index] = $range;
                 $set = array_unique($unique);
 
                 foreach($set as $key => $value) :
@@ -372,9 +373,14 @@ class IIIF {
                 $ranges[$rangeKey]['label'] = self::getLanguageArray($partTypeAnnotation, 'label');
                 $ranges[$rangeKey]['items'][] = (object) [
                     'type' => 'Range',
-                    'id' => $uri . '/' . $range . '/' . $key,
-                    'label' => self::getLanguageArray('this thing', 'label'),
-                    'items' => 'this'
+                    'id' => $uri . '/' . $range . '/' . $index,
+                    'label' => self::getLanguageArray($label[0]->textContent, 'label'),
+                    'items' => [
+                        (object) [
+                            'type' => 'Canvas',
+                            'id' => $canvas . '?t=' . $startTime . ',' . $endTime
+                        ]
+                    ]
                 ];
 
             endif;
