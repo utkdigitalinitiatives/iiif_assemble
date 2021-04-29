@@ -339,7 +339,6 @@ class IIIF {
     public function buildRange ($parts, $uri, $canvas) {
 
         $ranges = [];
-        $unique = [];
 
         foreach ($parts as $index => $part) :
 
@@ -354,19 +353,10 @@ class IIIF {
                 $partTypeAnnotation = $part->getAttribute('partTypeAnnotation');
                 $range = Utility::sanitizeLabel($partTypeAnnotation);
 
-                $unique[$index] = $range;
-                $set = array_unique($unique);
-
-                foreach($set as $key => $value) :
-                    if ($value === $range) :
-                        $rangeKey = $key;
-                    endif;
-                endforeach;
-
-                $ranges[$rangeKey]['type'] = 'Range';
-                $ranges[$rangeKey]['id'] = $uri . '/' . $range;
-                $ranges[$rangeKey]['label'] = self::getLanguageArray($partTypeAnnotation, 'label');
-                $ranges[$rangeKey]['items'][] = (object) [
+                $ranges[$range]['type'] = 'Range';
+                $ranges[$range]['id'] = $uri . '/' . $range;
+                $ranges[$range]['label'] = self::getLanguageArray($partTypeAnnotation, 'label');
+                $ranges[$range]['items'][] = (object) [
                     'type' => 'Range',
                     'id' => $uri . '/' . $range . '/' . $index,
                     'label' => self::getLanguageArray($label[0]->textContent, 'label'),
