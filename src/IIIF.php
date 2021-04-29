@@ -30,7 +30,7 @@ class IIIF {
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
 
-        $manifest['@context'] = 'https://iiif.io/api/presentation/3/context.json';
+        $manifest['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
         $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="Alternative")]'), 'value');
@@ -324,12 +324,14 @@ class IIIF {
 
                 $id = $uri . '/range/1';
 
-                $manifest['structures'] = (object) [
+                $manifest['structures'] = [
+                    (object) [
                     "id"    => $id,
                     "type" => "Range",
                     "label" => self::getLanguageArray('Table of Contents', 'label'),
                     "items" => self::buildRange($pbcore, $id, $uri . '/canvas')
-                    ];
+                    ]
+                ];
 
             endif;
 
