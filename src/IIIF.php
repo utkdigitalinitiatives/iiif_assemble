@@ -322,16 +322,9 @@ class IIIF {
 
             if (is_object($pbcore)) :
 
-                $id = $uri . '/range/1';
+                $id = $uri . '/range';
 
-                $manifest['structures'] = [
-                    (object) [
-                    "id"    => $id,
-                    "type" => "Range",
-                    "label" => self::getLanguageArray('Table of Contents', 'label'),
-                    "items" => self::buildRange($pbcore, $id, $uri . '/canvas')
-                    ]
-                ];
+                $manifest['structures'] = self::buildRange($pbcore, $id, $uri . '/canvas');
 
             endif;
 
