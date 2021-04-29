@@ -378,7 +378,7 @@ class IIIF {
                     'items' => [
                         (object) [
                             'type' => 'Canvas',
-                            'id' => $canvas . '?t=' . $startTime . ',' . $endTime
+                            'id' => $canvas . '#t=' . $startTime . ',' . $endTime
                         ]
                     ]
                 ];
