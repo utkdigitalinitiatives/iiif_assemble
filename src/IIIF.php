@@ -322,7 +322,7 @@ class IIIF {
 
             if (is_object($pbcore)) :
 
-                $id = $uri . '/range';
+                $id = $uri . '/range/1';
 
                 $manifest['structures'] = (object) [
                     "id"    => $id,

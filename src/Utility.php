@@ -28,7 +28,7 @@ class Utility {
     {
 
         $output = mb_strtolower($string);
-        $output = str_replace(' ', '-', $output);
+        $output = str_replace(' ', '_', $output);
 
         return $output;
 
