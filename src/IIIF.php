@@ -321,14 +321,8 @@ class IIIF {
             $pbcore = $doc->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcorePart');
 
             if (is_object($pbcore)) :
-
-                $id = $uri . '/range';
-
-                $manifest['structures'] = self::buildRange($pbcore, $id, $uri . '/canvas');
-
+                $manifest['structures'] = self::buildRange($pbcore, $uri . '/range', $uri . '/canvas');
             endif;
-
-        } else {
 
         }
 
@@ -342,9 +336,7 @@ class IIIF {
 
         foreach ($parts as $index => $part) :
 
-            $partType = $part->getAttribute('partType');
-
-            if ($partType === 'iiif') :
+            if ($part->getAttribute('partType') === 'iiif') :
 
                 $label = $part->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcoreTitle');
                 $startTime = $part->getAttribute('startTime');
