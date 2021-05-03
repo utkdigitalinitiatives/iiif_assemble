@@ -53,15 +53,15 @@ class IIIF {
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
-            'Role Term' => null,
-            'Publisher' => null,
-            'Date' => $this->xpath->query('dateCreated'),
-            'Publication Date' => null,
-            'Form' => null,
+            'Role Term' => $this->xpath->query('name/namePart'),
+            'Publisher' => $this->xpath->query('originInfo/publisher'),
+            'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),
+            'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
+            'Form' => $this->xpath->query('physicalDescription/form[not(@type="material")]'),
             'Extent' => $this->xpath->query('physicalDescription/extent'),
-            'Topic' => null,
-            'Coverage' => null,
-            'Time Period' => null,
+            'Topic' => $this->xpath->query('subject/topic'),
+            'Coverage' => $this->xpath->query('subject/geographic'),
+            'Time Period' => $this->xpath->query('subject/temporal'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn'])
         );
 
