@@ -33,7 +33,7 @@ class IIIF {
         $manifest['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
-        $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="Alternative")]'), 'value');
+        $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
         $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'), 'value');
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
