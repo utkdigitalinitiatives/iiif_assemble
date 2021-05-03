@@ -51,11 +51,14 @@ class Request {
 
     }
 
-    public static function getObjects($pid, $format = 'XML') {
+    public static function getObjects($pid, $format = 'XML', $isMemberOf = false) {
 
-        $request = $_ENV['FEDORA_URL'] . '/objects/' . $pid;
-
-        if ($format) :
+        if ($isMemberOf) :
+            $request = $_ENV['FEDORA_URL'] . '/objects';
+            $request .= '?query=pid%7E' . explode('%3A', $pid)[1] . '*&pid=true';
+            $request .= '&resultFormat=' . $format;
+        else :
+            $request = $_ENV['FEDORA_URL'] . '/objects/' . $pid;
             $request .= '?format=' . $format;
         endif;
 

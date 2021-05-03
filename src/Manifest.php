@@ -121,13 +121,6 @@ class Manifest
 
     }
 
-    private function removeExpired ($id)
-    {
-
-        return true;
-
-    }
-
     private function noFoundResponse()
     {
 
