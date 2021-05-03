@@ -15,6 +15,7 @@ class XPath
     {
 
         $doc = new DOMDocument();
+        $doc->preserveWhiteSpace = false;
         $doc->loadXML($xml);
 
         $this->domxpath = new DOMXPath($doc);
