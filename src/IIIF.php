@@ -62,7 +62,7 @@ class IIIF {
             'Topic' => null,
             'Coverage' => null,
             'Time Period' => null,
-            'Publication Identifier' => $this->xpath->query('identifier')
+            'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn'])
         );
 
         return self::validateMetadata($metadata);
