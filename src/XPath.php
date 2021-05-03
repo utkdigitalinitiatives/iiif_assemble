@@ -27,7 +27,7 @@ class XPath
 
         if ($this->ns) {
             $this->domxpath->registerNamespace('ns', $this->ns);
-            $nodes = $this->domxpath->query('ns:' . $expression);
+            $nodes = $this->domxpath->query('ns:' . str_replace('/', '/ns:', $expression));
         } else {
             $nodes = $this->domxpath->query($expression);
         }
