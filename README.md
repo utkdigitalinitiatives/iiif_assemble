@@ -1,12 +1,11 @@
 
 # IIIF Assemble
 
-This app WILL assemble and serve a IIIF Presentation API 3.0 manifest from a Fedora 3.8 object with a MODS datastream. The routing follows a pattern of  
-`/assemble/manifest/{namepsace}/{id}` where `namespace` is a string and `id` is positive integer.
+This app WILL assemble and serve a IIIF Presentation API 3.0 manifest from a Fedora 3.8 object with a MODS datastream. The routing follows a pattern of `/assemble/manifest/{namepsace}/{id}` where `namespace` is a string and `id` is positive integer.
 
-<img src="https://digital.lib.utk.edu/iiif/2/collections~islandora~object~calahan%3A3~datastream~OBJ/full/!320,320/0/default.jpg" alt="Postcard, Landmarks of the Desert, to Mr. C N Calahan, undated : page 1" />
+<img src="https://digital.lib.utk.edu/iiif/2/collections~islandora~object~tenncities%3A343~datastream~OBJ/full/!200,200/0/default.jpg" alt="Cabin near Knoxville" />
 
-The example route of `/assemble/manifest/calahan/3` will correlate to **calahan:3**, ex: https://digital.lib.utk.edu/assemble/manifest/calahan/3
+The example route of `/assemble/manifest/tenncities/343` will correlate to **tenncities:343**, ex: https://digital.lib.utk.edu/assemble/manifest/tenncities/343
 
 ## Notes and To Dos
 
@@ -14,12 +13,12 @@ Note: This is not production ready.
 
 
 ### Notes
-- This only outputs manifests and metadata fields mapped for boutique purposes. This is not currently intended as an access tool for all our collections in the wild.
-- This currently does not create collection lists of multiple items.
+- This only outputs manifests and metadata fields mapped for boutique purposes.
+- This is not currently intended as an access tool for all UT Libraries' collections in the wild.
+- This currently does not create collection lists of multiple manifests.
 - This generator caches a manifest for 24 Hours. If metadata or OBJ datastreams are updated, the directory for the manifest must be cleared at `./cache/namespace/id`
 
 ### To Do
-- Currently this does not map *provider* or *structure* per IIIF Presentation API 3.0 specifications.
 - Though possible at some point, this generator has no current way creating a manifest with referenced annotation lists.
 
 ## Requirements
