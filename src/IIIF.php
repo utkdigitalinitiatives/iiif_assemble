@@ -174,7 +174,7 @@ class IIIF {
         elseif ($this->type === 'Video') :
             $id = 'TN';
         else :
-            $id = 'OBJ';
+            $id = 'JP2';
         endif;
 
         return $id;
@@ -210,7 +210,7 @@ class IIIF {
 
         else :
 
-            $iiifImage = self::getIIIFImageURI('OBJ');
+            $iiifImage = self::getIIIFImageURI('JP2');
 
             if (Request::responseStatus($iiifImage)) :
                 $responseImageBody = json_decode(Request::responseBody($iiifImage));
@@ -283,7 +283,7 @@ class IIIF {
         $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ';
 
         if ($this->type === 'Image') :
-            $iiifImage = self::getIIIFImageURI('OBJ');
+            $iiifImage = self::getIIIFImageURI('JP2');
             $item = self::getItemBody($iiifImage, $datastream);
 
         elseif ($this->type === 'Sound') :
