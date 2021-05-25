@@ -66,6 +66,21 @@ class Request {
 
     }
 
+    public static function getBookPages($pid, $format = 'xml') {
+
+        $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=csv&query=';
+
+        $query = "PREFIX fedora-model: <info:fedora/fedora-system:def/model#> PREFIX fedora-rels-ext: ";
+        $query .= "<info:fedora/fedora-system:def/relations-external#> PREFIX isl-rels-ext: ";
+        $query .= "<http://islandora.ca/ontology/relsext#> SELECT \$page \$numbers FROM <#ri> WHERE {{ \$page ";
+        $query .= "fedora-rels-ext:isMemberOf <info:fedora/thing:36> ; isl-rels-ext:isPageNumber \$numbers .}}";
+
+        $request .= self::escapeQuery($query);
+
+        return self::curlRequest($request);
+
+    }
+
     public static function getDatastream ($dsid, $pid, $format = 'XML') {
 
         $request = $_ENV['FEDORA_URL'] . '/objects/' . $pid;
@@ -78,6 +93,30 @@ class Request {
         endif;
 
         return self::curlRequest($request);
+
+    }
+
+    public static function escapeQuery ($query) {
+
+        $searchReplace = array(
+            '*' => '%2A',
+            ' ' => '%20',
+            '<' => '%3C',
+            ':' => '%3A',
+            '>' => '%3E',
+            '#' => '%23',
+            '\n' => '',
+            '?' => '%3F',
+            '{' => '%7B',
+            '}' => '%7D',
+            '/' => '%2F'
+        );
+
+        return str_replace(
+            array_keys($searchReplace),
+            array_values($searchReplace),
+            $query
+        );
 
     }
 
