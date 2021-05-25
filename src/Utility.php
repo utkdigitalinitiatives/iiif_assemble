@@ -60,7 +60,7 @@ class Utility {
             $index[$pageNumber] = str_replace('info:fedora/', '', $item[0]);
         }
 
-        sort($index);
+        ksort($index);
 
         return $index;
 
