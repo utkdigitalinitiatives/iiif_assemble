@@ -67,17 +67,9 @@ class Utility {
         $sequence = [];
 
         foreach ($index as $key => $object) {
-            if ($canvas === 0) {
-                $sequence[$canvas][] = $object;
-                $page++;
-                $canvas++;
-            } else {
-                $sequence[$canvas][] = $object;
-                $page++;
-                if (count($sequence[$canvas]) === 2) {
-                    $canvas++;
-                }
-            }
+            $sequence[$canvas][] = $object;
+            $page++;
+            $canvas++;
         }
 
         return $sequence;

@@ -297,11 +297,11 @@ class IIIF {
         $page = $target . '/page';
 
         return (object) [
-            "id" => $page,
+            "id" => $page . '/' . $pid,
             "type" => 'AnnotationPage',
             "items" => [
                 (object) [
-                    "id" => $page . '/' . $number,
+                    "id" => $page . '/' . $pid . '/' . uniqid(),
                     "type" => 'Annotation',
                     "motivation" => "painting",
                     "body" => [self::paintCanvas($pid)],
