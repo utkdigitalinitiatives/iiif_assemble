@@ -43,7 +43,6 @@ class IIIF {
         $manifest['items'] = self::buildItems($id);
 
         if ($this->type === 'Book') {
-            $manifest['viewingDirection'] = "left-to-right";
             $manifest['behavior'] = ["paged"];
         }
 
@@ -205,16 +204,14 @@ class IIIF {
 
             if ($items['status'] === 200) {
 
-                $pages = Utility::orderCanvases($items['body']);
-                $canvas = [];
-                $index = 0;
+                $canvases = Utility::orderCanvases($items['body']);
+                $items = [];
 
-                foreach ($pages as $key => $pid) {
-                    $canvas[$index] = $this->buildCanvas($key, $uri, $pid);
-                    $index++;
+                foreach ($canvases as $key => $canvas) {
+                    $items[$key] = $this->buildCanvasWithPages($key, $uri, $canvas);
                 }
 
-                return $canvas;
+                return $items;
 
             } else {
 
@@ -266,7 +263,36 @@ class IIIF {
 
     }
 
-    public function preparePage ($target, $pid) {
+    public function buildCanvasWithPages ($index, $uri, $canvasData) {
+
+        $canvasId = $uri . '/canvas/' . $index;
+
+        $canvas = (object) [
+            "id" => $canvasId,
+            "type" => 'Canvas'
+        ];
+
+        foreach ($canvasData as $key => $pid) {
+
+            $iiifImage = self::getIIIFImageURI('JP2', $pid);
+
+            if (Request::responseStatus($iiifImage)) :
+                $responseImageBody = json_decode(Request::responseBody($iiifImage));
+                $canvas->width = $responseImageBody->width;
+                $canvas->height = $responseImageBody->height;
+            else :
+                $canvas->height = 640;
+                $canvas->width = 360;
+            endif;
+
+            $canvas->items[$key] = self::preparePage($canvasId, $pid, $key);
+        }
+
+        return $canvas;
+
+    }
+
+    public function preparePage ($target, $pid, $number = 1) {
 
         $page = $target . '/page';
 
@@ -276,7 +302,7 @@ class IIIF {
             "items" => [
                 (object) [
                     "@context" => 'https://iiif.io/api/presentation/3/context.json',
-                    "id" => $page . '/annotation',
+                    "id" => $page . '/' . $number,
                     "type" => 'Annotation',
                     "motivation" => "painting",
                     "body" => [self::paintCanvas($pid)],

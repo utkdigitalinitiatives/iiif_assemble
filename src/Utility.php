@@ -46,23 +46,41 @@ class Utility {
 
     }
 
-    public static function orderCanvases ($string)
+    public static function orderCanvases ($csv)
     {
 
-        $pages = str_getcsv($string, "\n");
-        unset($pages[0]);
+        $result = str_getcsv($csv, "\n");
+        unset($result[0]);
 
         $index = [];
 
-        foreach ($pages as $page) {
-            $item = explode(',', $page);
+        foreach ($result as $string) {
+            $item = explode(',', $string);
             $pageNumber = $item[1];
             $index[$pageNumber] = str_replace('info:fedora/', '', $item[0]);
         }
 
         ksort($index);
 
-        return $index;
+        $page = 0;
+        $canvas = 0;
+        $sequence = [];
+
+        foreach ($index as $key => $object) {
+            if ($canvas === 0) {
+                $sequence[$canvas][] = $object;
+                $page++;
+                $canvas++;
+            } else {
+                $sequence[$canvas][] = $object;
+                $page++;
+                if (count($sequence[$canvas]) === 2) {
+                    $canvas++;
+                }
+            }
+        }
+
+        return $sequence;
 
     }
 
