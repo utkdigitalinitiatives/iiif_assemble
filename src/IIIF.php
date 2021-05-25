@@ -202,9 +202,11 @@ class IIIF {
 
                 $pages = Utility::orderCanvases($items['body']);
                 $canvas = [];
+                $index = 0;
 
                 foreach ($pages as $key => $pid) {
-                    $canvas[$key] = $this->buildCanvas($key, $uri, $pid);
+                    $canvas[$index] = $this->buildCanvas($key, $uri, $pid);
+                    $index++;
                 }
 
                 return $canvas;

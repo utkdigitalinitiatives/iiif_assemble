@@ -61,7 +61,6 @@ class Utility {
         }
 
         ksort($index);
-        sort($index);
 
         return $index;
 
