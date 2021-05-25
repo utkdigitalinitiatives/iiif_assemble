@@ -42,10 +42,6 @@ class IIIF {
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
 
-        if ($this->type === 'Book') {
-            $manifest['behavior'] = ["paged"];
-        }
-
         $presentation = self::buildStructures($manifest, $id);
 
         return json_encode($presentation);
