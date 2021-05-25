@@ -148,7 +148,7 @@ class IIIF {
         $item = array();
 
         $dsid = self::getThumbnailDatastream();
-        $iiifImage = self::getIIIFImageURI($dsid);
+        $iiifImage = self::getIIIFImageURI($dsid, $this->pid);
 
         if (Request::responseStatus($iiifImage)) :
             $item['id'] = $iiifImage;
@@ -181,10 +181,10 @@ class IIIF {
 
     }
 
-    public function getIIIFImageURI ($dsid) {
+    public function getIIIFImageURI ($dsid, $pid) {
 
         $uri = $this->url . '/iiif/2/';
-        $uri .= 'collections~islandora~object~' . $this->pid;
+        $uri .= 'collections~islandora~object~' . $pid;
         $uri .= '~datastream~' . $dsid;
         $uri .= '/info.json';
 
@@ -194,42 +194,72 @@ class IIIF {
 
     public function buildItems ($uri) {
 
-        $canvasId = $uri . '/canvas';
+        if (in_array($this->type, ['Book'])) :
 
-        $canvas = [
-            (object) [
+            $items = Request::getBookPages($this->pid, 'csv');
+
+            if ($items['status'] === 200) {
+
+                $pages = Utility::orderCanvases($items['body']);
+                $canvas = [];
+
+                foreach ($pages as $key => $pid) {
+                    $canvas[$key] = $this->buildCanvas($key, $uri, $pid);
+                }
+
+                return $canvas;
+
+            } else {
+
+                return null;
+
+            }
+
+        else:
+
+            return [$this->buildCanvas(0, $uri, $this->pid)];
+
+        endif;
+
+    }
+
+    public function buildCanvas ($index, $uri, $pid) {
+
+        $canvasId = $uri . '/canvas/' . $index;
+
+        $canvas = (object) [
                 "id" => $canvasId,
                 "type" => 'Canvas'
-            ]
-        ];
+            ];
 
         if (in_array($this->type, ['Sound','Video'])) :
-            $canvas[0]->height = 640;
-            $canvas[0]->width = 360;
-            $canvas[0]->duration = self::getDuration();
+
+            $canvas->height = 640;
+            $canvas->width = 360;
+            $canvas->duration = self::getDuration();
 
         else :
 
-            $iiifImage = self::getIIIFImageURI('JP2');
+            $iiifImage = self::getIIIFImageURI('JP2', $pid);
 
             if (Request::responseStatus($iiifImage)) :
                 $responseImageBody = json_decode(Request::responseBody($iiifImage));
-                $canvas[0]->width = $responseImageBody->width;
-                $canvas[0]->height = $responseImageBody->height;
+                $canvas->width = $responseImageBody->width;
+                $canvas->height = $responseImageBody->height;
             else :
-                $canvas[0]->height = 640;
-                $canvas[0]->width = 360;
+                $canvas->height = 640;
+                $canvas->width = 360;
             endif;
 
         endif;
 
-        $canvas[0]->items = [self::preparePage($canvasId)];
+        $canvas->items = [self::preparePage($canvasId, $pid)];
 
         return $canvas;
 
     }
 
-    public function preparePage ($target) {
+    public function preparePage ($target, $pid) {
 
         $page = $target . '/page';
 
@@ -242,7 +272,7 @@ class IIIF {
                     "id" => $page . '/annotation',
                     "type" => 'Annotation',
                     "motivation" => "painting",
-                    "body" => [self::paintCanvas()],
+                    "body" => [self::paintCanvas($pid)],
                     "target" => $target
                 ]
             ]
@@ -276,14 +306,14 @@ class IIIF {
 
     }
 
-    public function paintCanvas () {
+    public function paintCanvas ($pid) {
 
         $item = array();
 
-        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/OBJ';
+        $datastream = $this->url . '/collections/islandora/object/' . $pid . '/datastream/OBJ';
 
         if ($this->type === 'Image') :
-            $iiifImage = self::getIIIFImageURI('JP2');
+            $iiifImage = self::getIIIFImageURI('JP2', $pid);
             $item = self::getItemBody($iiifImage, $datastream);
 
         elseif ($this->type === 'Sound') :
@@ -412,6 +442,8 @@ class IIIF {
             $type = "Sound";
         elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
             $type = "Video";
+        elseif (in_array('info:fedora/islandora:bookCModel', $model)) :
+            $type = "Book";
         else :
             $type = "Image";
         endif;

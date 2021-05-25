@@ -46,6 +46,27 @@ class Utility {
 
     }
 
+    public static function orderCanvases ($string)
+    {
+
+        $pages = str_getcsv($string, "\n");
+        unset($pages[0]);
+
+        $index = [];
+
+        foreach ($pages as $page) {
+            $item = explode(',', $page);
+            $pageNumber = $item[1];
+            $index[$pageNumber] = str_replace('info:fedora/', '', $item[0]);
+        }
+
+        sort($index);
+
+        return $index;
+
+    }
+
+
 }
 
 ?>

@@ -66,9 +66,9 @@ class Request {
 
     }
 
-    public static function getBookPages($pid, $format = 'xml') {
+    public static function getBookPages($pid, $format = 'csv') {
 
-        $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=csv&query=';
+        $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=' . $format .'&query=';
 
         $query = "PREFIX fedora-model: <info:fedora/fedora-system:def/model#> PREFIX fedora-rels-ext: ";
         $query .= "<info:fedora/fedora-system:def/relations-external#> PREFIX isl-rels-ext: ";
