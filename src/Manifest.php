@@ -74,7 +74,7 @@ class Manifest
 
         $namespace = self::getNamespacePath();
         $filename = self::getManifestPath($namespace) . '/manifest.json';
-        $expires = 86400;
+        $expires = 15552000;
 
         if (isset($_GET['update']) && $_GET['update'] === '1') {
             return false;
