@@ -154,11 +154,11 @@ class IIIF {
             (object) [
                 "id" => $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/MODS' ,
                 "type" => "Dataset",
-                "label" => [ 
+                "label" =>
                     (object) [
                         "en" => [ "Bibliographic Description in MODS" ]
                     ]
-                ],
+                ,
                 "format" => "application/xml",
                 "profile" => "http://www.loc.gov/standards/mods/v3/mods-3-5.xsd"
                 ]
