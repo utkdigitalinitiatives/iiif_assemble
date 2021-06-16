@@ -41,6 +41,7 @@ class IIIF {
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
+        $manifest['seeAlso'] = self::buildSeeAlso();
 
         if ($this->type === 'Book') {
             $manifest['behavior'] = ["paged"];
@@ -145,6 +146,24 @@ class IIIF {
             ]
         ];
 
+    }
+
+    private function buildSeeAlso () {
+
+        return [
+            (object) [
+                "id" => $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/MODS' ,
+                "type" => "Dataset",
+                "label" => [ 
+                    (object) [
+                        "en" =>
+                        [ "Bibliographic Description in MODS" ] 
+                    ],
+                    "format" => "application/xml",
+                    "profile" => "http://www.loc.gov/standards/mods/v3/mods-3-5.xsd"
+                ]
+            ]
+        ];
     }
 
     public function buildThumbnail ($width, $height) {
