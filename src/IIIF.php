@@ -156,13 +156,12 @@ class IIIF {
                 "type" => "Dataset",
                 "label" => [ 
                     (object) [
-                        "en" =>
-                        [ "Bibliographic Description in MODS" ] 
-                    ],
-                    "format" => "application/xml",
-                    "profile" => "http://www.loc.gov/standards/mods/v3/mods-3-5.xsd"
+                        "en" => [ "Bibliographic Description in MODS" ]
+                    ]
+                ],
+                "format" => "application/xml",
+                "profile" => "http://www.loc.gov/standards/mods/v3/mods-3-5.xsd"
                 ]
-            ]
         ];
     }
 
