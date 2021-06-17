@@ -58,7 +58,7 @@ class IIIF {
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
-            'Role Term' => $this->xpath->query('name/namePart'),
+            'Creators and Contributors' => $this->xpath->query('name/namePart'),
             'Publisher' => $this->xpath->query('originInfo/publisher'),
             'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),
             'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
@@ -79,7 +79,7 @@ class IIIF {
         $sets = array();
 
         foreach ($array as $label => $value) :
-            if ($value !== null) :
+            if ($value !== null or empty($value) !== true) :
                 $sets[] = self::getLabelValuePair(
                     $label,
                     $value
