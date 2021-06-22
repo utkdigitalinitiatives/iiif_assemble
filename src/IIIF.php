@@ -42,6 +42,23 @@ class IIIF {
 
     }
 
+    private function buildCollectionsItems () {
+
+        $xpath = new XPath($this->object['body']);
+        $items = [];
+
+        foreach ($xpath->query('resultList/objectFields/pid') as $item) {
+            $items[] = (object) [
+                'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item),
+                'type' => 'Manifest',
+                'label' => $item
+            ];
+        }
+
+        return $items;
+
+    }
+
     public function buildManifest ()
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
@@ -492,23 +509,6 @@ class IIIF {
 
     private static function getDuration () {
         return 500;
-    }
-
-    public function buildCollectionsItems () {
-
-        $xpath = new XPath($this->object['body']);
-        $items = [];
-
-        foreach ($xpath->query('resultList/objectFields/pid') as $item) {
-            $items[] = (object) [
-                'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item),
-                'type' => 'Manifest',
-                'label' => $item
-            ];
-        }
-
-        return $items;
-
     }
 
     private static function determineTypeByModel ($islandoraModel) {
