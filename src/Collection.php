@@ -43,14 +43,14 @@ class Collection
         if (self::collectionAvailable()) {
             $collection = self::getCollection();
         } else {
-            $collection = self::buildCollection();
+            $collection = self::newCollection();
         }
 
         return $collection;
 
     }
 
-    private function buildCollection ()
+    private function newCollection ()
     {
 
         $persistentIdentifier = implode('%3A', $this->persistentIdentifier);

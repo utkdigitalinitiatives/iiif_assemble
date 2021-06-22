@@ -42,7 +42,7 @@ class IIIF {
 
     }
 
-    public function buildPresentation ()
+    public function buildManifest ()
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
 

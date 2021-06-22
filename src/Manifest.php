@@ -39,14 +39,14 @@ class Manifest
         if (self::manifestAvailable()) {
             $manifest = self::getManifest();
         } else {
-            $manifest = self::buildManifest();
+            $manifest = self::newManifest();
         }
 
         return $manifest;
 
     }
 
-    private function buildManifest()
+    private function newManifest()
     {
 
         $persistentIdentifier = implode('%3A', $this->persistentIdentifier);
@@ -60,7 +60,7 @@ class Manifest
 
         if ($mods['status'] === 200) :
             $iiif = new IIIF($persistentIdentifier, $mods['body'], $object);
-            $presentation = $iiif->buildPresentation();
+            $presentation = $iiif->buildManifest();
             self::cacheManifest($presentation);
             return $presentation;
         else :
