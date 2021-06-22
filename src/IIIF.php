@@ -26,6 +26,20 @@ class IIIF {
 
     }
 
+    public function buildCollection ()
+    {
+        $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
+
+        $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
+        $collection['id'] = $id;
+        $collection['type'] = 'Collection';
+        $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
+        $collection['items'] = self::buildCollectionsItems();
+
+        return json_encode($collection);
+
+    }
+
     public function buildPresentation ()
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
@@ -476,6 +490,12 @@ class IIIF {
 
     private static function getDuration () {
         return 500;
+    }
+
+    public function buildCollectionsItems () {
+
+        return null;
+
     }
 
     private static function determineTypeByModel ($islandoraModel) {
