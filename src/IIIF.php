@@ -51,7 +51,9 @@ class IIIF {
             $items[] = (object) [
                 'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item),
                 'type' => 'Manifest',
-                'label' => $item
+                'label' => (object) [
+                    'none' => [$item]
+                    ]
             ];
         }
 
