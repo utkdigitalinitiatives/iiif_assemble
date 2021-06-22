@@ -9,15 +9,12 @@ class Collection
 
     private $requestMethod;
     private $persistentIdentifier;
-    private $url;
 
     public function __construct($requestMethod, $persistentIdentifier)
     {
 
         $this->requestMethod = $requestMethod;
         $this->persistentIdentifier = $persistentIdentifier;
-
-        $this->url = Utility::getBaseUrl();
 
     }
 
