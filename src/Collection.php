@@ -54,13 +54,15 @@ class Collection
     {
 
         $persistentIdentifier = implode('%3A', $this->persistentIdentifier);
+
         $object = Request::getObjects($persistentIdentifier);
+        $items = Request::getObjects($persistentIdentifier, 'XML', true);
 
         if ($object['status'] === 200) :
             $model = simplexml_load_string($object['body'])->objModels->model;
             if (self::isCollection($model)) :
                 $mods = Request::getDatastream('MODS', $persistentIdentifier);
-                $iiif = new IIIF($persistentIdentifier, $mods['body'], $object);
+                $iiif = new IIIF($persistentIdentifier, $mods['body'], $items);
                 $collection = $iiif->buildCollection();
                 self::cacheCollection($collection);
                 return $collection;

@@ -9,6 +9,7 @@ class IIIF {
 
     private $pid;
     private $xpath;
+    private $object;
     private $type;
     private $url;
 
@@ -19,6 +20,7 @@ class IIIF {
 
         $this->pid = $pid;
         $this->mods = $mods;
+        $this->object = $object;
         $this->xpath = new XPath($mods);
         $this->type = self::determineTypeByModel($model);
 
@@ -494,7 +496,18 @@ class IIIF {
 
     public function buildCollectionsItems () {
 
-        return null;
+        $xpath = new XPath($this->object['body']);
+        $items = [];
+
+        foreach ($xpath->query('resultList/objectFields/pid') as $item) {
+            $items[] = (object) [
+                'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item),
+                'type' => 'Manifest',
+                'label' => $item
+            ];
+        }
+
+        return $items;
 
     }
 
