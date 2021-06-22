@@ -36,13 +36,13 @@ class IIIF {
         $collection['id'] = $id;
         $collection['type'] = 'Collection';
         $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
-        $collection['items'] = self::buildCollectionsItems();
+        $collection['items'] = self::buildCollectionItems();
 
         return json_encode($collection);
 
     }
 
-    private function buildCollectionsItems () {
+    private function buildCollectionItems () {
 
         $xpath = new XPath($this->object['body']);
         $items = [];
