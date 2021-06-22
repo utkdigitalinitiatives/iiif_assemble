@@ -90,7 +90,7 @@ class Collection
     {
 
         $namespace = self::getNamespacePath();
-        $filename = self::getCollectionPath($namespace) . '/manifest.json';
+        $filename = self::getCollectionPath($namespace) . '/collection.json';
         $expires = 15552000;
 
         if (isset($_GET['update']) && $_GET['update'] === '1') {
@@ -111,7 +111,7 @@ class Collection
     {
 
         $namespace = self::getNamespacePath();
-        $filename = self::getCollectionPath($namespace) . '/manifest.json';
+        $filename = self::getCollectionPath($namespace) . '/collection.json';
 
         return file_get_contents($filename);
 
@@ -130,7 +130,7 @@ class Collection
             mkdir($id);
         }
 
-        $path = $id . '/manifest.json';
+        $path = $id . '/collection.json';
 
         file_put_contents($path, $manifest);
 
