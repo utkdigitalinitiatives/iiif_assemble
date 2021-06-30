@@ -13,10 +13,12 @@ class IIIF {
     private $type;
     private $url;
 
-    public function __construct($pid, $mods, $object)
+    public function __construct($pid, $mods, $object, $model = null)
     {
 
-        $model = simplexml_load_string($object['body'])->objModels->model;
+        if (!$model) {
+            $model = simplexml_load_string($object['body'])->objModels->model;
+        }
 
         $this->pid = $pid;
         $this->mods = $mods;
@@ -42,12 +44,9 @@ class IIIF {
 
     }
 
-    private function buildCollectionItems () {
+    private function buildCollectionItems ($items = []) {
 
-        $xpath = new XPath($this->object['body']);
-        $items = [];
-
-        foreach ($xpath->query('resultList/objectFields/pid') as $item) {
+        foreach ($this->object as $item) {
             $items[] = (object) [
                 'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item),
                 'type' => 'Manifest',

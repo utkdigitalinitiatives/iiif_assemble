@@ -51,24 +51,24 @@ class Collection
     {
 
         $persistentIdentifier = implode('%3A', $this->persistentIdentifier);
-
         $object = Request::getObjects($persistentIdentifier);
-        $items = Request::getObjects($persistentIdentifier, 'XML', true);
 
         if ($object['status'] === 200) :
             $model = simplexml_load_string($object['body'])->objModels->model;
             if (self::isCollection($model)) :
+                $items = Request::getCollectionItems($persistentIdentifier, 'csv');
                 $mods = Request::getDatastream('MODS', $persistentIdentifier);
-                $iiif = new IIIF($persistentIdentifier, $mods['body'], $items);
-                $collection = $iiif->buildCollection();
-                self::cacheCollection($collection);
-                return $collection;
+                $collection = Utility::orderCollection($items['body']);
+                $iiif = new IIIF($persistentIdentifier, $mods['body'], $collection, "info:fedora/islandora:collectionCModel");
+                $iiifCollection = $iiif->buildCollection();
+                self::cacheCollection($iiifCollection);
+                return $iiifCollection;
             else :
                 $object['body'] = 'Object ' . str_replace('%3A', ':', $persistentIdentifier) . ' is not of object model islandora:collectionCModel.';
                 return json_encode($object);
             endif;
         else :
-            return json_encode($object);
+            return json_encode($items);
         endif;
 
     }
