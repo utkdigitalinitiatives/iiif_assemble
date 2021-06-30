@@ -37,20 +37,38 @@ class Collection
     private function theCollection()
     {
 
+        if (self::collectionAvailable()) {
+            $collection = self::getCollection();
+        } else {
+            $collection = self::newCollection();
+        }
+
+        return $collection;
+
+    }
+
+    private function newCollection ()
+    {
+
         $persistentIdentifier = implode('%3A', $this->persistentIdentifier);
         $object = Request::getObjects($persistentIdentifier);
 
         if ($object['status'] === 200) :
             $model = simplexml_load_string($object['body'])->objModels->model;
             if (self::isCollection($model)) :
-                $object = Request::getObjects($persistentIdentifier, 'XML', true);
-                return json_encode($object);
+                $items = Request::getCollectionItems($persistentIdentifier, 'csv');
+                $mods = Request::getDatastream('MODS', $persistentIdentifier);
+                $collection = Utility::orderCollection($items['body']);
+                $iiif = new IIIF($persistentIdentifier, $mods['body'], $collection, $model);
+                $iiifCollection = $iiif->buildCollection();
+                self::cacheCollection($iiifCollection);
+                return $iiifCollection;
             else :
                 $object['body'] = 'Object ' . str_replace('%3A', ':', $persistentIdentifier) . ' is not of object model islandora:collectionCModel.';
                 return json_encode($object);
             endif;
         else :
-            return json_encode($object);
+            return json_encode($items);
         endif;
 
     }
@@ -64,6 +82,83 @@ class Collection
         else:
             return false;
         endif;
+
+    }
+
+    private function collectionAvailable ()
+    {
+
+        $namespace = self::getNamespacePath();
+        $filename = self::getCollectionPath($namespace) . '/collection.json';
+        $expires = 15552000;
+
+        if (isset($_GET['update']) && $_GET['update'] === '1') {
+            return false;
+        } else if (file_exists($filename)) {
+            if (time() < filemtime($filename) + $expires) :
+                return true;
+            else :
+                return false;
+            endif;
+        } else {
+            return false;
+        }
+
+    }
+
+    private function getCollection ()
+    {
+
+        $namespace = self::getNamespacePath();
+        $filename = self::getCollectionPath($namespace) . '/collection.json';
+
+        return file_get_contents($filename);
+
+    }
+
+    private function cacheCollection($manifest)
+    {
+
+        $namespace = self::getNamespacePath();
+        if (!is_dir($namespace)) {
+            mkdir($namespace);
+        }
+
+        $id = self::getCollectionPath($namespace);
+        if (!is_dir($id)) {
+            mkdir($id);
+        }
+
+        $path = $id . '/collection.json';
+
+        file_put_contents($path, $manifest);
+
+        return true;
+
+    }
+
+    private function noFoundResponse()
+    {
+
+        $response['status_code_header'] = 'HTTP/1.1 404 Not Found';
+        $response['body'] = null;
+
+        return $response;
+
+    }
+
+    private function getNamespacePath ()
+    {
+
+        return '../cache/' . $this->persistentIdentifier[0];
+
+    }
+
+
+    private function getCollectionPath ($container)
+    {
+
+        return $container . '/' . $this->persistentIdentifier[1];
 
     }
 

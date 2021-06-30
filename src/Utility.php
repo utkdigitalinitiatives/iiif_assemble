@@ -76,6 +76,22 @@ class Utility {
 
     }
 
+    public static function orderCollection ($csv)
+    {
+
+        $result = str_getcsv($csv, "\n");
+        unset($result[0]);
+
+        $index = [];
+
+        foreach ($result as $string) {
+            $item = explode(',', $string);
+            $index[] = str_replace('info:fedora/', '', $item[0]);
+        }
+
+        return $index;
+
+    }
 
 }
 

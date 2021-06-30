@@ -9,16 +9,20 @@ class IIIF {
 
     private $pid;
     private $xpath;
+    private $object;
     private $type;
     private $url;
 
-    public function __construct($pid, $mods, $object)
+    public function __construct($pid, $mods, $object, $model = null)
     {
 
-        $model = simplexml_load_string($object['body'])->objModels->model;
+        if (!$model) {
+            $model = simplexml_load_string($object['body'])->objModels->model;
+        }
 
         $this->pid = $pid;
         $this->mods = $mods;
+        $this->object = $object;
         $this->xpath = new XPath($mods);
         $this->type = self::determineTypeByModel($model);
 
@@ -26,7 +30,37 @@ class IIIF {
 
     }
 
-    public function buildPresentation ()
+    public function buildCollection ()
+    {
+        $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
+
+        $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
+        $collection['id'] = $id;
+        $collection['type'] = 'Collection';
+        $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
+        $collection['items'] = self::buildCollectionItems();
+
+        return json_encode($collection);
+
+    }
+
+    private function buildCollectionItems ($items = []) {
+
+        foreach ($this->object as $item) {
+            $items[] = (object) [
+                'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item),
+                'type' => 'Manifest',
+                'label' => (object) [
+                    'none' => [$item]
+                    ]
+            ];
+        }
+
+        return $items;
+
+    }
+
+    public function buildManifest ()
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
 

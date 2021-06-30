@@ -1,11 +1,24 @@
 
 # IIIF Assemble
 
-This app WILL assemble and serve a IIIF Presentation API 3.0 manifest from a Fedora 3.8 object with a MODS datastream. The routing follows a pattern of `/assemble/manifest/{namepsace}/{id}` where `namespace` is a string and `id` is positive integer.
 
-<img src="https://digital.lib.utk.edu/iiif/2/collections~islandora~object~tenncities%3A343~datastream~OBJ/full/!200,200/0/default.jpg" alt="Cabin near Knoxville" />
+<img src="https://digital.lib.utk.edu/iiif/2/collections~islandora~object~tenncities%3A343~datastream~OBJ/full/!400,400/0/default.jpg" alt="Cabin near Knoxville" />
+
+This app assembles and serves IIIF Presentation API 3.0 Manifest and Collections from a Fedora 3.8 objects with a MODS datastream. 
+
+Where `namespace` is a string and `id` is positive integer:
+
+- **Manifest**: `/assemble/manifest/{namespace}/{id}` 
+- **Collection**: ```/assemble/collection/{namespace}/{id}```
+
+## Manifest
 
 The example route of `/assemble/manifest/tenncities/343` will correlate to **tenncities:343**, ex: https://digital.lib.utk.edu/assemble/manifest/tenncities/343
+
+## Collection
+
+The path for a collection with the PID `gsmrc:thompson` would be `/assemble/collection/gsmrc/thompson`, ex: https://digital.lib.utk.edu/assemble/collection/gsmrc/thompson. Embedded collections are currently not supported.
+
 
 ## Notes and To Dos
 
@@ -16,7 +29,7 @@ Note: This is not production ready.
 - This only outputs manifests and metadata fields mapped for boutique purposes.
 - This is not currently intended as an access tool for all UT Libraries' collections in the wild.
 - This currently does not create collection lists of multiple manifests.
-- This generator caches a manifest for 24 Hours. If metadata or OBJ datastreams are updated, the directory for the manifest must be cleared at `./cache/namespace/id`
+- This generator caches a manifest for 180 days. If metadata or OBJ datastreams are updated, the directory for the manifest must be cleared at `./cache/namespace/id`
 
 ### To Do
 - Though possible at some point, this generator has no current way creating a manifest with referenced annotation lists.
