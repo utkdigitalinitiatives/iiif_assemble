@@ -59,7 +59,7 @@ class Collection
                 $items = Request::getCollectionItems($persistentIdentifier, 'csv');
                 $mods = Request::getDatastream('MODS', $persistentIdentifier);
                 $collection = Utility::orderCollection($items['body']);
-                $iiif = new IIIF($persistentIdentifier, $mods['body'], $collection, "info:fedora/islandora:collectionCModel");
+                $iiif = new IIIF($persistentIdentifier, $mods['body'], $collection, $model);
                 $iiifCollection = $iiif->buildCollection();
                 self::cacheCollection($iiifCollection);
                 return $iiifCollection;
