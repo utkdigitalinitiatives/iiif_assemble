@@ -113,7 +113,7 @@ class IIIF {
         $sets = array();
 
         foreach ($array as $label => $value) :
-            if ($value !== null or empty($value) !== true) :
+            if ($value !== null and empty($value) !== true) :
                 $sets[] = self::getLabelValuePair(
                     $label,
                     $value
