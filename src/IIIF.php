@@ -394,14 +394,14 @@ class IIIF {
 
         $item = array();
 
-        $datastream = $this->url . '/collections/islandora/object/' . $pid . '/datastream/OBJ';
+        $datastream = $this->url . '/collections/islandora/object/' . $pid . '/datastream/';
 
         if (in_array($this->type, ['Image', 'Book'])) :
             $iiifImage = self::getIIIFImageURI('JP2', $pid);
-            $item = self::getItemBody($iiifImage, $datastream);
+            $item = self::getItemBody($iiifImage, $datastream . 'OBJ');
 
         elseif ($this->type === 'Sound') :
-            $item['id'] = $datastream;
+            $item['id'] = $datastream . 'PROXY_MP3';
             $item['type'] = "Sound";
             $item['width'] = 640;
             $item['height'] = 360;
@@ -409,7 +409,7 @@ class IIIF {
             $item['format'] = "audio/mpeg";
 
         elseif ($this->type === 'Video') :
-            $item['id'] = $datastream;
+            $item['id'] = $datastream . 'MP4';
             $item['type'] = "Video";
             $item['width'] = 640;
             $item['height'] = 360;
