@@ -344,55 +344,57 @@ class IIIF {
 
     }
 
+    private function buildTranscript($language_code, $page, $target) {
+        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/';
+        $data = [
+            (object) [
+                "en" => [
+                    (object)[
+                        "datastream" => "TRANSCRIPT",
+                        "label" => "Captions in English",
+                        "language" => "en"
+                    ]
+                ],
+                "es"  => [
+                    (object)[
+                        "datastream" => "TRANSCRIPT-ES",
+                        "label" => "Captions in Spanish",
+                        "language" => "es"
+                    ]
+                ],
+            ]
+        ];
+        return [
+            (object) [
+                "id" => $page . '/' . $this->pid . '/' . uniqid(),
+                "type" => 'Annotation',
+                "motivation" => "supplementing",
+                "body" =>
+                    (object) [
+                        "id" => $datastream . $data[$language_code]['datastream'],
+                        "type" => "Text",
+                        "format" => "text/vtt",
+                        "label" => [
+                            (object) [
+                                "en"=> $data[$language_code]["label"]
+                            ]
+                        ],
+                        "language"=> $data[$language_code]["language"]
+                    ],
+                "target" => $target
+            ]
+        ];
+    }
+
     private function getTranscipts($pagenumber, $target) {
         $datastreams = $this::getDatastreamIds();
         $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/';
         $transcripts = [];
         if (in_array('TRANSCRIPT', $datastreams)) :
-            $english_transcript = [
-                (object) [
-                    "id" => $pagenumber . '/' . $this->pid . '/' . uniqid(),
-                    "type" => 'Annotation',
-                    "motivation" => "supplementing",
-                    "body" =>
-                        (object) [
-                            "id" => $datastream . 'TRANSCRIPT',
-                            "type" => "Text",
-						    "format" => "text/vtt",
-                            "label" => [
-                                (object) [
-                                    "en"=> "Captions in English"
-                                ]
-                            ],
-                            "language"=> "en"
-                        ],
-                    "target" => $target
-                ]
-            ];
-            array_push($transcripts, $english_transcript);
+            array_push($transcripts, $this::buildTranscript('en', $pagenumber, $target));
         endif;
         if (in_array('TRANSCRIPT-ES', $datastreams)) :
-            $spanish_transcript = [
-                (object) [
-                    "id" => $pagenumber . '/' . $this->pid . '/' . uniqid(),
-                    "type" => 'Annotation',
-                    "motivation" => "supplementing",
-                    "body" =>
-                        (object) [
-                            "id" => $datastream . 'TRANSCRIPT-ES',
-                            "type" => "Text",
-                            "format" => "text/vtt",
-                            "label" => [
-                                (object) [
-                                    "none"=> "Captions in Spanish"
-                                ]
-                            ],
-                            "language"=> "es"
-                        ],
-                    "target" => $target
-                ]
-            ];
-            array_push($transcripts, $spanish_transcript);
+            array_push($transcripts, $this::buildTranscript('es', $pagenumber, $target));
         endif;
         return $transcripts;
     }
