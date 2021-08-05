@@ -72,8 +72,9 @@ class Request {
 
         $query = "PREFIX fedora-model: <info:fedora/fedora-system:def/model#> PREFIX fedora-rels-ext: ";
         $query .= "<info:fedora/fedora-system:def/relations-external#> PREFIX isl-rels-ext: ";
-        $query .= "<http://islandora.ca/ontology/relsext#> SELECT \$page \$numbers FROM <#ri> WHERE {{ \$page ";
-        $query .= "fedora-rels-ext:isMemberOf <info:fedora/" . $pid ."> ; isl-rels-ext:isPageNumber \$numbers .}}";
+        $query .= "<http://islandora.ca/ontology/relsext#> SELECT \$page \$numbers \$title FROM <#ri> WHERE {{ \$page ";
+        $query .= "fedora-rels-ext:isMemberOf <info:fedora/" . $pid ."> ; isl-rels-ext:isPageNumber \$numbers ;";
+        $query .= "fedora-model:label \$title . }}";
 
         $request .= self::escapeQuery($query);
 

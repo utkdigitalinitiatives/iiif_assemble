@@ -282,10 +282,11 @@ class IIIF {
     public function buildCanvas ($index, $uri, $pid) {
 
         $canvasId = $uri . '/canvas/' . $index;
-
+        $title = $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
                 "id" => $canvasId,
-                "type" => 'Canvas'
+                "type" => 'Canvas',
+                "label" => self::getLanguageArray($title, 'label', 'none')
             ];
 
         if (in_array($this->type, ['Sound','Video'])) :
@@ -316,17 +317,15 @@ class IIIF {
     }
 
     public function buildCanvasWithPages ($index, $uri, $canvasData) {
-
         $canvasId = $uri . '/canvas/' . $index;
-
         $canvas = (object) [
             "id" => $canvasId,
-            "type" => 'Canvas'
+            "type" => 'Canvas',
+            "label" => self::getLanguageArray($canvasData[0]['title'], 'label', 'none')
         ];
 
-        foreach ($canvasData as $key => $pid) {
-
-            $iiifImage = self::getIIIFImageURI('JP2', $pid);
+        foreach ($canvasData as $key => $data) {
+            $iiifImage = self::getIIIFImageURI('JP2', $data['pid']);
 
             if (Request::responseStatus($iiifImage)) :
                 $responseImageBody = json_decode(Request::responseBody($iiifImage));
@@ -337,7 +336,7 @@ class IIIF {
                 $canvas->width = 360;
             endif;
 
-            $canvas->items[$key] = self::preparePage($canvasId, $pid, $key);
+            $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key);
         }
 
         return $canvas;
