@@ -282,7 +282,7 @@ class IIIF {
     public function buildCanvas ($index, $uri, $pid) {
 
         $canvasId = $uri . '/canvas/' . $index;
-        $title = $this->xpath->query('titleInfo[not(@type="alternative")]');
+        $title = $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
                 "id" => $canvasId,
                 "type" => 'Canvas',
