@@ -282,10 +282,11 @@ class IIIF {
     public function buildCanvas ($index, $uri, $pid) {
 
         $canvasId = $uri . '/canvas/' . $index;
-
+        $title = $this->xpath->query('titleInfo[not(@type="alternative")]');
         $canvas = (object) [
                 "id" => $canvasId,
-                "type" => 'Canvas'
+                "type" => 'Canvas',
+                "label" => self::getLanguageArray($title, 'label', 'none')
             ];
 
         if (in_array($this->type, ['Sound','Video'])) :
