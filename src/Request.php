@@ -96,6 +96,16 @@ class Request {
 
     }
 
+    public static function getDatastreams($pid, $format = 'csv'){
+        $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=' . $format .'&query=';
+        $query = "PREFIX fedora: <info:fedora/fedora-system:def/view#> SELECT \$o FROM <#ri> WHERE {{ ";
+        $query .= "<info:fedora/" . $pid ."> fedora:disseminates \$o . }}";
+
+        $request .= self::escapeQuery($query);
+
+        return self::curlRequest($request);
+    }
+
     public static function getDatastream ($dsid, $pid, $format = 'XML') {
 
         $request = $_ENV['FEDORA_URL'] . '/objects/' . $pid;
