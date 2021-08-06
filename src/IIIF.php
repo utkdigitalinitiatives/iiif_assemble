@@ -346,24 +346,15 @@ class IIIF {
 
     private function buildTranscript($language_code, $page, $target) {
         $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/';
-        $data = [
-            (object) [
-                "en" => [
-                    (object)[
-                        "datastream" => "TRANSCRIPT",
-                        "label" => "Captions in English",
-                        "language" => "en"
-                    ]
-                ],
-                "es"  => [
-                    (object)[
-                        "datastream" => "TRANSCRIPT-ES",
-                        "label" => "Captions in Spanish",
-                        "language" => "es"
-                    ]
-                ],
-            ]
-        ];
+        if ($language_code == "es") :
+            $transcript_datastream = "TRANSCRIPT-ES";
+            $transcript_label = "Captions in Spanish";
+            $transcript_language = "es";
+        else :
+            $transcript_datastream = "TRANSCRIPT";
+            $transcript_label = "Captions in English";
+            $transcript_language = "en";
+        endif;
         return [
             (object) [
                 "id" => $page . '/' . $this->pid . '/' . uniqid(),
@@ -371,15 +362,15 @@ class IIIF {
                 "motivation" => "supplementing",
                 "body" =>
                     (object) [
-                        "id" => $datastream . $data[$language_code]['datastream'],
+                        "id" => $datastream . $transcript_datastream,
                         "type" => "Text",
                         "format" => "text/vtt",
                         "label" => [
                             (object) [
-                                "en"=> $data[$language_code]["label"]
+                                "en"=> $transcript_label
                             ]
                         ],
-                        "language"=> $data[$language_code]["language"]
+                        "language"=> $transcript_language
                     ],
                 "target" => $target
             ]
