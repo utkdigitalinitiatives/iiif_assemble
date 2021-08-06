@@ -355,8 +355,7 @@ class IIIF {
             $transcript_label = "Captions in English";
             $transcript_language = "en";
         endif;
-        return [
-            (object) [
+        return (object) [
                 "id" => $page . '/' . $this->pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "supplementing",
@@ -374,7 +373,6 @@ class IIIF {
                     ],
                 ],
                 "target" => $target
-            ]
         ];
     }
 
