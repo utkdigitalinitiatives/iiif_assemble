@@ -364,14 +364,15 @@ class IIIF {
                         "id" => $datastream . $transcript_datastream,
                         "type" => "Text",
                         "format" => "text/vtt",
-                        "label" => [
+                        "label" =>
                             (object) [
-                                "en"=> $transcript_label
-                            ]
-                        ],
+                                "en"=> [
+                                    $transcript_label
+                                ]
+                            ],
                         "language"=> $transcript_language
+                        ],
                     ],
-                ],
                 "target" => $target
         ];
     }
