@@ -360,7 +360,7 @@ class IIIF {
                 "id" => $page . '/' . $this->pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "supplementing",
-                "body" =>
+                "body" => [
                     (object) [
                         "id" => $datastream . $transcript_datastream,
                         "type" => "Text",
@@ -372,6 +372,7 @@ class IIIF {
                         ],
                         "language"=> $transcript_language
                     ],
+                ],
                 "target" => $target
             ]
         ];
