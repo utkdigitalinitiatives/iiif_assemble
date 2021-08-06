@@ -379,7 +379,6 @@ class IIIF {
 
     private function getTranscipts($pagenumber, $target) {
         $datastreams = $this::getDatastreamIds();
-        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/';
         $transcripts = [];
         if (in_array('TRANSCRIPT', $datastreams)) :
             array_push($transcripts, $this::buildTranscript('en', $pagenumber, $target));
