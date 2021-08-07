@@ -111,6 +111,19 @@ class Request {
 
     }
 
+    public static function getBibframeDuration($pid, $format = 'csv') {
+
+        $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=' . $format .'&query=';
+
+        $query = "PREFIX bibframe: <http://id.loc.gov/ontologies/bibframe/#>";
+        $query .= "SELECT \$duration FROM <#ri> WHERE {{ <info:fedora/" . $pid ."> bibframe:duration ?duration . }}";
+
+        $request .= self::escapeQuery($query);
+
+        return self::curlRequest($request);
+
+    }
+
     public static function escapeQuery ($query) {
 
         $searchReplace = array(
