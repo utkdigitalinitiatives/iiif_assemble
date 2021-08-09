@@ -449,7 +449,7 @@ class IIIF {
 
         foreach ($parts as $index => $part) :
 
-            if ($part->getAttribute('partType') === 'iiif') :
+            if (in_array($part->getAttribute('partType'), ['Interview Questions', 'Chapters'])) :
 
                 $label = $part->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcoreTitle');
                 $startTime = $part->getAttribute('startTime');
