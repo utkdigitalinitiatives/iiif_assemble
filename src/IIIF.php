@@ -449,18 +449,19 @@ class IIIF {
 
         foreach ($parts as $index => $part) :
 
-            if (in_array($part->getAttribute('partType'), ['Interview Questions', 'Chapters'])) :
+            $partType = $part->getAttribute('partType');
+
+            if (in_array($partType, ['Interview Questions', 'Chapters'])) :
 
                 $label = $part->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcoreTitle');
                 $startTime = $part->getAttribute('startTime');
                 $endTime = $part->getAttribute('endTime');
 
-                $partTypeAnnotation = $part->getAttribute('partTypeAnnotation');
-                $range = Utility::sanitizeLabel($partTypeAnnotation);
+                $range = Utility::sanitizeLabel($partType);
 
                 $ranges[$range]['type'] = 'Range';
                 $ranges[$range]['id'] = $uri . '/' . $range;
-                $ranges[$range]['label'] = self::getLanguageArray($partTypeAnnotation, 'label');
+                $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
                 $ranges[$range]['items'][] = (object) [
                     'type' => 'Range',
                     'id' => $uri . '/' . $range . '/' . $index,
