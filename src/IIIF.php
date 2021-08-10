@@ -348,7 +348,7 @@ class IIIF {
         $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/';
         if ($language_code == "es") :
             $transcript_datastream = "TRANSCRIPT-ES";
-            $transcript_label = "Captions in Spanish";
+            $transcript_label = "Subtítulos en español";
             $transcript_language = "es";
         else :
             $transcript_datastream = "TRANSCRIPT";
@@ -366,7 +366,7 @@ class IIIF {
                         "format" => "text/vtt",
                         "label" =>
                             (object) [
-                                "en"=> [
+                                $transcript_language => [
                                     $transcript_label
                                 ]
                             ],
