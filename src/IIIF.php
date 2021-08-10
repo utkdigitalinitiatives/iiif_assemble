@@ -343,24 +343,74 @@ class IIIF {
 
     }
 
+    private function buildTranscript($language_code, $page, $target) {
+        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/';
+        if ($language_code == "es") :
+            $transcript_datastream = "TRANSCRIPT-ES";
+            $transcript_label = "Subtítulos en español";
+            $transcript_language = "es";
+        else :
+            $transcript_datastream = "TRANSCRIPT";
+            $transcript_label = "Captions in English";
+            $transcript_language = "en";
+        endif;
+        return (object) [
+                "id" => $page . '/' . $this->pid . '/' . uniqid(),
+                "type" => 'Annotation',
+                "motivation" => "supplementing",
+                "body" => [
+                    (object) [
+                        "id" => $datastream . $transcript_datastream,
+                        "type" => "Text",
+                        "format" => "text/vtt",
+                        "label" =>
+                            (object) [
+                                $transcript_language => [
+                                    $transcript_label
+                                ]
+                            ],
+                        "language"=> $transcript_language
+                        ],
+                    ],
+                "target" => $target
+        ];
+    }
+
+    private function getTranscipts($pagenumber, $target) {
+        $datastreams = $this::getDatastreamIds();
+        $transcripts = [];
+        if (in_array('TRANSCRIPT', $datastreams)) :
+            array_push($transcripts, $this::buildTranscript('en', $pagenumber, $target));
+        endif;
+        if (in_array('TRANSCRIPT-ES', $datastreams)) :
+            array_push($transcripts, $this::buildTranscript('es', $pagenumber, $target));
+        endif;
+        return $transcripts;
+    }
+
     public function preparePage ($target, $pid, $number = 1) {
 
         $page = $target . '/page';
-
+        $items = [
+            (object) [
+                "id" => $page . '/' . $pid . '/' . uniqid(),
+                "type" => 'Annotation',
+                "motivation" => "painting",
+                "body" => [self::paintCanvas($pid)],
+                "target" => $target
+            ]
+        ];
+        if (in_array($this->type, ['Sound', 'Video'])) :
+            $transcripts = self::getTranscipts($page, $target);
+            foreach ($transcripts as &$transcript) :
+                array_push($items, $transcript);
+            endforeach;
+        endif;
         return (object) [
             "id" => $page . '/' . $pid,
             "type" => 'AnnotationPage',
-            "items" => [
-                (object) [
-                    "id" => $page . '/' . $pid . '/' . uniqid(),
-                    "type" => 'Annotation',
-                    "motivation" => "painting",
-                    "body" => [self::paintCanvas($pid)],
-                    "target" => $target
-                ]
-            ]
+            "items" => $items
         ];
-
     }
 
     public function getItemBody ($primary, $fallback) {
@@ -387,6 +437,16 @@ class IIIF {
 
         return $body;
 
+    }
+
+    private function getDatastreamIds () {
+        $dsids = Request::getDatastreams($this->pid, 'csv');
+        $final_dsids = [];
+        foreach (explode("\n", $dsids['body']) as &$dsid) :
+            $potential_dsid = explode("/", $dsid);
+            array_push($final_dsids, end($potential_dsid));
+        endforeach;
+        return $final_dsids;
     }
 
     public function paintCanvas ($pid) {
