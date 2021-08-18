@@ -514,8 +514,7 @@ class IIIF {
 
     private function getBibframeDuration($dsid) {
         $durations = Request::getBibframeDuration($this->pid, $dsid, 'csv');
-        print_r($durations);
-        $duration = explode('\n', $durations);
+        $duration = explode('\n', $durations['body']);
         return($duration[0]);
     }
 
