@@ -413,7 +413,7 @@ class IIIF {
             $item['type'] = "Video";
             $item['width'] = 640;
             $item['height'] = 360;
-            $item['duration'] = self::getDuration();
+            $item['duration'] = self::getBibframeDuration();
             $item['format'] = "video/mp4";
 
         else :
@@ -510,6 +510,12 @@ class IIIF {
 
     private static function getDuration () {
         return 500;
+    }
+
+    private function getBibframeDuration() {
+        $duration = Request::getBibframeDuration($this->pid, 'csv');
+        print_r($duration);
+        return($duration[0]);
     }
 
     private static function determineTypeByModel ($islandoraModel) {
