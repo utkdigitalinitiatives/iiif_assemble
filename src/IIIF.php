@@ -279,6 +279,14 @@ class IIIF {
 
     }
 
+    private function findProxyDatastream () {
+        if ($this->type == 'Sound'):
+            return 'PROXY_MP3';
+        else:
+            return 'MP4';
+        endif;
+    }
+
     public function buildCanvas ($index, $uri, $pid) {
 
         $canvasId = $uri . '/canvas/' . $index;
@@ -292,7 +300,7 @@ class IIIF {
 
             $canvas->height = 640;
             $canvas->width = 360;
-            $canvas->duration = self::getDuration();
+            $canvas->duration = self::getDuration(self::findProxyDatastream());
 
         else :
 
