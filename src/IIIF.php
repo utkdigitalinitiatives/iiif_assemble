@@ -514,12 +514,8 @@ class IIIF {
 
     private function getBibframeDuration($dsid) {
         $durations = Request::getBibframeDuration($this->pid, $dsid, 'csv');
-        $duration = [];
-        foreach (explode("\n", $durations['body']) as &$this_duration):
-            array_push($duration, end($this_duration));
-        endforeach;
-        print_r($duration);
-        return($duration[0]);
+        print_r($durations['body']);
+        return($durations['body']);
     }
 
     private static function determineTypeByModel ($islandoraModel) {
