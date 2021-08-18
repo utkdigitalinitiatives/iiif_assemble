@@ -57,11 +57,11 @@ class Utility {
         foreach ($result as $string) {
             $item = explode(',', $string);
             $pageNumber = $item[1];
-            $index[$pageNumber] = str_replace('info:fedora/', '', $item[0]);
+            $index[$pageNumber]['pid'] = str_replace('info:fedora/', '', $item[0]);
+            $index[$pageNumber]['title'] = $item[2];
         }
 
         ksort($index);
-
         $page = 0;
         $canvas = 0;
         $sequence = [];
