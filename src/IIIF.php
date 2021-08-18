@@ -300,7 +300,7 @@ class IIIF {
 
             $canvas->height = 640;
             $canvas->width = 360;
-            $canvas->duration = self::getDuration(self::findProxyDatastream());
+            $canvas->duration = self::getBibframeDuration(self::findProxyDatastream());
 
         else :
 
