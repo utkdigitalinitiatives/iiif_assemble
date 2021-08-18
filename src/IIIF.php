@@ -413,7 +413,7 @@ class IIIF {
             $item['type'] = "Video";
             $item['width'] = 640;
             $item['height'] = 360;
-            $item['duration'] = self::getBibframeDuration();
+            $item['duration'] = self::getBibframeDuration('MP4');
             $item['format'] = "video/mp4";
 
         else :
@@ -512,8 +512,8 @@ class IIIF {
         return 500;
     }
 
-    private function getBibframeDuration() {
-        $duration = Request::getBibframeDuration($this->pid, 'csv');
+    private function getBibframeDuration($dsid) {
+        $duration = Request::getBibframeDuration($this->pid, $dsid, 'csv');
         print($duration['body']);
         return($duration[0]);
     }
