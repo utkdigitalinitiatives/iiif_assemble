@@ -514,7 +514,7 @@ class IIIF {
 
     private function getBibframeDuration() {
         $duration = Request::getBibframeDuration($this->pid, 'csv');
-        print_r($duration['body']);
+        print($duration['body']);
         return($duration[0]);
     }
 
