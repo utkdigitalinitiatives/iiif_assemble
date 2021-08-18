@@ -516,9 +516,9 @@ class IIIF {
         $durations = Request::getBibframeDuration($this->pid, $dsid, 'csv');
         $duration = [];
         foreach (explode("\n", $durations['body']) as $this_duration):
-            $potential_duration = explode("/", $this_duration);
             array_push($duration, end($this_duration));
         endforeach;
+        print_r($duration);
         return($duration[0]);
     }
 
