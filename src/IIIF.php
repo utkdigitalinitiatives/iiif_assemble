@@ -405,7 +405,7 @@ class IIIF {
             $item['type'] = "Sound";
             $item['width'] = 640;
             $item['height'] = 360;
-            $item['duration'] = self::getDuration();
+            $item['duration'] = self::getBibframeDuration('PROXY_MP3');
             $item['format'] = "audio/mpeg";
 
         elseif ($this->type === 'Video') :
@@ -413,7 +413,7 @@ class IIIF {
             $item['type'] = "Video";
             $item['width'] = 640;
             $item['height'] = 360;
-            $item['duration'] = self::getDuration();
+            $item['duration'] = self::getBibframeDuration('MP4');
             $item['format'] = "video/mp4";
 
         else :
