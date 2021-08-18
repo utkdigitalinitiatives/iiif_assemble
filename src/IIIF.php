@@ -279,6 +279,14 @@ class IIIF {
 
     }
 
+    private function findProxyDatastream () {
+        if ($this->type == 'Sound'):
+            return 'PROXY_MP3';
+        else:
+            return 'MP4';
+        endif;
+    }
+
     public function buildCanvas ($index, $uri, $pid) {
 
         $canvasId = $uri . '/canvas/' . $index;
@@ -293,7 +301,7 @@ class IIIF {
 
             $canvas->height = 640;
             $canvas->width = 360;
-            $canvas->duration = self::getDuration();
+            $canvas->duration = self::getBibframeDuration(self::findProxyDatastream());
 
         else :
 
@@ -464,7 +472,7 @@ class IIIF {
             $item['type'] = "Sound";
             $item['width'] = 640;
             $item['height'] = 360;
-            $item['duration'] = self::getDuration();
+            $item['duration'] = self::getBibframeDuration('PROXY_MP3');
             $item['format'] = "audio/mpeg";
 
         elseif ($this->type === 'Video') :
@@ -472,7 +480,7 @@ class IIIF {
             $item['type'] = "Video";
             $item['width'] = 640;
             $item['height'] = 360;
-            $item['duration'] = self::getDuration();
+            $item['duration'] = self::getBibframeDuration('MP4');
             $item['format'] = "video/mp4";
 
         else :
@@ -570,6 +578,15 @@ class IIIF {
 
     private static function getDuration () {
         return 500;
+    }
+
+    private function getBibframeDuration($dsid) {
+        $durations = Request::getBibframeDuration($this->pid, $dsid, 'csv');
+        $duration = explode("\n", $durations['body'])[1];
+        $split_duration = explode(":", $duration);
+        $hours = intval($split_duration[0]) *  60 * 60;
+        $minutes = intval($split_duration[1]) * 60;
+        return $hours + $minutes + intval($split_duration[2]);
     }
 
     private static function determineTypeByModel ($islandoraModel) {
