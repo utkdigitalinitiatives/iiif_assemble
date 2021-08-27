@@ -97,7 +97,6 @@ class IIIF {
             'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),
             'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
             'Form' => $this->xpath->query('physicalDescription/form[not(@type="material")]'),
-            'Type of Resource' => $this->type,
             'Extent' => $this->xpath->query('physicalDescription/extent'),
             'Topic' => $this->xpath->query('subject/topic'),
             'Coverage' => $this->xpath->query('subject/geographic'),
