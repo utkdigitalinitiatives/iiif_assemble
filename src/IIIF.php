@@ -519,11 +519,15 @@ class IIIF {
 
             $partType = $part->getAttribute('partType');
 
-            if (in_array($partType, ['Interview Questions', 'Chapters'])) :
+            if (in_array($partType, ['Interview Questions', 'Chapters', 'geographic'])) :
 
                 $label = $part->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcoreTitle');
                 $startTime = $part->getAttribute('startTime');
                 $endTime = $part->getAttribute('endTime');
+                $part_type_label = self::getLanguageArray($partType, 'label');
+                if ($part_type_label == 'geographic') :
+                    $part_type_label = 'Places Mentioned';
+                endif;
 
                 $range = Utility::sanitizeLabel($partType);
 
