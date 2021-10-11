@@ -533,7 +533,7 @@ class IIIF {
 
                 $ranges[$range]['type'] = 'Range';
                 $ranges[$range]['id'] = $uri . '/' . $range;
-                $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
+                $ranges[$range]['label'] = $part_type_label;
                 $ranges[$range]['items'][] = (object) [
                     'type' => 'Range',
                     'id' => $uri . '/' . $range . '/' . $index,
