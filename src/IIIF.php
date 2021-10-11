@@ -524,16 +524,14 @@ class IIIF {
                 $label = $part->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcoreTitle');
                 $startTime = $part->getAttribute('startTime');
                 $endTime = $part->getAttribute('endTime');
-                $part_type_label = self::getLanguageArray($partType, 'label');
-                if ($part_type_label == 'geographic') :
-                    $part_type_label = 'Places Mentioned';
+                if ($partType == 'geographic'):
+                    $partType = 'Places Mentioned';
                 endif;
-
                 $range = Utility::sanitizeLabel($partType);
 
                 $ranges[$range]['type'] = 'Range';
                 $ranges[$range]['id'] = $uri . '/' . $range;
-                $ranges[$range]['label'] = $part_type_label;
+                $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
                 $ranges[$range]['items'][] = (object) [
                     'type' => 'Range',
                     'id' => $uri . '/' . $range . '/' . $index,
