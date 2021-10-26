@@ -98,7 +98,7 @@ class IIIF {
             'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
             'Form' => $this->xpath->query('physicalDescription/form[not(@type="material")]'),
             'Extent' => $this->xpath->query('physicalDescription/extent'),
-            'Topic' => $this->xpath->query('subject[@authority]/topic'),
+            'Topic' => $this->xpath->query('subject[not(@displayLabel="Narrator Class")]/topic'),
             'Narrator Class' => $this->xpath->query('subject[@displayLabel="Narrator Class"]/topic'),
             'Coverage' => $this->xpath->query('subject/geographic'),
             'Time Period' => $this->xpath->query('subject/temporal'),
