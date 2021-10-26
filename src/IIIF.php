@@ -100,7 +100,7 @@ class IIIF {
             'Extent' => $this->xpath->query('physicalDescription/extent'),
             'Topic' => $this->xpath->query('subject[not(@displayLabel="Narrator Class")]/topic'),
             'Narrator Class' => $this->xpath->query('subject[@displayLabel="Narrator Class"]/topic'),
-            'Coverage' => $this->xpath->query('subject/geographic'),
+            'Place' => $this->xpath->query('subject/geographic'),
             'Time Period' => $this->xpath->query('subject/temporal'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn'])
         );
