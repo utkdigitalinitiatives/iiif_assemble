@@ -114,6 +114,15 @@ class SimpleXPath
         }
         return $return_value;
     }
+
+    public function get_role_terms() {
+        $return_value = array();
+        $matches = $this->doc->xpath('mods:name/mods:role/mods:roleTerm');
+        foreach ($matches as $value) {
+            array_push($return_value, (string)$value);
+        }
+        return $return_value;
+    }
 }
 
 ?>
