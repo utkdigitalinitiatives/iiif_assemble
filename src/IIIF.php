@@ -24,6 +24,7 @@ class IIIF {
         $this->mods = $mods;
         $this->object = $object;
         $this->xpath = new XPath($mods);
+        $this->markxpath = new SimpleXPath($mods);
         $this->type = self::determineTypeByModel($model);
 
         $this->url = Utility::getBaseUrl();
@@ -93,6 +94,8 @@ class IIIF {
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
             'Creators and Contributors' => $this->xpath->query('name/namePart'),
+            'Interviewee' => $this->markxpath->get_interviewees(),
+            'Interviewer' => $this->xpath->query('name/namePart'),
             'Publisher' => $this->xpath->query('originInfo/publisher'),
             'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),
             'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
