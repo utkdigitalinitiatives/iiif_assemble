@@ -4,6 +4,7 @@ namespace Src;
 
 use DOMDocument;
 use DOMXPath;
+use SimpleXMLElement;
 
 class XPath
 {
@@ -90,6 +91,28 @@ class XPath
 
     }
 
+}
+
+class SimpleXPath
+{
+    private $domxpath;
+    private $ns;
+
+    public function __construct($xml)
+    {
+
+        $doc = new SimpleXMLElement();
+        $doc->preserveWhiteSpace = false;
+        $doc->loadXML($xml);
+
+        $this->domxpath = new SimpleXMLElement($doc);
+        $this->domxpath->registerXPathNamespace("mods", "http://www.loc.gov/mods/v3");
+        $this->ns = $doc->documentElement->namespaceURI;
+    }
+
+    public function get_interviewees() {
+        return $this->domxpath->xpath('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart');
+    }
 }
 
 ?>
