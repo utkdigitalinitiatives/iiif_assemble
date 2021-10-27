@@ -106,7 +106,7 @@ class SimpleXPath
         $this->doc->registerXPathNamespace("mods", "http://www.loc.gov/mods/v3");
     }
 
-    private function get_values($expression) {
+    public function get_values($expression) {
         $return_value = array();
         $matches = $this->doc->xpath($expression);
         foreach ($matches as $value) {
