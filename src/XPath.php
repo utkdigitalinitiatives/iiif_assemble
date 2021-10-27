@@ -110,7 +110,7 @@ class SimpleXPath
         $value = array();
         $interviewees = $this->doc->xpath('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart');
         foreach ($interviewees as $interviewee) {
-            array_push($value, $interviewee->child);
+            array_push($value, (string)$interviewee);
         }
         return $value;
     }
