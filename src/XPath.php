@@ -106,13 +106,13 @@ class SimpleXPath
         $this->doc->registerXPathNamespace("mods", "http://www.loc.gov/mods/v3");
     }
 
-    public function get_interviewees($expression) {
-        $value = array();
-        $interviewees = $this->doc->xpath($expression);
-        foreach ($interviewees as $interviewee) {
-            array_push($value, (string)$interviewee);
+    public function get_values($expression) {
+        $return_value = array();
+        $matches = $this->doc->xpath($expression);
+        foreach ($matches as $value) {
+            array_push($return_value, (string)$value);
         }
-        return $value;
+        return $return_value;
     }
 }
 
