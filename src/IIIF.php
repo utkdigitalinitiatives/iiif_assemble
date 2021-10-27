@@ -96,10 +96,11 @@ class IIIF {
             'Publisher' => $this->xpath->query('originInfo/publisher'),
             'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),
             'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
-            'Form' => $this->xpath->query('physicalDescription/form[not(@type="material")]'),
+            'Format' => $this->xpath->query('physicalDescription/form[not(@type="material")]'),
             'Extent' => $this->xpath->query('physicalDescription/extent'),
-            'Topic' => $this->xpath->query('subject/topic'),
-            'Coverage' => $this->xpath->query('subject/geographic'),
+            'Subject' => $this->xpath->query('subject[not(@displayLabel="Narrator Class")]/topic'),
+            'Narrator Class' => $this->xpath->query('subject[@displayLabel="Narrator Class"]/topic'),
+            'Place' => $this->xpath->query('subject/geographic'),
             'Time Period' => $this->xpath->query('subject/temporal'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn'])
         );
