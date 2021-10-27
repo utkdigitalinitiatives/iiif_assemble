@@ -94,7 +94,7 @@ class IIIF {
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
             'Creators and Contributors' => $this->xpath->query('name/namePart'),
-            'Interviewee' => $this->markxpath->get_interviewees(),
+            'Interviewee' => $this->markxpath->get_interviewees('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart'),
             'Interviewer' => $this->xpath->query('name/namePart'),
             'Publisher' => $this->xpath->query('originInfo/publisher'),
             'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),

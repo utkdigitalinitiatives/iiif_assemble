@@ -106,9 +106,9 @@ class SimpleXPath
         $this->doc->registerXPathNamespace("mods", "http://www.loc.gov/mods/v3");
     }
 
-    public function get_interviewees() {
+    public function get_interviewees($expression) {
         $value = array();
-        $interviewees = $this->doc->xpath('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart');
+        $interviewees = $this->doc->xpath($expression);
         foreach ($interviewees as $interviewee) {
             array_push($value, (string)$interviewee);
         }
