@@ -101,13 +101,13 @@ class SimpleXPath
     public function __construct($xml)
     {
 
-        $doc = new SimpleXMLElement($xml);
-        $this->domxpath->registerXPathNamespace("mods", "http://www.loc.gov/mods/v3");
-        $this->ns = $doc->documentElement->namespaceURI;
+        $this->mods = $xml;
+        $this->doc = new SimpleXMLElement($xml);
+        $this->doc->registerXPathNamespace("mods", "http://www.loc.gov/mods/v3");
     }
 
     public function get_interviewees() {
-        return $this->domxpath->xpath('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart');
+        return $this->doc->xpath('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart');
     }
 }
 
