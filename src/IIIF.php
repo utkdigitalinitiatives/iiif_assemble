@@ -24,7 +24,7 @@ class IIIF {
         $this->mods = $mods;
         $this->object = $object;
         $this->xpath = new XPath($mods);
-        $this->markxpath = new SimpleXPath($mods);
+        $this->simplexpath = new SimpleXPath($mods);
         $this->type = self::determineTypeByModel($model);
 
         $this->url = Utility::getBaseUrl();
@@ -94,8 +94,8 @@ class IIIF {
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
             'Creators and Contributors' => $this->xpath->query('name/namePart'),
-            'Interviewees' => $this->markxpath->get_values('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart'),
-            'Interviewers' => $this->markxpath->get_values('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ivr"]]]/mods:namePart'),
+            'Interviewees' => $this->simplexpath->get_values('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart'),
+            'Interviewers' => $this->simplexpath->get_values('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ivr"]]]/mods:namePart'),
             'Publisher' => $this->xpath->query('originInfo/publisher'),
             'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),
             'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
