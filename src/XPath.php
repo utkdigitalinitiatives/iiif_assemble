@@ -125,6 +125,16 @@ class SimpleXPath
         }
         return $return_value;
     }
+
+    public function get_names() {
+        $names = array();
+        $roleterms = $this->get_role_terms();
+        foreach ($roleterms as $role) {
+            $current = (string)$role;
+            $names[$current]  = $this->doc-xpath("mods:name[mods:role[mods:roleTerm[text()='{$current}']]]/mods:namePart");
+        }
+        return $names;
+    }
 }
 
 ?>
