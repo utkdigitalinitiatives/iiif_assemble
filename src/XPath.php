@@ -131,7 +131,7 @@ class SimpleXPath
         $roleterms = $this->get_role_terms();
         foreach ($roleterms as $role) {
             $current = (string)$role;
-            $names[$current]  = $this->doc->xpath("mods:name[mods:role[mods:roleTerm[text()='{$current}']]]/mods:namePart");
+            $names[$current]  = $this->get_values("mods:name[mods:role[mods:roleTerm[text()='{$current}']]]/mods:namePart");
         }
         return $names;
     }
