@@ -119,7 +119,9 @@ class SimpleXPath
         $return_value = array();
         $matches = $this->doc->xpath('mods:name/mods:role/mods:roleTerm');
         foreach ($matches as $value) {
-            array_push($return_value, (string)$value);
+            if (in_array((string)$value, $return_value)==false) {
+                array_push($return_value, (string)$value);
+            }
         }
         return $return_value;
     }
