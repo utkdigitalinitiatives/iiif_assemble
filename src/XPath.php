@@ -101,11 +101,7 @@ class SimpleXPath
     public function __construct($xml)
     {
 
-        $doc = new SimpleXMLElement();
-        $doc->preserveWhiteSpace = false;
-        $doc->loadXML($xml);
-
-        $this->domxpath = new SimpleXMLElement($doc);
+        $doc = new SimpleXMLElement($xml);
         $this->domxpath->registerXPathNamespace("mods", "http://www.loc.gov/mods/v3");
         $this->ns = $doc->documentElement->namespaceURI;
     }
