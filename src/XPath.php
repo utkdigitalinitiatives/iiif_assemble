@@ -108,9 +108,9 @@ class SimpleXPath
 
     public function get_interviewees() {
         $value = array();
-        $iterviewees = $this->doc->xpath('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart');
-        foreach ($iterviewees as $interviewee) {
-            array_push($value, $interviewee);
+        $interviewees = $this->doc->xpath('//mods:name[mods:role[mods:roleTerm[@valueURI="http://id.loc.gov/vocabulary/relators/ive"]]]/mods:namePart');
+        foreach ($interviewees as $interviewee) {
+            array_push($value, $interviewee->child);
         }
         return $value;
     }
