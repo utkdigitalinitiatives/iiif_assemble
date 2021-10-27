@@ -108,7 +108,10 @@ class IIIF {
             'Time Period' => $this->xpath->query('subject/temporal'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn'])
         );
-
+        $names = $this->simplexpath->get_names();
+        foreach ($names as $k => $v) {
+            $metadata[$k] = $v;
+        }
         return self::validateMetadata($metadata);
 
     }
