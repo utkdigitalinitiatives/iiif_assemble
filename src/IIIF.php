@@ -104,12 +104,17 @@ class IIIF {
             'Time Period' => $this->xpath->query('subject/temporal'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn'])
         );
+        $metadata_with_names = $this->add_names_to_metadata($metadata);
+        return self::validateMetadata($metadata_with_names);
+
+    }
+
+    private function add_names_to_metadata($current_metadata) {
         $names = $this->simplexpath->get_names();
         foreach ($names as $k => $v) {
-            $metadata[$k] = $v;
+            $current_metadata[$k] = $v;
         }
-        return self::validateMetadata($metadata);
-
+        return $current_metadata;
     }
 
     public function validateMetadata ($array) {
