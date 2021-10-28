@@ -147,9 +147,10 @@ class IIIF {
 
     public function buildRequiredStatement () {
 
+        $providing_institution = $this->xpath->query('recordInfo/recordContentSource');
         return (object) [
             'label' => self::getLanguageArray('Attribution', 'label'),
-            'value' => self::getLanguageArray(['University of Tennessee, Knoxville. Libraries'], 'value')
+            'value' => self::getLanguageArray($providing_institution, 'value')
         ];
 
     }
