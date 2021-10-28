@@ -95,8 +95,6 @@ class XPath
 
 class SimpleXPath
 {
-    private $domxpath;
-    private $ns;
 
     public function __construct($xml)
     {
