@@ -206,17 +206,20 @@ class IIIF {
 
         $dsid = self::getThumbnailDatastream();
         $iiifImage = self::getIIIFImageURI($dsid, $this->pid);
+        $thumbnail_details = Request::get_thumbnail_details($iiifImage);
 
-        if (Request::responseStatus($iiifImage)) :
-            $item['id'] = $iiifImage;
+        if ($thumbnail_details['is_iiif']) :
+            $item['id'] = $thumbnail_details['thumbnail_uri'];
+            $item['width'] = $thumbnail_details['width'];
+            $item['height'] = $thumbnail_details['height'];
         else :
             $item['id'] = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/' . $dsid;
+            $item['width'] = $width;
+            $item['height'] = $height;
         endif;
 
         $item['type'] = "Image";
         $item['format'] = "image/jpeg";
-        $item['width'] = $width;
-        $item['height'] = $height;
 
         return [
             $item
