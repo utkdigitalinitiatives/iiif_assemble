@@ -218,6 +218,10 @@ class IIIF {
             $item['height'] = $height;
         endif;
 
+        if ( $this->type === "Sound" or $this->type === "Video") {
+            $item['duration'] = self::getBibframeDuration(self::findProxyDatastream());
+        }
+
         $item['type'] = "Image";
         $item['format'] = "image/jpeg";
 
