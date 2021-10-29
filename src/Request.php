@@ -44,6 +44,22 @@ class Request {
 
     }
 
+    public static function get_thumbnail_details ($uri) {
+        $response = self::curlRequest($uri, false);
+        $decoded_response = json_decode($response['body'], true);
+        $details = array(
+            'is_iiif'=>false
+        );
+        if ($response['status'] === 200) {
+            $details['is_iiif'] = true;
+            $details['width'] = $decoded_response['width'];
+            $details['height'] = $decoded_response['height'];
+            $details['thumbnail_uri'] = str_replace('info.json','full/max/0/default.jpg', $uri);
+        }
+        return $details;
+
+    }
+
     public static function responseBody($uri) {
 
         $response = self::curlRequest($uri, false);
