@@ -149,7 +149,7 @@ class IIIF {
 
         $providing_institution = $this->xpath->query('recordInfo/recordContentSource');
         return (object) [
-            'label' => self::getLanguageArray('Attribution', 'label'),
+            'label' => self::getLanguageArray('Provided by', 'label'),
             'value' => self::getLanguageArray($providing_institution, 'value')
         ];
 
