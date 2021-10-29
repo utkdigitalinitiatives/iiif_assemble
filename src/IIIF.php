@@ -69,7 +69,7 @@ class IIIF {
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
         $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
-        $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'), 'value');
+        $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
         $manifest['requiredStatement'] = self::buildRequiredStatement();
@@ -102,6 +102,8 @@ class IIIF {
             'Narrator Class' => $this->xpath->query('subject[@displayLabel="Narrator Class"]/topic'),
             'Place' => $this->xpath->query('subject/geographic'),
             'Time Period' => $this->xpath->query('subject/temporal'),
+            'Description' => $this->xpath->query('abstract[not(@lang)]'),
+            'Descripción' => $this->xpath->query('abstract[@lang="spa"]'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn'])
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
