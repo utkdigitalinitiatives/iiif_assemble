@@ -4,6 +4,7 @@ namespace Src;
 
 use DOMDocument;
 use DOMXPath;
+use SimpleXMLElement;
 
 class XPath
 {
@@ -90,6 +91,48 @@ class XPath
 
     }
 
+}
+
+class SimpleXPath
+{
+
+    public function __construct($xml)
+    {
+
+        $this->mods = $xml;
+        $this->doc = new SimpleXMLElement($xml);
+        $this->doc->registerXPathNamespace("mods", "http://www.loc.gov/mods/v3");
+    }
+
+    public function get_values($expression) {
+        $return_value = array();
+        $matches = $this->doc->xpath($expression);
+        foreach ($matches as $value) {
+            array_push($return_value, (string)$value);
+        }
+        return $return_value;
+    }
+
+    private function get_role_terms() {
+        $return_value = array();
+        $matches = $this->doc->xpath('mods:name/mods:role/mods:roleTerm');
+        foreach ($matches as $value) {
+            if (in_array((string)$value, $return_value)==false) {
+                array_push($return_value, (string)$value);
+            }
+        }
+        return $return_value;
+    }
+
+    public function get_names() {
+        $names = array();
+        $roleterms = $this->get_role_terms();
+        foreach ($roleterms as $role) {
+            $current = (string)$role;
+            $names[$current]  = $this->get_values("mods:name[mods:role[mods:roleTerm[text()='{$current}']]]/mods:namePart");
+        }
+        return $names;
+    }
 }
 
 ?>

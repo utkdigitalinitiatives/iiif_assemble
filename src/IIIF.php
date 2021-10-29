@@ -24,6 +24,7 @@ class IIIF {
         $this->mods = $mods;
         $this->object = $object;
         $this->xpath = new XPath($mods);
+        $this->simplexpath = new SimpleXPath($mods);
         $this->type = self::determineTypeByModel($model);
 
         $this->url = Utility::getBaseUrl();
@@ -92,7 +93,6 @@ class IIIF {
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
-            'Creators and Contributors' => $this->xpath->query('name/namePart'),
             'Publisher' => $this->xpath->query('originInfo/publisher'),
             'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),
             'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
@@ -104,9 +104,17 @@ class IIIF {
             'Time Period' => $this->xpath->query('subject/temporal'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn'])
         );
+        $metadata_with_names = $this->add_names_to_metadata($metadata);
+        return self::validateMetadata($metadata_with_names);
 
-        return self::validateMetadata($metadata);
+    }
 
+    private function add_names_to_metadata($current_metadata) {
+        $names = $this->simplexpath->get_names();
+        foreach ($names as $k => $v) {
+            $current_metadata[$k] = $v;
+        }
+        return $current_metadata;
     }
 
     public function validateMetadata ($array) {
