@@ -68,7 +68,7 @@ class IIIF {
         $manifest['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
-        $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang="spa")]'), 'value');
+        $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
         $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
