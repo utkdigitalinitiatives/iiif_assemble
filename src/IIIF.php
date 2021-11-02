@@ -81,9 +81,10 @@ class IIIF {
         if ($this->type === 'Book') {
             $manifest['behavior'] = ["paged"];
         }
-
+        if ($this->type === "Sound") {
+            $manifest['accompanyingCanvas'] = self::buildAccompanyingCanvas($this->getIIIFImageURI('TN', $this->pid));
+        }
         $presentation = self::buildStructures($manifest, $id);
-
         return json_encode($presentation);
 
     }
@@ -304,6 +305,33 @@ class IIIF {
         endif;
     }
 
+    private function buildAccompanyingCanvas ($uri) {
+        $canvasId = $uri . '/canvas/accompanying';
+        $title = 'Accompanying canvas for ' . $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
+        $canvas = (object) [
+            "id" => $canvasId,
+            "type" => "Canvas",
+            "label" => self::getLanguageArray($title, 'label', 'none')
+        ];
+        $iiifImage = self::getIIIFImageURI('TN', $this->pid);
+
+        if (Request::responseStatus($iiifImage)) :
+            $responseImageBody = json_decode(Request::responseBody($iiifImage));
+            $canvas->width = $responseImageBody->width;
+            $canvas->height = $responseImageBody->height;
+        endif;
+        $canvas->items = [self::prepareAccompanyingPage($canvasId)];
+        return $canvas;
+    }
+
+    private function paintAccompanyingImage($dsid) {
+        $item = array();
+        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/';
+        $iiifImage = self::getIIIFImageURI($dsid, $this->pid);
+        $item = self::getItemBody($iiifImage, $datastream . 'TN');
+        return $item;
+        }
+
     public function buildCanvas ($index, $uri, $pid) {
 
         $canvasId = $uri . '/canvas/' . $index;
@@ -312,7 +340,7 @@ class IIIF {
                 "id" => $canvasId,
                 "type" => 'Canvas',
                 "label" => self::getLanguageArray($title, 'label', 'none')
-            ];
+        ];
 
         if (in_array($this->type, ['Sound','Video'])) :
 
@@ -411,6 +439,25 @@ class IIIF {
             array_push($transcripts, $this::buildTranscript('es', $pagenumber, $target));
         endif;
         return $transcripts;
+    }
+
+    public function prepareAccompanyingPage ($target) {
+
+        $page = $target . '/page';
+        $items = [
+            (object) [
+                "id" => $page . '/' . $this->pid . '/' . uniqid(),
+                "type" => 'Annotation',
+                "motivation" => "painting",
+                "body" => [self::paintAccompanyingImage('TN')],
+                "target" => $target
+            ]
+        ];
+        return (object) [
+            "id" => $page . '/' . $this->pid,
+            "type" => 'AnnotationPage',
+            "items" => $items
+        ];
     }
 
     public function preparePage ($target, $pid, $number = 1) {
@@ -600,12 +647,13 @@ class IIIF {
     }
 
     private function getBibframeDuration($dsid) {
-        $durations = Request::getBibframeDuration($this->pid, $dsid, 'csv');
-        $duration = explode("\n", $durations['body'])[1];
-        $split_duration = explode(":", $duration);
-        $hours = intval($split_duration[0]) *  60 * 60;
-        $minutes = intval($split_duration[1]) * 60;
-        return $hours + $minutes + intval($split_duration[2]);
+//        $durations = Request::getBibframeDuration($this->pid, $dsid, 'csv');
+//        $duration = explode("\n", $durations['body'])[1];
+//        $split_duration = explode(":", $duration);
+//        $hours = intval($split_duration[0]) *  60 * 60;
+//        $minutes = intval($split_duration[1]) * 60;
+//        return $hours + $minutes + intval($split_duration[2]);
+        return 300;
     }
 
     private static function determineTypeByModel ($islandoraModel) {
