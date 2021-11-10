@@ -68,8 +68,8 @@ class IIIF {
         $manifest['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
-        $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
-        $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract'), 'value');
+        $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
+        $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
         $manifest['metadata'] = self::buildMetadata();
         $manifest['rights'] = self::buildRights();
         $manifest['requiredStatement'] = self::buildRequiredStatement();
@@ -102,6 +102,9 @@ class IIIF {
             'Narrator Role' => $this->xpath->query('subject[@displayLabel="Narrator Class"]/topic'),
             'Place' => $this->xpath->query('subject/geographic'),
             'Time Period' => $this->xpath->query('subject/temporal'),
+            'Description' => $this->xpath->query('abstract[not(@lang)]'),
+            'Descripción' => $this->xpath->query('abstract[@lang="spa"]'),
+            'Título' => $this->xpath->query('titleInfo[@lang="spa"]/title'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn'])
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
@@ -120,12 +123,19 @@ class IIIF {
     public function validateMetadata ($array) {
 
         $sets = array();
+        $spanish_labels = array('Descripción', 'Título');
 
         foreach ($array as $label => $value) :
             if ($value !== null and empty($value) !== true) :
+                if (in_array($label, $spanish_labels)) :
+                    $lang = 'es';
+                else :
+                    $lang = 'en';
+                endif;
                 $sets[] = self::getLabelValuePair(
                     $label,
-                    $value
+                    $value,
+                    $lang
                 );
             endif;
         endforeach;
@@ -569,12 +579,12 @@ class IIIF {
 
     }
 
-    public function getLabelValuePair ($label, $value) {
+    public function getLabelValuePair ($label, $value, $language="en") {
 
         if ($value !== null) {
             return (object) [
-                'label' => self::getLanguageArray($label, 'label'),
-                'value' => self::getLanguageArray($value, 'value')
+                'label' => self::getLanguageArray($label, 'label', $language),
+                'value' => self::getLanguageArray($value, 'value', $language)
             ];
         } else {
             return null;
