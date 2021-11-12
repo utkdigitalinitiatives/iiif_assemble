@@ -106,7 +106,7 @@ class IIIF {
             'Descripción' => $this->xpath->query('abstract[@lang="spa"]'),
             'Título' => $this->xpath->query('titleInfo[@lang="spa"]/title'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
-            'Browse' => $this->xpath->query('note[@displayLabel"Browse"]')
+            'Browse' => $this->xpath->query('note[@displayLabel="Browse"]')
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
