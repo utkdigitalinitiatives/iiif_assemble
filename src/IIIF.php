@@ -100,7 +100,7 @@ class IIIF {
             'Extent' => $this->xpath->query('physicalDescription/extent'),
             'Subject' => $this->xpath->query('subject[not(@displayLabel="Narrator Class")]/topic'),
             'Narrator Role' => $this->xpath->query('subject[@displayLabel="Narrator Class"]/topic'),
-            'Place' => $this->xpath->query('subject/geographic'),
+            'Place' => $this->browse_sanitize($this->xpath->query('subject/geographic')),
             'Time Period' => $this->xpath->query('subject/temporal'),
             'Description' => $this->xpath->query('abstract[not(@lang)]'),
             'Descripción' => $this->xpath->query('abstract[@lang="spa"]'),
@@ -115,10 +115,11 @@ class IIIF {
 
     private function browse_sanitize($value) {
         $sanitize = array(
-            'Meterologists & Environmentalists' => 'Meterologists and Environmentalists',
+            'Medical Personnel & First Responders' => 'Medical Personnel and First Responders',
             'Educators and Public or Government officials or employees' => 'Public or Government Employees',
             'Meterologists & Environmentalists' => 'Meterologists and Environmentalists',
-            'Disaster Response & Recovery' => 'Disaster Response and Recovery'
+            'Disaster Response & Recovery' => 'Disaster Response and Recovery',
+            'Arrowmont School of Arts & Crafts' => 'Arrowmont School of Arts and Crafts'
             );
         $finals = array();
         foreach ($value as $thing) {
