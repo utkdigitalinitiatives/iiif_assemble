@@ -100,17 +100,37 @@ class IIIF {
             'Extent' => $this->xpath->query('physicalDescription/extent'),
             'Subject' => $this->xpath->query('subject[not(@displayLabel="Narrator Class")]/topic'),
             'Narrator Role' => $this->xpath->query('subject[@displayLabel="Narrator Class"]/topic'),
-            'Place' => $this->xpath->query('subject/geographic'),
+            'Place' => $this->browse_sanitize($this->xpath->query('subject/geographic')),
             'Time Period' => $this->xpath->query('subject/temporal'),
             'Description' => $this->xpath->query('abstract[not(@lang)]'),
             'Descripción' => $this->xpath->query('abstract[@lang="spa"]'),
             'Título' => $this->xpath->query('titleInfo[@lang="spa"]/title'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
-            'Browse' => $this->xpath->query('note[@displayLabel="Browse"]')
+            'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]'))
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
 
+    }
+
+    private function browse_sanitize($value) {
+        $sanitize = array(
+            'Medical Personnel & First Responders' => 'Medical Personnel and First Responders',
+            'Educators and Public or Government officials or employees' => 'Public or Government Employees',
+            'Meterologists & Environmentalists' => 'Meterologists and Environmentalists',
+            'Disaster Response & Recovery' => 'Disaster Response and Recovery',
+            'Arrowmont School of Arts & Crafts' => 'Arrowmont School of Arts and Crafts'
+            );
+        $finals = array();
+        foreach ($value as $thing) {
+            if (array_key_exists($thing, $sanitize)) {
+                array_push($finals, $sanitize[$thing]);
+            }
+            else {
+                array_push($finals, $thing);
+            }
+        }
+        return $finals;
     }
 
     private function add_names_to_metadata($current_metadata) {
@@ -124,7 +144,7 @@ class IIIF {
     public function validateMetadata ($array) {
 
         $sets = array();
-        $spanish_labels = array('Descripción', 'Título');
+        $spanish_labels = array('spa_sample_1', 'spa_sample_2');
 
         foreach ($array as $label => $value) :
             if ($value !== null and empty($value) !== true) :
