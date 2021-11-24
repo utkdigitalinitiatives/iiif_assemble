@@ -106,11 +106,30 @@ class IIIF {
             'Descripción' => $this->xpath->query('abstract[@lang="spa"]'),
             'Título' => $this->xpath->query('titleInfo[@lang="spa"]/title'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
-            'Browse' => $this->xpath->query('note[@displayLabel="Browse"]')
+            'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]'))
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
 
+    }
+
+    private function browse_sanitize($value) {
+        $sanitize = array(
+            'Meterologists & Environmentalists' => 'Meterologists and Environmentalists',
+            'Educators and Public or Government officials or employees' => 'Public or Government Employees',
+            'Meterologists & Environmentalists' => 'Meterologists and Environmentalists',
+            'Disaster Response & Recovery' => 'Disaster Response and Recovery'
+            );
+        $finals = array();
+        foreach ($value as $thing) {
+            if (array_key_exists($thing, $sanitize)) {
+                array_push($finals, $sanitize[$thing]);
+            }
+            else {
+                array_push($finals, $thing);
+            }
+        }
+        return $finals;
     }
 
     private function add_names_to_metadata($current_metadata) {
