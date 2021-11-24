@@ -124,7 +124,7 @@ class IIIF {
     public function validateMetadata ($array) {
 
         $sets = array();
-        $spanish_labels = array('Descripción', 'Título');
+        $spanish_labels = array('spa_sample_1', 'spa_sample_2');
 
         foreach ($array as $label => $value) :
             if ($value !== null and empty($value) !== true) :
