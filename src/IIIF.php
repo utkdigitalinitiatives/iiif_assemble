@@ -106,11 +106,20 @@ class IIIF {
             'Descripción' => $this->xpath->query('abstract[@lang="spa"]'),
             'Título' => $this->xpath->query('titleInfo[@lang="spa"]/title'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
-            'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]'))
+            'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
+            'Language' => $this->determine_language($this->xpath->query('language/languageTerm'))
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
 
+    }
+
+    private function determine_language($value) {
+        $language = array('English');
+        if (count($value) > 0){
+            $language = $value;
+        }
+        return $language;
     }
 
     private function browse_sanitize($value) {
