@@ -568,7 +568,7 @@ class IIIF {
 
             $partType = $part->getAttribute('partType');
 
-            if (in_array($partType, ['Interview Questions', 'Chapters', 'geographic'])) :
+            if (in_array($partType, ['Interview Questions', 'Chapters', 'geographic', 'Preguntas de entrevista'])) :
 
                 $label = $part->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcoreTitle');
                 $startTime = $part->getAttribute('startTime');
