@@ -105,8 +105,8 @@ class IIIF {
             'Description' => $this->xpath->query('abstract[not(@lang)]'),
             'Descripción' => $this->xpath->query('abstract[@lang="spa"]'),
             'Título' => $this->xpath->query('titleInfo[@lang="spa"]/title'),
-            'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
-            'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
+//            'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
+//            'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
             'Language' => $this->xpath->query('language/languageTerm')
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
@@ -123,12 +123,14 @@ class IIIF {
             'Arrowmont School of Arts & Crafts' => 'Arrowmont School of Arts and Crafts'
             );
         $finals = array();
-        foreach ($value as $thing) {
-            if (array_key_exists($thing, $sanitize)) {
-                array_push($finals, $sanitize[$thing]);
-            }
-            else {
-                array_push($finals, $thing);
+        if($value) {
+            foreach ($value as $thing) {
+                if (array_key_exists($thing, $sanitize)) {
+                    array_push($finals, $sanitize[$thing]);
+                }
+                else {
+                    array_push($finals, $thing);
+                }
             }
         }
         return $finals;
