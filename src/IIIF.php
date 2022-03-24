@@ -124,12 +124,14 @@ class IIIF {
             'Arrowmont School of Arts & Crafts' => 'Arrowmont School of Arts and Crafts'
             );
         $finals = array();
-        foreach ($value as $thing) {
-            if (array_key_exists($thing, $sanitize)) {
-                array_push($finals, $sanitize[$thing]);
-            }
-            else {
-                array_push($finals, $thing);
+        if($value) {
+            foreach ($value as $thing) {
+                if (array_key_exists($thing, $sanitize)) {
+                    array_push($finals, $sanitize[$thing]);
+                }
+                else {
+                    array_push($finals, $thing);
+                }
             }
         }
         return $finals;
