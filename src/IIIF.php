@@ -49,10 +49,10 @@ class IIIF {
 
         foreach ($this->object as $item) {
             $items[] = (object) [
-                'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item),
+                'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item->pid),
                 'type' => 'Manifest',
                 'label' => (object) [
-                    'none' => [$item]
+                    'none' => [$item->label]
                     ]
             ];
         }
