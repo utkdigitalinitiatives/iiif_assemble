@@ -86,9 +86,15 @@ class Utility {
 
         foreach ($result as $string) {
             $item = explode(',', $string);
+            if(str_starts_with($item[1], '"')) {
+                $split = explode('"', $string);
+                $label = str_replace('"', '', $split[1]);
+            } else {
+                $label = $item[1];
+            }
             $index[] = (object) [
                 'pid' => str_replace('info:fedora/', '', $item[0]),
-                'label' => $item[1],
+                'label' => $label,
             ];
         }
 
