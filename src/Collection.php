@@ -68,7 +68,7 @@ class Collection
                 return json_encode($object);
             endif;
         else :
-            return json_encode($items);
+            return $object['status'];
         endif;
 
     }
