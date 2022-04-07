@@ -528,10 +528,12 @@ class IIIF {
             $body['width'] = $response->width;
             $body['height'] = $response->height;;
             $body['format'] = "image/jpeg";
-            $body['service'] = (object) [
-                '@id' => $response->{'@id'},
-                '@type' => $response->{'@context'},
-                'profile' => $response->profile[0],
+            $body['service'] = [
+                (object) [
+                    '@id' => $response->{'@id'},
+                    '@type' => $response->{'@context'},
+                    'profile' => $response->profile[0],
+                    ]
             ];
         else :
             $body['id'] = $fallback;
