@@ -502,7 +502,7 @@ class IIIF {
                 "id" => $page . '/' . $pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "painting",
-                "body" => [self::paintCanvas($pid)],
+                "body" => self::paintCanvas($pid),
                 "target" => $target
             ]
         ];
