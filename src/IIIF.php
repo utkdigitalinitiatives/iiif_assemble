@@ -38,6 +38,7 @@ class IIIF {
         $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
         $collection['id'] = $id;
         $collection['type'] = 'Collection';
+        $collection['thumbnail'] = self::buildCollectionThumbnails();
         $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
         $collection['items'] = self::buildCollectionItems();
 
@@ -59,6 +60,27 @@ class IIIF {
 
         return $items;
 
+    }
+
+    private function buildCollectionThumbnails ($items = []) {
+
+        foreach ($this->object as $item) {
+            $items[] = (object) [
+                /*'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item->pid),*/
+                'id' => $this->url . '/iiif/2/collections~islandora~object~' . $item->pid . '~datastream~TN/full/full/0/default.jpg',
+                'type' => 'Image',
+                'format' => 'image/jpeg',
+                'service' => [
+                    (object) [
+                        '@id' => $this->url . '/iiif/2/collections~islandora~object~' . $item->pid . '~datastream~TN',
+                        '@type' => "http://iiif.io/api/image/2/context.json",
+                        'profile' => 'http://iiif.io/api/image/2/level2.json'
+                    ]
+                ]
+            ];
+        }
+
+        return $items;
     }
 
     public function buildManifest ()
