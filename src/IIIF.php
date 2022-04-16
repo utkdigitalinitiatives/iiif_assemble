@@ -38,7 +38,10 @@ class IIIF {
         $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
         $collection['id'] = $id;
         $collection['type'] = 'Collection';
-        $collection['summary'] = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+        $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+        if ($summary->en[0] != "") {
+            $collection['summary'] = $summary;
+        }
         $collection['viewingDirection'] = 'left-to-right';
         $collection['behavior'] = ['unordered'];
         $collection['thumbnail'] = self::buildCollectionThumbnails();
