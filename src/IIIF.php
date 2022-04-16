@@ -497,10 +497,11 @@ class IIIF {
         $all_collections = [];
         $collections = Request::getCollectionPidIsPartOf($this->pid, 'csv');
         $split_collections = explode("\n", $collections['body']);
-        $split_collections = array_diff( $split_collections, ['"collection"', ''] );
+        $split_collections = array_diff( $split_collections, ['"collection"', '', 'info:fedora/islandora:root'] );
         foreach ($split_collections as $collection) :
+            $just_collection_pid = str_replace('info:fedora/', '', $collection);
             $new_collection = ( object ) [
-                "id" => $this->url . '/collections/islandora/object/' . str_replace('info:fedora/', '', $collection),
+                "id" => $this->url . '/assemble/collection/' . str_replace(':', '/', $just_collection_pid),
                 "type" => "Collection"
             ];
             array_push($all_collections, $new_collection);
