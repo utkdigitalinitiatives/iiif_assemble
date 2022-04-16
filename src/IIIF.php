@@ -44,6 +44,7 @@ class IIIF {
         }
         $collection['viewingDirection'] = 'left-to-right';
         $collection['behavior'] = ['unordered'];
+        $collection['partOf'] = self::getPartOf($this->pid);
         $collection['thumbnail'] = self::buildCollectionThumbnails();
         $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
         $collection['items'] = self::buildCollectionItems();
@@ -490,6 +491,22 @@ class IIIF {
                     ],
                 "target" => $target
         ];
+    }
+
+    private function getPartOf($pid) {
+        $all_collections = [];
+        $collections = Request::getCollectionPidIsPartOf($this->pid, 'csv');
+        $split_collections = explode("\n", $collections['body']);
+        $split_collections = array_diff( $split_collections, ['"collection"', ''] );
+        foreach ($split_collections as $collection) :
+            $new_collection = ( object ) [
+                "id" => $this->url . '/collections/islandora/object/' . str_replace('info:fedora/', '', $collection),
+                "type" => "Collection"
+            ];
+            array_push($all_collections, $new_collection);
+        endforeach;
+        return $all_collections;
+
     }
 
     private function getTranscipts($pagenumber, $target) {
