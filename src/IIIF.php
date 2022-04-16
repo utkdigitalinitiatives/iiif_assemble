@@ -74,7 +74,6 @@ class IIIF {
 
         foreach ($this->object as $item) {
             $items[] = (object) [
-                /*'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item->pid),*/
                 'id' => $this->url . '/iiif/2/collections~islandora~object~' . $item->pid . '~datastream~TN/full/full/0/default.jpg',
                 'type' => 'Image',
                 'format' => 'image/jpeg',
