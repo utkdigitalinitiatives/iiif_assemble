@@ -44,7 +44,7 @@ class IIIF {
         }
         $collection['viewingDirection'] = 'left-to-right';
         $collection['behavior'] = ['unordered'];
-        $collection['partOf'] = self::getPartOf($this->pid);
+        $collection['partOf'] = self::getPartOf();
         $collection['thumbnail'] = self::buildCollectionThumbnails();
         $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
         $collection['items'] = self::buildCollectionItems();
@@ -493,7 +493,7 @@ class IIIF {
         ];
     }
 
-    private function getPartOf($pid) {
+    private function getPartOf() {
         $all_collections = [];
         $collections = Request::getCollectionPidIsPartOf($this->pid, 'csv');
         $split_collections = explode("\n", $collections['body']);
