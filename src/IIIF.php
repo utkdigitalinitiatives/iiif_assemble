@@ -106,6 +106,7 @@ class IIIF {
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
         $manifest['seeAlso'] = self::buildSeeAlso();
+        $manifest['partOf'] = self::getPartOf();
 
         if ($this->type === 'Book') {
             $manifest['behavior'] = ["paged"];
