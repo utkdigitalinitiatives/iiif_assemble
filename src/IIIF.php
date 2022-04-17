@@ -45,6 +45,7 @@ class IIIF {
         $collection['viewingDirection'] = 'left-to-right';
         $collection['behavior'] = ['unordered'];
         $collection['partOf'] = self::getPartOf();
+        $collection['metadata'] = self::buildMetadata();
         $collection['thumbnail'] = self::buildCollectionThumbnails();
         $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
         $collection['items'] = self::buildCollectionItems();
