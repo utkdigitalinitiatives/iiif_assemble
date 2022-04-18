@@ -63,7 +63,8 @@ class IIIF {
                 'type' => 'Manifest',
                 'label' => (object) [
                     'none' => [$item->label]
-                    ]
+                    ],
+                'thumbnail' => self::buildThumbnail(200, 200)
             ];
         }
 
