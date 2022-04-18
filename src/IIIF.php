@@ -482,7 +482,7 @@ class IIIF {
                 "id" => $page . '/' . $this->pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "painting",
-                "body" => [self::paintAccompanyingImage('TN')],
+                "body" => self::paintAccompanyingImage('TN'),
                 "target" => $target
             ]
         ];
