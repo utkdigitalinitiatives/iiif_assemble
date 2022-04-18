@@ -50,9 +50,21 @@ class IIIF {
         $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
         $collection['items'] = self::buildCollectionItems();
         $collection['provider'] = self::buildProvider();
+        $collection['homepage'] = [ self::buildHomepage($this->pid, $collection['label']) ];
 
         return json_encode($collection);
 
+    }
+
+
+    private function buildHomepage ($pid, $label) {
+        $homepage = (object) [
+            'id' => $this->url . '/collections/islandora/object/' . $pid,
+            'label' => $label,
+            'type' => 'Text',
+            'format' => 'text/html'
+        ];
+        return $homepage;
     }
 
     private function buildCollectionItems ($items = []) {
