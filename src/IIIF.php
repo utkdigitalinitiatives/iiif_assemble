@@ -133,6 +133,7 @@ class IIIF {
         $manifest['items'] = self::buildItems($id);
         $manifest['seeAlso'] = self::buildSeeAlso();
         $manifest['partOf'] = self::getPartOf();
+        $manifest['homepage'] = [ self::buildHomepage($this->pid, $manifest['label']) ];
 
         if ($this->type === 'Book') {
             $manifest['behavior'] = ["paged"];
