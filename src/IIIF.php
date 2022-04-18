@@ -39,7 +39,7 @@ class IIIF {
         $collection['id'] = $id;
         $collection['type'] = 'Collection';
         $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
-        if ($summary->en[0] != "") {
+        if (is_array($summary->en) && $summary->en[0] != "") {
             $collection['summary'] = $summary;
         }
         $collection['viewingDirection'] = 'left-to-right';
