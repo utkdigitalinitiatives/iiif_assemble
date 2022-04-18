@@ -64,12 +64,24 @@ class IIIF {
                 'label' => (object) [
                     'none' => [$item->label]
                     ],
-                'thumbnail' => self::buildThumbnail(200, 200)
+                'thumbnail' => [self::useFedoraThumbnail($item->pid)]
             ];
         }
 
         return $items;
 
+    }
+
+    private function useFedoraThumbnail ($pid) {
+
+        $item = array();
+        $item['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/TN/view';
+        $item['height'] = 200;
+        $item['width'] = 200;
+        $item['type'] = 'Image';
+        $item['format'] = 'image/jpeg';
+
+        return $item;
     }
 
     private function buildCollectionThumbnails ($items = []) {
