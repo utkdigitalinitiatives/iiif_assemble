@@ -515,7 +515,7 @@ class IIIF {
     }
 
     private function prepareAnnotationPage ($target, $pid, $number = 1) {
-        $page = $target . '/page';
+        $page = $target . '/page/annotation';
         $items = [];
         if (in_array($this->type, ['Sound', 'Video'])) :
             $transcripts = self::getTranscipts($page, $target);
