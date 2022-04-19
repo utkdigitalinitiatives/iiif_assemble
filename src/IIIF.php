@@ -518,7 +518,7 @@ class IIIF {
             "items" => $items
         ];
         if (count($annotations) > 0) {
-            $canvas['annotations'] = $annotations;
+            $canvas->annotations = $annotations;
         }
         return $canvas;
     }
