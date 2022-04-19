@@ -506,21 +506,11 @@ class IIIF {
                 "target" => $target
             ]
         ];
-        $annotations = [];
-        if (in_array($this->type, ['Sound', 'Video'])) :
-            $transcripts = self::getTranscipts($page, $target);
-            foreach ($transcripts as &$transcript) :
-                array_push($annotations, $transcript);
-            endforeach;
-        endif;
         $canvas = (object) [
             "id" => $page . '/' . $pid,
             "type" => 'AnnotationPage',
             "items" => $items
         ];
-        if (count($annotations) > 0) {
-            $canvas->annotations = $annotations;
-        }
         return $canvas;
     }
 
