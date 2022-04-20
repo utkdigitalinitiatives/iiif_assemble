@@ -398,6 +398,7 @@ class IIIF {
         endif;
 
         $canvas->items = [self::preparePage($canvasId, $pid)];
+        $canvas->annotations = [self::prepareAnnotationPage($canvasId, $pid)];
 
         return $canvas;
 
@@ -505,6 +506,17 @@ class IIIF {
                 "target" => $target
             ]
         ];
+        $canvas = (object) [
+            "id" => $page . '/' . $pid,
+            "type" => 'AnnotationPage',
+            "items" => $items
+        ];
+        return $canvas;
+    }
+
+    private function prepareAnnotationPage ($target, $pid, $number = 1) {
+        $page = $target . '/page/annotation';
+        $items = [];
         if (in_array($this->type, ['Sound', 'Video'])) :
             $transcripts = self::getTranscipts($page, $target);
             foreach ($transcripts as &$transcript) :
