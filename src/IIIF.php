@@ -38,11 +38,33 @@ class IIIF {
         $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
         $collection['id'] = $id;
         $collection['type'] = 'Collection';
+        $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+        if (is_array($summary->en) && $summary->en[0] != "") {
+            $collection['summary'] = $summary;
+        }
+        $collection['viewingDirection'] = 'left-to-right';
+        $collection['behavior'] = ['unordered'];
+        $collection['partOf'] = self::getPartOf();
+        $collection['metadata'] = self::buildMetadata();
+        $collection['thumbnail'] = self::buildCollectionThumbnails();
         $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
         $collection['items'] = self::buildCollectionItems();
+        $collection['provider'] = self::buildProvider();
+        $collection['homepage'] = [ self::buildHomepage($this->pid, $collection['label']) ];
 
         return json_encode($collection);
 
+    }
+
+
+    private function buildHomepage ($pid, $label) {
+        $homepage = (object) [
+            'id' => $this->url . '/collections/islandora/object/' . $pid,
+            'label' => $label,
+            'type' => 'Text',
+            'format' => 'text/html'
+        ];
+        return $homepage;
     }
 
     private function buildCollectionItems ($items = []) {
@@ -53,12 +75,50 @@ class IIIF {
                 'type' => 'Manifest',
                 'label' => (object) [
                     'none' => [$item->label]
-                    ]
+                    ],
+                'thumbnail' => [self::useFedoraThumbnail($item->pid)],
+                'homepage' => [
+                    self::buildHomepage($item->pid, (object) [
+                        'none' => [$item->label]
+                    ]),
+                ]
             ];
         }
 
         return $items;
 
+    }
+
+    private function useFedoraThumbnail ($pid) {
+
+        $item = array();
+        $item['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/TN/view';
+        $item['height'] = 200;
+        $item['width'] = 200;
+        $item['type'] = 'Image';
+        $item['format'] = 'image/jpeg';
+
+        return $item;
+    }
+
+    private function buildCollectionThumbnails ($items = []) {
+
+        foreach ($this->object as $item) {
+            $items[] = (object) [
+                'id' => $this->url . '/iiif/2/collections~islandora~object~' . $item->pid . '~datastream~TN/full/full/0/default.jpg',
+                'type' => 'Image',
+                'format' => 'image/jpeg',
+                'service' => [
+                    (object) [
+                        '@id' => $this->url . '/iiif/2/collections~islandora~object~' . $item->pid . '~datastream~TN',
+                        '@type' => "http://iiif.io/api/image/2/context.json",
+                        'profile' => 'http://iiif.io/api/image/2/level2.json'
+                    ]
+                ]
+            ];
+        }
+
+        return $items;
     }
 
     public function buildManifest ()
@@ -77,6 +137,8 @@ class IIIF {
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
         $manifest['seeAlso'] = self::buildSeeAlso();
+        $manifest['partOf'] = self::getPartOf();
+        $manifest['homepage'] = [ self::buildHomepage($this->pid, $manifest['label']) ];
 
         if ($this->type === 'Book') {
             $manifest['behavior'] = ["paged"];
@@ -461,6 +523,23 @@ class IIIF {
                     ],
                 "target" => $target
         ];
+    }
+
+    private function getPartOf() {
+        $all_collections = [];
+        $collections = Request::getCollectionPidIsPartOf($this->pid, 'csv');
+        $split_collections = explode("\n", $collections['body']);
+        $split_collections = array_diff( $split_collections, ['"collection"', '', 'info:fedora/islandora:root'] );
+        foreach ($split_collections as $collection) :
+            $just_collection_pid = str_replace('info:fedora/', '', $collection);
+            $new_collection = ( object ) [
+                "id" => $this->url . '/assemble/collection/' . str_replace(':', '/', $just_collection_pid),
+                "type" => "Collection"
+            ];
+            array_push($all_collections, $new_collection);
+        endforeach;
+        return $all_collections;
+
     }
 
     private function getTranscipts($pagenumber, $target) {

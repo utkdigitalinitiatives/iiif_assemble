@@ -61,13 +61,18 @@ class XPath
             $values[$value] = $nodes[$key]->nodeValue;
         endforeach;
 
-        foreach ($values as $key => $value) :
-            if (!in_array($key, $attributeValues)) :
-                unset($values[$key]);
-            endif;
-        endforeach;
+        if ($values != null) {
+            foreach ($values as $key => $value) :
+                if (!in_array($key, $attributeValues)) :
+                    unset($values[$key]);
+                endif;
+            endforeach;
 
-        return array_values($values);
+            return array_values($values);
+        } else {
+            return null;
+        }
+
 
     }
 
