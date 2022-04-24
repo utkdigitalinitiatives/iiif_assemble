@@ -460,6 +460,7 @@ class IIIF {
         endif;
 
         $canvas->items = [self::preparePage($canvasId, $pid)];
+        $canvas->annotations = [self::prepareAnnotationPage($canvasId, $pid)];
 
         return $canvas;
 
@@ -507,7 +508,7 @@ class IIIF {
                 "id" => $page . '/' . $this->pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "supplementing",
-                "body" => [
+                "body" =>
                     (object) [
                         "id" => $datastream . $transcript_datastream,
                         "type" => "Text",
@@ -520,7 +521,6 @@ class IIIF {
                             ],
                         "language"=> $transcript_language
                         ],
-                    ],
                 "target" => $target
         ];
     }
@@ -562,7 +562,7 @@ class IIIF {
                 "id" => $page . '/' . $this->pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "painting",
-                "body" => [self::paintAccompanyingImage('TN')],
+                "body" => self::paintAccompanyingImage('TN'),
                 "target" => $target
             ]
         ];
@@ -581,10 +581,21 @@ class IIIF {
                 "id" => $page . '/' . $pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "painting",
-                "body" => [self::paintCanvas($pid)],
+                "body" => self::paintCanvas($pid),
                 "target" => $target
             ]
         ];
+        $canvas = (object) [
+            "id" => $page . '/' . $pid,
+            "type" => 'AnnotationPage',
+            "items" => $items
+        ];
+        return $canvas;
+    }
+
+    private function prepareAnnotationPage ($target, $pid, $number = 1) {
+        $page = $target . '/page/annotation';
+        $items = [];
         if (in_array($this->type, ['Sound', 'Video'])) :
             $transcripts = self::getTranscipts($page, $target);
             foreach ($transcripts as &$transcript) :
@@ -607,10 +618,12 @@ class IIIF {
             $body['width'] = $response->width;
             $body['height'] = $response->height;;
             $body['format'] = "image/jpeg";
-            $body['service'] = (object) [
-                '@id' => $response->{'@id'},
-                '@type' => $response->{'@context'},
-                'profile' => $response->profile[0],
+            $body['service'] = [
+                (object) [
+                    '@id' => $response->{'@id'},
+                    '@type' => $response->{'@context'},
+                    'profile' => $response->profile[0],
+                ]
             ];
         else :
             $body['id'] = $fallback;
