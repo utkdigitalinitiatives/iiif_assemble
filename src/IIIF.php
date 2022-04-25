@@ -436,7 +436,8 @@ class IIIF {
         $canvas = (object) [
                 "id" => $canvasId,
                 "type" => 'Canvas',
-                "label" => self::getLanguageArray($title, 'label', 'none')
+                "label" => self::getLanguageArray($title, 'label', 'none'),
+                "thumbnail" => self::buildThumbnail(200, 200)
         ];
 
         if (in_array($this->type, ['Sound','Video'])) :
