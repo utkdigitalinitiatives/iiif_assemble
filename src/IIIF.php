@@ -318,6 +318,7 @@ class IIIF {
             $item['id'] = $thumbnail_details['thumbnail_uri'];
             $item['width'] = $thumbnail_details['width'];
             $item['height'] = $thumbnail_details['height'];
+            $item['service'] = $thumbnail_details['service'];
         else :
             $item['id'] = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/' . $dsid;
             $item['width'] = $width;

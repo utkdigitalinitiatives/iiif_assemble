@@ -55,6 +55,13 @@ class Request {
             $details['width'] = $decoded_response['width'];
             $details['height'] = $decoded_response['height'];
             $details['thumbnail_uri'] = str_replace('info.json','full/max/0/default.jpg', $uri);
+            $details['service'] = [
+                (object) [
+                    '@id' => $uri,
+                    '@type' => 	'http://iiif.io/api/image/2/context.json',
+                    '@profile' => 'http://iiif.io/api/image/2/level2.json'
+                ]
+            ];
         }
         return $details;
 
