@@ -57,7 +57,7 @@ class Request {
             $details['thumbnail_uri'] = str_replace('info.json','full/max/0/default.jpg', $uri);
             $details['service'] = [
                 (object) [
-                    '@id' => $uri,
+                    '@id' => str_replace('info.json','', $uri),
                     '@type' => 	'http://iiif.io/api/image/2/context.json',
                     '@profile' => 'http://iiif.io/api/image/2/level2.json'
                 ]
