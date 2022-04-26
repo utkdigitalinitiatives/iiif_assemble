@@ -309,9 +309,7 @@ class IIIF {
     public function buildThumbnail ($width, $height) {
 
         $item = array();
-
-        $dsid = self::getThumbnailDatastream();
-        $iiifImage = self::getIIIFImageURI($dsid, $this->pid);
+        $iiifImage = self::getIIIFImageURI('TN', $this->pid);
         $thumbnail_details = Request::get_thumbnail_details($iiifImage);
 
         if ($thumbnail_details['is_iiif']) :
@@ -320,7 +318,7 @@ class IIIF {
             $item['height'] = $thumbnail_details['height'];
             $item['service'] = $thumbnail_details['service'];
         else :
-            $item['id'] = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/' . $dsid;
+            $item['id'] = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/' . 'TN';
             $item['width'] = $width;
             $item['height'] = $height;
         endif;
