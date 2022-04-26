@@ -471,7 +471,8 @@ class IIIF {
         $canvas = (object) [
             "id" => $canvasId,
             "type" => 'Canvas',
-            "label" => self::getLanguageArray($canvasData[0]['title'], 'label', 'none')
+            "label" => self::getLanguageArray($canvasData[0]['title'], 'label', 'none'),
+            "thumbnail" => self::buildThumbnail(200, 200)
         ];
 
         foreach ($canvasData as $key => $data) {
