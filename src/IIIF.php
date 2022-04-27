@@ -306,20 +306,21 @@ class IIIF {
         ];
     }
 
-    public function buildThumbnail ($width, $height) {
-
+    public function buildThumbnail ($width, $height, $pid="") {
+        if ($pid == "") {
+            $pid = $this->pid;
+        }
         $item = array();
-
-        $dsid = self::getThumbnailDatastream();
-        $iiifImage = self::getIIIFImageURI($dsid, $this->pid);
+        $iiifImage = self::getIIIFImageURI('TN', $pid);
         $thumbnail_details = Request::get_thumbnail_details($iiifImage);
 
         if ($thumbnail_details['is_iiif']) :
             $item['id'] = $thumbnail_details['thumbnail_uri'];
             $item['width'] = $thumbnail_details['width'];
             $item['height'] = $thumbnail_details['height'];
+            $item['service'] = $thumbnail_details['service'];
         else :
-            $item['id'] = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/' . $dsid;
+            $item['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/' . 'TN';
             $item['width'] = $width;
             $item['height'] = $height;
         endif;
@@ -435,7 +436,8 @@ class IIIF {
         $canvas = (object) [
                 "id" => $canvasId,
                 "type" => 'Canvas',
-                "label" => self::getLanguageArray($title, 'label', 'none')
+                "label" => self::getLanguageArray($title, 'label', 'none'),
+                "thumbnail" => self::buildThumbnail(200, 200)
         ];
 
         if (in_array($this->type, ['Sound','Video'])) :
@@ -486,6 +488,7 @@ class IIIF {
                 $canvas->width = 360;
             endif;
 
+            $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid']);
             $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key);
         }
 
