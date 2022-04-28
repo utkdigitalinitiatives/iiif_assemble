@@ -800,6 +800,8 @@ class IIIF {
             $type = "Video";
         elseif (in_array('info:fedora/islandora:bookCModel', $model)) :
             $type = "Book";
+        elseif (in_array('info:fedora/islandora:info:fedora/islandora:compoundCModel', $model)) :
+            $type = "Compound";
         else :
             $type = "Image";
         endif;
