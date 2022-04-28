@@ -462,7 +462,10 @@ class IIIF {
         endif;
 
         $canvas->items = [self::preparePage($canvasId, $pid)];
-        $canvas->annotations = [self::prepareAnnotationPage($canvasId, $pid)];
+        $annotations = self::prepareAnnotationPage($canvasId, $pid);
+        if (count($annotations->items) > 0) {
+            $canvas->annotations = [self::prepareAnnotationPage($canvasId, $pid)];
+        }
 
         return $canvas;
 
