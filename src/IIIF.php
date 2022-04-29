@@ -702,7 +702,7 @@ class IIIF {
                 $item['type'] = "Video";
                 $item['width'] = 640;
                 $item['height'] = 360;
-                $item['duration'] = self::getBibframeDuration('MP4');
+                $item['duration'] = self::getBibframeDuration('MP4', $pid);
                 $item['format'] = "video/mp4";
             endif;
         else :
