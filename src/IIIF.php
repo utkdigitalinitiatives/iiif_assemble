@@ -492,6 +492,10 @@ class IIIF {
 
             $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid']);
             $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key, $canvasData);
+            $annotations = self::prepareAnnotationPage($canvasId, $data['pid']);
+            if (count($annotations->items) > 0) {
+                $canvas->annotations = [self::prepareAnnotationPage($canvasId, $data['pid'])];
+            }
         }
 
         return $canvas;
