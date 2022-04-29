@@ -695,7 +695,7 @@ class IIIF {
                 $item['type'] = "Sound";
                 $item['width'] = 640;
                 $item['height'] = 360;
-                $item['duration'] = self::getBibframeDuration('PROXY_MP3');
+                $item['duration'] = self::getBibframeDuration('PROXY_MP3', $pid);
                 $item['format'] = "audio/mpeg";
             elseif ($part_type == 'Video') :
                 $item['id'] = $datastream . 'MP4';
@@ -801,8 +801,11 @@ class IIIF {
 
     }
 
-    private function getBibframeDuration($dsid) {
-        $durations = Request::getBibframeDuration($this->pid, $dsid, 'csv');
+    private function getBibframeDuration($dsid, $pid="") {
+        if ($pid == "") {
+            $pid = $this->pid;
+        }
+        $durations = Request::getBibframeDuration($pid, $dsid, 'csv');
         $duration = explode("\n", $durations['body'])[1];
         $split_duration = explode(":", $duration);
         $hours = intval($split_duration[0]) *  60 * 60;
