@@ -494,7 +494,7 @@ class IIIF {
             $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key, $canvasData);
             $annotations = self::prepareAnnotationPage($canvasId, $data['pid']);
             if (count($annotations->items) > 0) {
-                $canvas->annotations = [self::prepareAnnotationPage($canvasId, $data['pid'])];
+                $canvas->annotations = [$annotations];
             }
         }
 
@@ -551,8 +551,8 @@ class IIIF {
 
     }
 
-    private function getTranscipts($pagenumber, $target) {
-        $datastreams = $this::getDatastreamIds();
+    private function getTranscipts($pagenumber, $target, $pid) {
+        $datastreams = $this::getDatastreamIds($pid);
         $transcripts = [];
         if (in_array('TRANSCRIPT', $datastreams)) :
             array_push($transcripts, $this::buildTranscript('en', $pagenumber, $target));
@@ -606,7 +606,7 @@ class IIIF {
         $page = $target . '/page/annotation';
         $items = [];
         if (in_array($this->type, ['Sound', 'Video', 'Compound'])) :
-            $transcripts = self::getTranscipts($page, $target);
+            $transcripts = self::getTranscipts($page, $target, $pid);
             foreach ($transcripts as &$transcript) :
                 array_push($items, $transcript);
             endforeach;
@@ -646,8 +646,11 @@ class IIIF {
 
     }
 
-    private function getDatastreamIds () {
-        $dsids = Request::getDatastreams($this->pid, 'csv');
+    private function getDatastreamIds ($pid="") {
+        if($pid == "") {
+            $pid = $this->pid;
+        }
+        $dsids = Request::getDatastreams($pid, 'csv');
         $final_dsids = [];
         foreach (explode("\n", $dsids['body']) as &$dsid) :
             $potential_dsid = explode("/", $dsid);
