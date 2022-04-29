@@ -143,6 +143,9 @@ class IIIF {
         if ($this->type === 'Book') {
             $manifest['behavior'] = ["paged"];
         }
+        if ($this->type === 'Compound') {
+            $manifest['behavior'] = ["individuals"];
+        }
         if ($this->type === "Sound") {
             $manifest['accompanyingCanvas'] = self::buildAccompanyingCanvas($this->getIIIFImageURI('TN', $this->pid));
         }
