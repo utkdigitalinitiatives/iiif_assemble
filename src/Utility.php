@@ -55,10 +55,13 @@ class Utility {
         $index = [];
 
         foreach ($result as $string) {
-            $item = explode(',', $string);
-            $pageNumber = $item[1];
-            $index[$pageNumber]['pid'] = str_replace('info:fedora/', '', $item[0]);
-            $index[$pageNumber]['title'] = $item[2];
+            if (strpos($string, "info:fedora/fedora-system:FedoraObject-3.0") !== true) {
+                $item = explode(',', $string);
+                $pageNumber = $item[1];
+                $index[$pageNumber]['pid'] = str_replace('info:fedora/', '', $item[0]);
+                $index[$pageNumber]['title'] = $item[2];
+                $index[$pageNumber]['type'] = $item[3];
+            }
         }
 
         ksort($index);
