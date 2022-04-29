@@ -338,20 +338,6 @@ class IIIF {
 
     }
 
-    public function getThumbnailDatastream () {
-
-        if ($this->type === 'Sound') :
-            $id = 'TN';
-        elseif ($this->type === 'Video') :
-            $id = 'TN';
-        else :
-            $id = 'JP2';
-        endif;
-
-        return $id;
-
-    }
-
     public function getIIIFImageURI ($dsid, $pid) {
 
         $uri = $this->url . '/iiif/2/';
@@ -364,7 +350,6 @@ class IIIF {
     }
 
     public function buildItems ($uri) {
-
         if (in_array($this->type, ['Book'])) :
 
             $items = Request::getBookPages($this->pid, 'csv');
@@ -385,7 +370,26 @@ class IIIF {
                 return null;
 
             }
+        elseif (in_array($this->type, ['Compound'])) :
+            $items = Request::getCompoundParts($this->pid, 'csv');
 
+            if ($items['status'] === 200) {
+
+                $canvases = Utility::orderCanvases($items['body']);
+
+                $items = [];
+                foreach ($canvases as $key => $canvas) {
+                $items[$key] = $this->buildCanvasWithPages($key, $uri, $canvas);
+//                    $items[$key] = $this->buildCanvas($key, $uri, $canvas);
+                }
+
+                return $items;
+
+            } else {
+
+                return null;
+
+            }
         else:
 
             return [$this->buildCanvas(0, $uri, $this->pid)];
@@ -478,7 +482,6 @@ class IIIF {
 
         foreach ($canvasData as $key => $data) {
             $iiifImage = self::getIIIFImageURI('JP2', $data['pid']);
-
             if (Request::responseStatus($iiifImage)) :
                 $responseImageBody = json_decode(Request::responseBody($iiifImage));
                 $canvas->width = $responseImageBody->width;
@@ -771,10 +774,6 @@ class IIIF {
 
     }
 
-    private static function getDuration () {
-        return 500;
-    }
-
     private function getBibframeDuration($dsid) {
         $durations = Request::getBibframeDuration($this->pid, $dsid, 'csv');
         $duration = explode("\n", $durations['body'])[1];
@@ -800,7 +799,7 @@ class IIIF {
             $type = "Video";
         elseif (in_array('info:fedora/islandora:bookCModel', $model)) :
             $type = "Book";
-        elseif (in_array('info:fedora/islandora:info:fedora/islandora:compoundCModel', $model)) :
+        elseif (in_array('info:fedora/islandora:compoundCModel', $model)) :
             $type = "Compound";
         else :
             $type = "Image";
