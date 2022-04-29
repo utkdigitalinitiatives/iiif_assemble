@@ -502,8 +502,11 @@ class IIIF {
 
     }
 
-    private function buildTranscript($language_code, $page, $target) {
-        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/';
+    private function buildTranscript($language_code, $page, $target, $pid="") {
+        if($pid == "") {
+            $pid = $this->pid;
+        }
+        $datastream = $this->url . '/collections/islandora/object/' . $pid . '/datastream/';
         if ($language_code == "es") :
             $transcript_datastream = "TRANSCRIPT-ES";
             $transcript_label = "Subtítulos en español";
@@ -514,7 +517,7 @@ class IIIF {
             $transcript_language = "en";
         endif;
         return (object) [
-                "id" => $page . '/' . $this->pid . '/' . uniqid(),
+                "id" => $page . '/' . $pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "supplementing",
                 "body" =>
@@ -555,10 +558,10 @@ class IIIF {
         $datastreams = $this::getDatastreamIds($pid);
         $transcripts = [];
         if (in_array('TRANSCRIPT', $datastreams)) :
-            array_push($transcripts, $this::buildTranscript('en', $pagenumber, $target));
+            array_push($transcripts, $this::buildTranscript('en', $pagenumber, $target, $pid));
         endif;
         if (in_array('TRANSCRIPT-ES', $datastreams)) :
-            array_push($transcripts, $this::buildTranscript('es', $pagenumber, $target));
+            array_push($transcripts, $this::buildTranscript('es', $pagenumber, $target, $pid));
         endif;
         return $transcripts;
     }
