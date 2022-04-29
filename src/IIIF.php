@@ -659,7 +659,7 @@ class IIIF {
 
         $datastream = $this->url . '/collections/islandora/object/' . $pid . '/datastream/';
 
-        if (in_array($this->type, ['Image', 'Book'])) :
+        if (in_array($this->type, ['Image', 'Book', 'Compound'])) :
             $iiifImage = self::getIIIFImageURI('JP2', $pid);
             $item = self::getItemBody($iiifImage, $datastream . 'OBJ');
 
