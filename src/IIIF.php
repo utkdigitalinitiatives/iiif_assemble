@@ -374,7 +374,6 @@ class IIIF {
             $items = Request::getCompoundParts($this->pid, 'csv');
 
             if ($items['status'] === 200) {
-
                 $canvases = Utility::orderCanvases($items['body']);
 
                 $items = [];
@@ -492,7 +491,7 @@ class IIIF {
             endif;
 
             $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid']);
-            $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key);
+            $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key, $canvasData);
         }
 
         return $canvas;
@@ -579,7 +578,7 @@ class IIIF {
         ];
     }
 
-    public function preparePage ($target, $pid, $number = 1) {
+    public function preparePage ($target, $pid, $number = 1, $canvas_data=[]) {
 
         $page = $target . '/page';
         $items = [
@@ -587,7 +586,7 @@ class IIIF {
                 "id" => $page . '/' . $pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "painting",
-                "body" => self::paintCanvas($pid),
+                "body" => self::paintCanvas($pid, $canvas_data),
                 "target" => $target
             ]
         ];
@@ -653,13 +652,13 @@ class IIIF {
         return $final_dsids;
     }
 
-    public function paintCanvas ($pid) {
+    public function paintCanvas ($pid, $data=[] ){
 
         $item = array();
 
         $datastream = $this->url . '/collections/islandora/object/' . $pid . '/datastream/';
 
-        if (in_array($this->type, ['Image', 'Book', 'Compound'])) :
+        if (in_array($this->type, ['Image', 'Book'])) :
             $iiifImage = self::getIIIFImageURI('JP2', $pid);
             $item = self::getItemBody($iiifImage, $datastream . 'OBJ');
 
@@ -679,6 +678,26 @@ class IIIF {
             $item['duration'] = self::getBibframeDuration('MP4');
             $item['format'] = "video/mp4";
 
+        elseif ($this->type === 'Compound') :
+            $part_type = self::determineTypeByModel($data[0]['type']);
+            if ($part_type === 'Image') :
+                $iiifImage = self::getIIIFImageURI('JP2', $pid);
+                $item = self::getItemBody($iiifImage, $datastream . 'OBJ');
+            elseif ($part_type === 'Sound') :
+                $item['id'] = $datastream . 'PROXY_MP3';
+                $item['type'] = "Sound";
+                $item['width'] = 640;
+                $item['height'] = 360;
+                $item['duration'] = self::getBibframeDuration('PROXY_MP3');
+                $item['format'] = "audio/mpeg";
+            elseif ($part_type == 'Video') :
+                $item['id'] = $datastream . 'MP4';
+                $item['type'] = "Video";
+                $item['width'] = 640;
+                $item['height'] = 360;
+                $item['duration'] = self::getBibframeDuration('MP4');
+                $item['format'] = "video/mp4";
+            endif;
         else :
             $item['id'] = null;
             $item['type'] = null;
@@ -688,6 +707,7 @@ class IIIF {
 
         return $item;
     }
+
 
     public function buildStructures ($manifest, $uri) {
 
