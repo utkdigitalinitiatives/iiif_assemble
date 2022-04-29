@@ -107,11 +107,11 @@ class Request {
 
     public static function getCompoundParts($pid, $format = 'csv') {
         $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=' . $format .'&query=';
-        $escaped_pid = str_replace(':', "_", $pid);
+        $escaped_pid = str_replace('%3A', "%5F", $pid);
         $query = "PREFIX fedora-model: <info:fedora/fedora-system:def/model#> PREFIX fedora-rels-ext: ";
         $query .= "<info:fedora/fedora-system:def/relations-external#> PREFIX isl-rels-ext: ";
         $query .= "<http://islandora.ca/ontology/relsext#> SELECT \$part \$numbers \$title FROM <#ri> WHERE {{ \$part ";
-        $query .= "fedora-rels-ext:isMemberOf <info:fedora/" . $pid ."> ; isl-rels-ext:isisSequenceNumberOf" . $escaped_pid . "\$numbers ;";
+        $query .= "fedora-rels-ext:isConstituentOf <info:fedora/" . $pid ."> ; isl-rels-ext:isSequenceNumberOf" . $escaped_pid . " \$numbers ;";
         $query .= "fedora-model:label \$title . }}";
 
         $request .= self::escapeQuery($query);
