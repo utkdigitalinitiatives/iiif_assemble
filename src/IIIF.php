@@ -503,7 +503,10 @@ class IIIF {
             $mods = Request::getDatastream('MODS', $data['pid']);
             $this->xpath = new XPath($mods['body']);
             $this->simplexpath = new SimpleXPath($mods['body']);
-            $canvas->metadata = self::buildMetadata();
+            $part_metadata = self::buildMetadata();
+            if (count($part_metadata) >0) {
+                $canvas->metadata = self::buildMetadata();
+            }
         }
 
         return $canvas;
