@@ -504,8 +504,20 @@ class IIIF {
             $this->xpath = new XPath($mods['body']);
             $this->simplexpath = new SimpleXPath($mods['body']);
             $part_metadata = self::buildMetadata();
-            if (count($part_metadata) >0) {
-                $canvas->metadata = self::buildMetadata();
+            $part_rights = self::buildRights();
+            $part_requiredstatement = self::buildRequiredStatement();
+            $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+            if (is_array($summary->en) && $summary->en[0] != "") {
+                $canvas->summary = $summary;
+            }
+            if (count($part_metadata) > 0) {
+                $canvas->metadata = $part_metadata;
+            }
+            if ($part_rights !== null) {
+                $canvas->rights = $part_rights;
+            }
+            if ($part_requiredstatement->value->en !== null ) {
+                $canvas->requiredStatement = $part_requiredstatement;
             }
         }
 
