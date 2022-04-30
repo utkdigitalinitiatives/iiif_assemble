@@ -382,7 +382,6 @@ class IIIF {
                 $items = [];
                 foreach ($canvases as $key => $canvas) {
                 $items[$key] = $this->buildCanvasWithPages($key, $uri, $canvas);
-//                    $items[$key] = $this->buildCanvas($key, $uri, $canvas);
                 }
 
                 return $items;
@@ -499,6 +498,12 @@ class IIIF {
             if (count($annotations->items) > 0) {
                 $canvas->annotations = [$annotations];
             }
+        }
+        if ($this->type === "Compound") {
+            $mods = Request::getDatastream('MODS', $data['pid']);
+            $this->xpath = new XPath($mods['body']);
+            $this->simplexpath = new SimpleXPath($mods['body']);
+            $canvas->metadata = self::buildMetadata();
         }
 
         return $canvas;
