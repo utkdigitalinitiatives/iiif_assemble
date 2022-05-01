@@ -133,7 +133,10 @@ class IIIF {
         if ($summary->en) {
             $manifest['summary'] = $summary;
         }
-        $manifest['metadata'] = self::buildMetadata();
+        $metadata = self::buildMetadata();
+        if (count($metadata) > 0) {
+            $manifest['metadata'] = $metadata;
+        }
         $rights = self::buildRights();
         if ($rights) {
             $manifest['rights'] = $rights;
