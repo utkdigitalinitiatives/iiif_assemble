@@ -129,7 +129,10 @@ class IIIF {
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
         $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
-        $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+        $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+        if ($summary->en) {
+            $manifest['summary'] = $summary;
+        }
         $manifest['metadata'] = self::buildMetadata();
         $rights = self::buildRights();
         if ($rights) {
