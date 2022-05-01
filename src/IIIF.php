@@ -132,10 +132,13 @@ class IIIF {
         $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
         $manifest['metadata'] = self::buildMetadata();
         $rights = self::buildRights();
-        if ($rights !== null) {
+        if ($rights) {
             $manifest['rights'] = $rights;
         }
-        $manifest['requiredStatement'] = self::buildRequiredStatement();
+        $requiredStatement = self::buildRequiredStatement();
+        if ($requiredStatement->value->en) {
+            $manifest['requiredStatement'] = $requiredStatement;
+        }
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
