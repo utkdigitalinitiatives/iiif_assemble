@@ -26,7 +26,7 @@ class IIIF {
         $this->xpath = new XPath($mods);
         $this->simplexpath = new SimpleXPath($mods);
         $this->type = self::determineTypeByModel($model);
-
+        $this->label = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
         $this->url = Utility::getBaseUrl();
 
     }
@@ -57,10 +57,18 @@ class IIIF {
     }
 
 
-    private function buildHomepage ($pid, $label) {
+    private function buildHomepage ($pid, $label_for_manifest) {
+        if(strpos($pid, 'rfta%3A') === 0) {
+            $label = str_replace('Interview with ', '', $this->label->en[0]);
+            $label = str_replace(' ', '-', $label);
+            $label = strtolower(str_replace(',', '', $label));
+            $slug = 'https://rfta.lib.utk.edu/interviews/object/' . $label;
+        } else {
+            $slug = $this->url . '/collections/islandora/object/' . $pid;
+        }
         $homepage = (object) [
-            'id' => $this->url . '/collections/islandora/object/' . $pid,
-            'label' => $label,
+            'id' => $slug,
+            'label' => $label_for_manifest,
             'type' => 'Text',
             'format' => 'text/html'
         ];
@@ -129,10 +137,22 @@ class IIIF {
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
         $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
-        $manifest['summary'] = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
-        $manifest['metadata'] = self::buildMetadata();
-        $manifest['rights'] = self::buildRights();
-        $manifest['requiredStatement'] = self::buildRequiredStatement();
+        $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+        if ($summary->en) {
+            $manifest['summary'] = $summary;
+        }
+        $metadata = self::buildMetadata();
+        if (count($metadata) > 0) {
+            $manifest['metadata'] = $metadata;
+        }
+        $rights = self::buildRights();
+        if ($rights) {
+            $manifest['rights'] = $rights;
+        }
+        $requiredStatement = self::buildRequiredStatement();
+        if ($requiredStatement->value->en) {
+            $manifest['requiredStatement'] = $requiredStatement;
+        }
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
@@ -142,6 +162,9 @@ class IIIF {
 
         if ($this->type === 'Book') {
             $manifest['behavior'] = ["paged"];
+        }
+        if ($this->type === 'Compound') {
+            $manifest['behavior'] = ["individuals"];
         }
         if ($this->type === "Sound") {
             $manifest['accompanyingCanvas'] = self::buildAccompanyingCanvas($this->getIIIFImageURI('TN', $this->pid));
@@ -338,20 +361,6 @@ class IIIF {
 
     }
 
-    public function getThumbnailDatastream () {
-
-        if ($this->type === 'Sound') :
-            $id = 'TN';
-        elseif ($this->type === 'Video') :
-            $id = 'TN';
-        else :
-            $id = 'JP2';
-        endif;
-
-        return $id;
-
-    }
-
     public function getIIIFImageURI ($dsid, $pid) {
 
         $uri = $this->url . '/iiif/2/';
@@ -364,7 +373,6 @@ class IIIF {
     }
 
     public function buildItems ($uri) {
-
         if (in_array($this->type, ['Book'])) :
 
             $items = Request::getBookPages($this->pid, 'csv');
@@ -385,7 +393,24 @@ class IIIF {
                 return null;
 
             }
+        elseif (in_array($this->type, ['Compound'])) :
+            $items = Request::getCompoundParts($this->pid, 'csv');
 
+            if ($items['status'] === 200) {
+                $canvases = Utility::orderCanvases($items['body']);
+
+                $items = [];
+                foreach ($canvases as $key => $canvas) {
+                $items[$key] = $this->buildCanvasWithPages($key, $uri, $canvas);
+                }
+
+                return $items;
+
+            } else {
+
+                return null;
+
+            }
         else:
 
             return [$this->buildCanvas(0, $uri, $this->pid)];
@@ -481,7 +506,6 @@ class IIIF {
 
         foreach ($canvasData as $key => $data) {
             $iiifImage = self::getIIIFImageURI('JP2', $data['pid']);
-
             if (Request::responseStatus($iiifImage)) :
                 $responseImageBody = json_decode(Request::responseBody($iiifImage));
                 $canvas->width = $responseImageBody->width;
@@ -492,15 +516,43 @@ class IIIF {
             endif;
 
             $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid']);
-            $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key);
+            $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key, $canvasData);
+            $annotations = self::prepareAnnotationPage($canvasId, $data['pid']);
+            if (count($annotations->items) > 0) {
+                $canvas->annotations = [$annotations];
+            }
+        }
+        if ($this->type === "Compound") {
+            $mods = Request::getDatastream('MODS', $data['pid']);
+            $this->xpath = new XPath($mods['body']);
+            $this->simplexpath = new SimpleXPath($mods['body']);
+            $part_metadata = self::buildMetadata();
+            $part_rights = self::buildRights();
+            $part_requiredstatement = self::buildRequiredStatement();
+            $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+            if (is_array($summary->en) && $summary->en[0] != "") {
+                $canvas->summary = $summary;
+            }
+            if (count($part_metadata) > 0) {
+                $canvas->metadata = $part_metadata;
+            }
+            if ($part_rights !== null) {
+                $canvas->rights = $part_rights;
+            }
+            if ($part_requiredstatement->value->en !== null ) {
+                $canvas->requiredStatement = $part_requiredstatement;
+            }
         }
 
         return $canvas;
 
     }
 
-    private function buildTranscript($language_code, $page, $target) {
-        $datastream = $this->url . '/collections/islandora/object/' . $this->pid . '/datastream/';
+    private function buildTranscript($language_code, $page, $target, $pid="") {
+        if($pid == "") {
+            $pid = $this->pid;
+        }
+        $datastream = $this->url . '/collections/islandora/object/' . $pid . '/datastream/';
         if ($language_code == "es") :
             $transcript_datastream = "TRANSCRIPT-ES";
             $transcript_label = "Subtítulos en español";
@@ -511,7 +563,7 @@ class IIIF {
             $transcript_language = "en";
         endif;
         return (object) [
-                "id" => $page . '/' . $this->pid . '/' . uniqid(),
+                "id" => $page . '/' . $pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "supplementing",
                 "body" =>
@@ -548,14 +600,14 @@ class IIIF {
 
     }
 
-    private function getTranscipts($pagenumber, $target) {
-        $datastreams = $this::getDatastreamIds();
+    private function getTranscipts($pagenumber, $target, $pid) {
+        $datastreams = $this::getDatastreamIds($pid);
         $transcripts = [];
         if (in_array('TRANSCRIPT', $datastreams)) :
-            array_push($transcripts, $this::buildTranscript('en', $pagenumber, $target));
+            array_push($transcripts, $this::buildTranscript('en', $pagenumber, $target, $pid));
         endif;
         if (in_array('TRANSCRIPT-ES', $datastreams)) :
-            array_push($transcripts, $this::buildTranscript('es', $pagenumber, $target));
+            array_push($transcripts, $this::buildTranscript('es', $pagenumber, $target, $pid));
         endif;
         return $transcripts;
     }
@@ -579,7 +631,7 @@ class IIIF {
         ];
     }
 
-    public function preparePage ($target, $pid, $number = 1) {
+    public function preparePage ($target, $pid, $number = 1, $canvas_data=[]) {
 
         $page = $target . '/page';
         $items = [
@@ -587,7 +639,7 @@ class IIIF {
                 "id" => $page . '/' . $pid . '/' . uniqid(),
                 "type" => 'Annotation',
                 "motivation" => "painting",
-                "body" => self::paintCanvas($pid),
+                "body" => self::paintCanvas($pid, $canvas_data),
                 "target" => $target
             ]
         ];
@@ -602,8 +654,8 @@ class IIIF {
     private function prepareAnnotationPage ($target, $pid, $number = 1) {
         $page = $target . '/page/annotation';
         $items = [];
-        if (in_array($this->type, ['Sound', 'Video'])) :
-            $transcripts = self::getTranscipts($page, $target);
+        if (in_array($this->type, ['Sound', 'Video', 'Compound'])) :
+            $transcripts = self::getTranscipts($page, $target, $pid);
             foreach ($transcripts as &$transcript) :
                 array_push($items, $transcript);
             endforeach;
@@ -643,8 +695,11 @@ class IIIF {
 
     }
 
-    private function getDatastreamIds () {
-        $dsids = Request::getDatastreams($this->pid, 'csv');
+    private function getDatastreamIds ($pid="") {
+        if($pid == "") {
+            $pid = $this->pid;
+        }
+        $dsids = Request::getDatastreams($pid, 'csv');
         $final_dsids = [];
         foreach (explode("\n", $dsids['body']) as &$dsid) :
             $potential_dsid = explode("/", $dsid);
@@ -653,7 +708,7 @@ class IIIF {
         return $final_dsids;
     }
 
-    public function paintCanvas ($pid) {
+    public function paintCanvas ($pid, $data=[] ){
 
         $item = array();
 
@@ -679,6 +734,26 @@ class IIIF {
             $item['duration'] = self::getBibframeDuration('MP4');
             $item['format'] = "video/mp4";
 
+        elseif ($this->type === 'Compound') :
+            $part_type = self::determineTypeByModel($data[0]['type']);
+            if ($part_type === 'Image') :
+                $iiifImage = self::getIIIFImageURI('JP2', $pid);
+                $item = self::getItemBody($iiifImage, $datastream . 'OBJ');
+            elseif ($part_type === 'Sound') :
+                $item['id'] = $datastream . 'PROXY_MP3';
+                $item['type'] = "Sound";
+                $item['width'] = 640;
+                $item['height'] = 360;
+                $item['duration'] = self::getBibframeDuration('PROXY_MP3', $pid);
+                $item['format'] = "audio/mpeg";
+            elseif ($part_type == 'Video') :
+                $item['id'] = $datastream . 'MP4';
+                $item['type'] = "Video";
+                $item['width'] = 640;
+                $item['height'] = 360;
+                $item['duration'] = self::getBibframeDuration('MP4', $pid);
+                $item['format'] = "video/mp4";
+            endif;
         else :
             $item['id'] = null;
             $item['type'] = null;
@@ -688,6 +763,7 @@ class IIIF {
 
         return $item;
     }
+
 
     public function buildStructures ($manifest, $uri) {
 
@@ -774,12 +850,11 @@ class IIIF {
 
     }
 
-    private static function getDuration () {
-        return 500;
-    }
-
-    private function getBibframeDuration($dsid) {
-        $durations = Request::getBibframeDuration($this->pid, $dsid, 'csv');
+    private function getBibframeDuration($dsid, $pid="") {
+        if ($pid == "") {
+            $pid = $this->pid;
+        }
+        $durations = Request::getBibframeDuration($pid, $dsid, 'csv');
         $duration = explode("\n", $durations['body'])[1];
         $split_duration = explode(":", $duration);
         $hours = intval($split_duration[0]) *  60 * 60;
@@ -803,6 +878,8 @@ class IIIF {
             $type = "Video";
         elseif (in_array('info:fedora/islandora:bookCModel', $model)) :
             $type = "Book";
+        elseif (in_array('info:fedora/islandora:compoundCModel', $model)) :
+            $type = "Compound";
         else :
             $type = "Image";
         endif;

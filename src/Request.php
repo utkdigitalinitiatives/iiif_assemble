@@ -105,6 +105,24 @@ class Request {
 
     }
 
+    public static function getConentModel($pid, $format = 'csv') {
+
+    }
+
+    public static function getCompoundParts($pid, $format = 'csv') {
+        $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=' . $format .'&query=';
+        $escaped_pid = str_replace('%3A', "%5F", $pid);
+        $query = "PREFIX fedora-model: <info:fedora/fedora-system:def/model#> PREFIX fedora-rels-ext: ";
+        $query .= "<info:fedora/fedora-system:def/relations-external#> PREFIX isl-rels-ext: ";
+        $query .= "<http://islandora.ca/ontology/relsext#> SELECT \$part \$numbers \$title \$model FROM <#ri> WHERE {{ \$part ";
+        $query .= "fedora-rels-ext:isConstituentOf <info:fedora/" . $pid ."> ; isl-rels-ext:isSequenceNumberOf" . $escaped_pid . " \$numbers ;";
+        $query .= "fedora-model:label \$title ; fedora-model:hasModel \$model  . }}";
+
+        $request .= self::escapeQuery($query);
+
+        return self::curlRequest($request);
+    }
+
     public static function getCollectionItems($pid, $format = 'csv') {
 
         $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=' . $format .'&query=';
