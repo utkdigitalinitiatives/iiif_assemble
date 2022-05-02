@@ -26,7 +26,7 @@ class IIIF {
         $this->xpath = new XPath($mods);
         $this->simplexpath = new SimpleXPath($mods);
         $this->type = self::determineTypeByModel($model);
-
+        $this->label = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
         $this->url = Utility::getBaseUrl();
 
     }
@@ -57,10 +57,18 @@ class IIIF {
     }
 
 
-    private function buildHomepage ($pid, $label) {
+    private function buildHomepage ($pid, $label_for_manifest) {
+        if(strpos($pid, 'rfta%3A') === 0) {
+            $label = str_replace('Interview with ', '', $this->label->en[0]);
+            $label = str_replace(' ', '-', $label);
+            $label = strtolower(str_replace(',', '', $label));
+            $slug = 'https://rfta.lib.utk.edu/interviews/object/' . $label;
+        } else {
+            $slug = $this->url . '/collections/islandora/object/' . $pid;
+        }
         $homepage = (object) [
-            'id' => $this->url . '/collections/islandora/object/' . $pid,
-            'label' => $label,
+            'id' => $slug,
+            'label' => $label_for_manifest,
             'type' => 'Text',
             'format' => 'text/html'
         ];
