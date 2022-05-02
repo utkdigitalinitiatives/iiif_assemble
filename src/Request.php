@@ -144,7 +144,17 @@ class Request {
 
         $query = "PREFIX fedora-rels-ext: <info:fedora/fedora-system:def/relations-external#>";
         $query .= "SELECT \$collection FROM <#ri> WHERE {{ <info:fedora/" . $pid ."> fedora-rels-ext:isMemberOfCollection \$collection . }}";
+        $request .= self::escapeQuery($query);
 
+        return self::curlRequest($request);
+    }
+
+    public static function getCompoundObjectPidIsPartOf($pid, $format = 'csv') {
+
+        $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=' . $format .'&query=';
+
+        $query = "PREFIX fedora-rels-ext: <info:fedora/fedora-system:def/relations-external#>";
+        $query .= "SELECT \$compound FROM <#ri> WHERE {{ <info:fedora/" . $pid ."> fedora-rels-ext:isConstituentOf \$compound . }}";
         $request .= self::escapeQuery($query);
 
         return self::curlRequest($request);

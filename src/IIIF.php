@@ -586,13 +586,24 @@ class IIIF {
     private function getPartOf() {
         $all_collections = [];
         $collections = Request::getCollectionPidIsPartOf($this->pid, 'csv');
+        $compound_objects = Request::getCompoundObjectPidIsPartOf($this->pid, 'csv');
         $split_collections = explode("\n", $collections['body']);
+        $split_compounds = explode("\n", $compound_objects['body']);
         $split_collections = array_diff( $split_collections, ['"collection"', '', 'info:fedora/islandora:root'] );
+        $split_compounds = array_diff( $split_compounds, ['"compound"', ''] );
         foreach ($split_collections as $collection) :
             $just_collection_pid = str_replace('info:fedora/', '', $collection);
             $new_collection = ( object ) [
                 "id" => $this->url . '/assemble/collection/' . str_replace(':', '/', $just_collection_pid),
                 "type" => "Collection"
+            ];
+            array_push($all_collections, $new_collection);
+        endforeach;
+        foreach ($split_compounds as $compound) :
+            $just_compound_pid = str_replace('info:fedora/', '', $compound);
+            $new_collection = ( object ) [
+                "id" => $this->url . '/assemble/collection/' . str_replace(':', '/', $just_compound_pid),
+                "type" => "Manifest"
             ];
             array_push($all_collections, $new_collection);
         endforeach;
