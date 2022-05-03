@@ -596,6 +596,19 @@ class IIIF {
             ];
             array_push($all_collections, $new_collection);
         endforeach;
+        if (in_array($this->type, ['Sound', 'Video', 'Image'])) {
+            $compound_objects = Request::getCompoundObjectPidIsPartOf($this->pid, 'csv');
+            $split_compounds = explode("\n", $compound_objects['body']);
+            $split_compounds = array_diff( $split_compounds, ['"compound"', ''] );
+            foreach ($split_compounds as $compound) :
+                $just_compound_pid = str_replace('info:fedora/', '', $compound);
+                $new_collection = ( object ) [
+                    "id" => $this->url . '/assemble/collection/' . str_replace(':', '/', $just_compound_pid),
+                    "type" => "Manifest"
+                ];
+                array_push($all_collections, $new_collection);
+            endforeach;
+        }
         return $all_collections;
 
     }
@@ -871,7 +884,7 @@ class IIIF {
         elseif (in_array('info:fedora/islandora:sp_large_image_cmodel', $model)) :
             $type = "Image";
         elseif (in_array('info:fedora/islandora:pageCModel', $model)) :
-            $type = "Image";
+            $type = "Page";
         elseif (in_array('info:fedora/islandora:sp-audioCModel', $model)) :
             $type = "Sound";
         elseif (in_array('info:fedora/islandora:sp_videoCModel', $model)) :
