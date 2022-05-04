@@ -78,8 +78,16 @@ class IIIF {
     private function buildCollectionItems ($items = []) {
 
         foreach ($this->object as $item) {
+            if(strpos($item->pid, 'rfta%3A') === 0) {
+                $label = str_replace('Interview with ', '', $this->label->en[0]);
+                $label = str_replace(' ', '-', $label);
+                $label = strtolower(str_replace(',', '', $label));
+                $slug = 'https://rfta.lib.utk.edu/interviews/object/' . $label;
+            } else {
+                $slug = $this->url . '/assemble/manifest/' . str_replace(':', '/', $item->pid);
+            }
             $items[] = (object) [
-                'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item->pid),
+                'id' => $slug,
                 'type' => 'Manifest',
                 'label' => (object) [
                     'none' => [$item->label]
