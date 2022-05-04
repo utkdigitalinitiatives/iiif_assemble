@@ -58,9 +58,10 @@ class IIIF {
 
 
     private function buildHomepage ($pid, $label_for_manifest) {
-        if(strpos($pid, 'rfta%3A') === 0) {
-            $label = str_replace('Interview with ', '', $this->label->en[0]);
+        if(strpos($pid, 'rfta%3A') === 0 || strpos($pid, 'rfta:') === 0 ) {
+            $label = str_replace('Interview with ', '', $label_for_manifest->en[0]);
             $label = str_replace(' ', '-', $label);
+            $label = str_replace('/', '-', $label);
             $label = strtolower(str_replace(',', '', $label));
             $slug = 'https://rfta.lib.utk.edu/interviews/object/' . $label;
         } else {
@@ -87,7 +88,7 @@ class IIIF {
                 'thumbnail' => [self::useFedoraThumbnail($item->pid)],
                 'homepage' => [
                     self::buildHomepage($item->pid, (object) [
-                        'none' => [$item->label]
+                        'en' => [$item->label]
                     ]),
                 ]
             ];
