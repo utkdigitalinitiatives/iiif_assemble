@@ -78,7 +78,7 @@ class IIIF {
     private function buildCollectionItems ($items = []) {
 
         foreach ($this->object as $item) {
-            if(strpos($item->pid, 'rfta%3A') === 0) {
+            if(strpos($item->pid, 'rfta:') === 0) {
                 $label = str_replace('Interview with ', '', $this->label->en[0]);
                 $label = str_replace(' ', '-', $label);
                 $label = strtolower(str_replace(',', '', $label));
