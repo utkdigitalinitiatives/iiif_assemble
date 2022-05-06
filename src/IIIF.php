@@ -84,7 +84,7 @@ class IIIF {
                 'label' => (object) [
                     'none' => [$item->label]
                     ],
-                'thumbnail' => self::useFedoraThumbnail($item->pid, $item->model),
+                'thumbnail' => self::useFedoraThumbnail($item->pid),
                 'homepage' => [
                     self::buildHomepage($item->pid, (object) [
                         'en' => [$item->label]
