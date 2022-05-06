@@ -109,8 +109,8 @@ class IIIF {
         if ($model === "islandora:sp_videoCModel") {
             $video = array();
             $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/?t=60,75';
-            $item['type'] = 'Video';
-            $item['format'] = 'video/mp4';
+            $video['type'] = 'Video';
+            $video['format'] = 'video/mp4';
             $video['width'] = 300;
             $video['height'] = 200;
             $video['duration'] = 15;
