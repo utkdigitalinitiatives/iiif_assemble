@@ -95,10 +95,13 @@ class Utility {
             } else {
                 $label = $item[1];
             }
-            $index[] = (object) [
-                'pid' => str_replace('info:fedora/', '', $item[0]),
-                'label' => $label,
-            ];
+            if($item[2] !== "info:fedora/fedora-system:FedoraObject-3.0") {
+                $index[] = (object)[
+                    'pid' => str_replace('info:fedora/', '', $item[0]),
+                    'label' => $label,
+                    'model' => str_replace('info:fedora/', '', $item[2]),
+                ];
+            }
         }
 
         return $index;
