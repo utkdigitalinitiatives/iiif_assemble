@@ -108,7 +108,7 @@ class IIIF {
         array_push($items, $item);
         if ($model === "islandora:sp_videoCModel") {
             $video = array();
-            $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/?t=60,75';
+            $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/#t=60,75';
             $video['type'] = 'Video';
             $video['format'] = 'video/mp4';
             $video['width'] = 300;
@@ -368,7 +368,7 @@ class IIIF {
         array_push($items, $item);
         if ( $this->type === "Video") {
             $video = array();
-            $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/?t=60,75';
+            $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/#t=60,75';
             $video['type'] = 'Video';
             $video['format'] = 'video/mp4';
             $video['width'] = 300;
