@@ -105,10 +105,6 @@ class Request {
 
     }
 
-    public static function getConentModel($pid, $format = 'csv') {
-
-    }
-
     public static function getCompoundParts($pid, $format = 'csv') {
         $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=' . $format .'&query=';
         $escaped_pid = str_replace('%3A', "%5F", $pid);
