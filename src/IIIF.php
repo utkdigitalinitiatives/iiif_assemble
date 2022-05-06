@@ -106,16 +106,6 @@ class IIIF {
         $item['type'] = 'Image';
         $item['format'] = 'image/jpeg';
         array_push($items, $item);
-        if ($model === "islandora:sp_videoCModel") {
-            $video = array();
-            $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/#t=60,75';
-            $video['type'] = 'Video';
-            $video['format'] = 'video/mp4';
-            $video['width'] = 300;
-            $video['height'] = 200;
-            $video['duration'] = 15;
-            array_push($items, $video);
-        }
         return $items;
     }
 

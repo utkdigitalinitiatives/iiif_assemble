@@ -99,7 +99,6 @@ class Utility {
                 $index[] = (object)[
                     'pid' => str_replace('info:fedora/', '', $item[0]),
                     'label' => $label,
-                    'model' => str_replace('info:fedora/', '', $item[2]),
                 ];
             }
         }
