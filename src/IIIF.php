@@ -77,7 +77,6 @@ class IIIF {
     }
 
     private function buildCollectionItems ($items = []) {
-
         foreach ($this->object as $item) {
             $items[] = (object) [
                 'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item->pid),
@@ -85,7 +84,7 @@ class IIIF {
                 'label' => (object) [
                     'none' => [$item->label]
                     ],
-                'thumbnail' => [self::useFedoraThumbnail($item->pid)],
+                'thumbnail' => self::useFedoraThumbnail($item->pid, $item->model),
                 'homepage' => [
                     self::buildHomepage($item->pid, (object) [
                         'en' => [$item->label]
@@ -98,16 +97,26 @@ class IIIF {
 
     }
 
-    private function useFedoraThumbnail ($pid) {
-
+    private function useFedoraThumbnail ($pid, $model="") {
+        $items = [];
         $item = array();
         $item['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/TN/view';
         $item['height'] = 200;
         $item['width'] = 200;
         $item['type'] = 'Image';
         $item['format'] = 'image/jpeg';
-
-        return $item;
+        array_push($items, $item);
+        if ($model === "islandora:sp_videoCModel") {
+            $video = array();
+            $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/?t=60,75';
+            $item['type'] = 'Video';
+            $item['format'] = 'video/mp4';
+            $video['width'] = 300;
+            $video['height'] = 200;
+            $video['duration'] = 15;
+            array_push($items, $video);
+        }
+        return $items;
     }
 
     private function buildCollectionThumbnails ($items = []) {
