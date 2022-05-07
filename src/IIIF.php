@@ -329,7 +329,7 @@ class IIIF {
         ];
     }
 
-    public function buildThumbnail ($width, $height, $pid="") {
+    public function buildThumbnail ($width, $height, $pid="", $model="") {
         if ($pid == "") {
             $pid = $this->pid;
         }
@@ -356,7 +356,7 @@ class IIIF {
         $item['type'] = "Image";
         $item['format'] = "image/jpeg";
         array_push($items, $item);
-        if ( $this->type === "Video") {
+        if ( $this->type === "Video" || $model === "info:fedora/islandora:sp_videoCModel") {
             $video = array();
             $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/#t=60,75';
             $video['type'] = 'Video';
@@ -523,8 +523,7 @@ class IIIF {
                 $canvas->height = 640;
                 $canvas->width = 360;
             endif;
-
-            $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid']);
+            $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid'], $data['type']);
             $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key, $canvasData);
             $annotations = self::prepareAnnotationPage($canvasId, $data['pid']);
             if (count($annotations->items) > 0) {
