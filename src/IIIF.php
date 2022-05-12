@@ -176,12 +176,15 @@ class IIIF {
     }
 
     public function buildMetadata () {
-
+        $date = $this->xpath->query('originInfo/dateCreated[not(@encoding)]');
+        if ($date == "") {
+            $date = $this->xpath->query('originInfo/dateCreated[@encoding]');
+        }
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
             'Publisher' => $this->xpath->query('originInfo/publisher'),
-            'Date' => $this->xpath->query('originInfo/dateCreated[not(@encoding)]|originInfo/dateOther'),
+            'Date' => $date,
             'Publication Date' => $this->xpath->query('originInfo/dateIssued[not(@encoding)]'),
             'Format' => $this->xpath->query('physicalDescription/form[not(@type="material")]'),
             'Extent' => $this->xpath->query('physicalDescription/extent'),
