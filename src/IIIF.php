@@ -497,6 +497,15 @@ class IIIF {
 
     }
 
+    private function buildOCR ($pid) {
+        return (object) [
+            "id" => $this->url . "collections/islandora/object/" . $pid . '/datastream/HOCR',
+            "motivation"=> "supplementing",
+            "format"=> "text/vnd.hocr+html",
+            "profile"=> "http://kba.cloud/hocr-spec/1.2/"
+        ];
+    }
+
     public function buildCanvasWithPages ($index, $uri, $canvasData) {
         $canvasId = $uri . '/canvas/' . $index;
         $canvas = (object) [
@@ -521,6 +530,9 @@ class IIIF {
             $annotations = self::prepareAnnotationPage($canvasId, $data['pid']);
             if (count($annotations->items) > 0) {
                 $canvas->annotations = [$annotations];
+            }
+            if ($this->type === "Book") {
+                $canvas->seeAlso = [self::buildOCR($data['pid'])];
             }
         }
         if ($this->type === "Compound") {
