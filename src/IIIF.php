@@ -176,13 +176,16 @@ class IIIF {
     }
 
     public function buildMetadata () {
-
+        $date = $this->xpath->query('originInfo/dateCreated[not(@encoding)]');
+        if ($date == "") {
+            $date = $this->xpath->query('originInfo/dateCreated[@encoding]');
+        }
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
             'Publisher' => $this->xpath->query('originInfo/publisher'),
-            'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),
-            'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
+            'Date' => $date,
+            'Publication Date' => $this->xpath->query('originInfo/dateIssued[not(@encoding)]'),
             'Format' => $this->xpath->query('physicalDescription/form[not(@type="material")]'),
             'Extent' => $this->xpath->query('physicalDescription/extent'),
             'Subject' => $this->xpath->query('subject[not(@displayLabel="Narrator Class")]/topic'),
@@ -194,7 +197,8 @@ class IIIF {
             'Título' => $this->xpath->query('titleInfo[@lang="spa"]/title'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
             'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
-            'Language' => $this->xpath->query('language/languageTerm')
+            'Language' => $this->xpath->query('language/languageTerm'),
+            'Related Resource' => $this->xpath->query('relatedItem[@type="references"]/location/url')
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
