@@ -27,7 +27,7 @@ if (isset($metadata_field) && isset($metadata_value)) {
 
     $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-    $controller = new MetadataCollection($requestMethod, array($metadata_field, $metadata_value));
+    $controller = new MetadataCollection($requestMethod, $metadata_field, $metadata_value);
     $controller->processRequest();
 
 } else {
