@@ -105,6 +105,15 @@ class Utility {
 
     }
 
+    public static function addAnchorsToReferences($references) {
+        $results = [];
+        foreach ($references as $reference){
+            $new_reference = '<a href="' . $reference . '">' . $reference . '</a>';
+            array_push($results, $new_reference);
+        }
+        return $results;
+    }
+
 }
 
 ?>

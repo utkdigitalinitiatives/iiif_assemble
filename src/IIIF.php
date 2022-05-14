@@ -179,6 +179,8 @@ class IIIF {
         if ($date == "") {
             $date = $this->xpath->query('originInfo/dateCreated[@encoding]');
         }
+        $related_resources = $this->xpath->query('relatedItem[@type="references"]/location/url');
+        $final_resources = Utility::addAnchorsToReferences($related_resources);
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
@@ -197,7 +199,7 @@ class IIIF {
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
             'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
             'Language' => $this->xpath->query('language/languageTerm'),
-            'Related Resource' => $this->xpath->query('relatedItem[@type="references"]/location/url')
+            'Related Resource' => $final_resources
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
