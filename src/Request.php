@@ -197,7 +197,7 @@ class Request {
 
     public static function getMetadataObjects ($field, $value, $format = 'csv') {
         $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&format=' . $format .'&query=';
-        $query = 'SELECT ?pid ?label FROM <#ri> WHERE {{ ?pid <' . $field . '> "'  . $value . '" ; <info:fedora/fedora-system:def/model#label> ?label . }}';
+        $query = "SELECT \$pid \$label FROM <#ri> WHERE {{ \$pid <" . $field . "> '"  . $value . "' ; <info:fedora/fedora-system:def/model#label> \$label . }}";
         $request .= self::escapeQuery($query);
 
         return self::curlRequest($request);
