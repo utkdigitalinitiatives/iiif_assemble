@@ -105,38 +105,34 @@ class Utility {
 
     }
 
-    public function makeMetadataCollectionLabel ($identifier) {
+    public static function makeMetadataCollectionLabel ($identifier) {
         $metadata_value = explode('%2F', $identifier);
-        return "Other Items "  . self::convertMetadataValue($metadata_value[0]) . " " . urldecode(metadata[1]);
-    }
-
-    private static function convertMetadataValue($metadata_value) {
-        $new_value = $metadata_value;
-        if ($metadata_value === "subject") {
+        $new_value = $metadata_value[0];
+        if ($metadata_value[0] === "subject") {
             $new_value = "about";
         }
-        elseif ($metadata_value === "contributor") {
+        elseif ($metadata_value[0] === "contributor") {
             $new_value = "by";
         }
-        elseif ($metadata_value === "language") {
+        elseif ($metadata_value[0] === "language") {
             $new_value = "in";
         }
-        elseif ($metadata_value === "type") {
-            $new_value = "of type";
+        elseif ($metadata_value[0] === "type") {
+            $new_value = "of Type";
         }
-        elseif ($metadata_value === "rights") {
-            $new_value = "with rights statement";
+        elseif ($metadata_value[0] === "rights") {
+            $new_value = "with Rights Statement";
         }
-        elseif ($metadata_value === "format") {
-            $new_value = "with format";
+        elseif ($metadata_value[0] === "format") {
+            $new_value = "with Format";
         }
-        elseif ($metadata_value === "relation") {
-            $new_value = "related to";
+        elseif ($metadata_value[0] === "relation") {
+            $new_value = "Related to";
         }
-        elseif ($metadata_value === "title") {
-            $new_value = "with label";
+        elseif ($metadata_value[0] === "title") {
+            $new_value = "with Label";
         }
-        return $new_value;
+        return "Other Items "  . $new_value . " " . urldecode($metadata_value[1]);
     }
 
 }
