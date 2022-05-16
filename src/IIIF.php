@@ -68,10 +68,9 @@ class IIIF {
         $collection['viewingDirection'] = 'left-to-right';
         $collection['behavior'] = ['unordered'];
         $collection['thumbnail'] = self::buildCollectionThumbnails();
-        $collection['label'] = (object)['none'=> [$this->pid]];
+        $collection['label'] = (object)['none'=> [Utility::makeMetadataCollectionLabel($this->pid)]];
         $collection['items'] = self::buildCollectionItems();
         $collection['provider'] = self::buildProvider();
-        $collection['homepage'] = [ self::buildHomepage($this->pid, $collection['label']) ];
 
         return json_encode($collection);
 

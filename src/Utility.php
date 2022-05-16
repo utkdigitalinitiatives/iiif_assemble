@@ -105,6 +105,11 @@ class Utility {
 
     }
 
+    public static function makeMetadataCollectionLabel ($identifier) {
+        $metadata_value = explode('%2F', $identifier);
+        return "Other Items of "  . $metadata_value[0] . " " . $metadata_value[1];
+    }
+
 }
 
 ?>
