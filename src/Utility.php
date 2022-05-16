@@ -105,9 +105,38 @@ class Utility {
 
     }
 
-    public static function makeMetadataCollectionLabel ($identifier) {
+    public function makeMetadataCollectionLabel ($identifier) {
         $metadata_value = explode('%2F', $identifier);
-        return "Other Items of "  . $metadata_value[0] . " " . $metadata_value[1];
+        return "Other Items "  . self::convertMetadataValue($metadata_value[0]) . " " . urldecode(metadata[1]);
+    }
+
+    private static function convertMetadataValue($metadata_value) {
+        $new_value = $metadata_value;
+        if ($metadata_value === "subject") {
+            $new_value = "about";
+        }
+        elseif ($metadata_value === "contributor") {
+            $new_value = "by";
+        }
+        elseif ($metadata_value === "language") {
+            $new_value = "in";
+        }
+        elseif ($metadata_value === "type") {
+            $new_value = "of type";
+        }
+        elseif ($metadata_value === "rights") {
+            $new_value = "with rights statement";
+        }
+        elseif ($metadata_value === "format") {
+            $new_value = "with format";
+        }
+        elseif ($metadata_value === "relation") {
+            $new_value = "related to";
+        }
+        elseif ($metadata_value === "title") {
+            $new_value = "with label";
+        }
+        return $new_value;
     }
 
 }
