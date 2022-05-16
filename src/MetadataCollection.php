@@ -38,11 +38,7 @@ class MetadataCollection
     private function theCollection()
     {
 
-        if (self::collectionAvailable()) {
-            $collection = self::getCollection();
-        } else {
-            $collection = self::newCollection();
-        }
+        $collection = self::newCollection();
 
         return $collection;
 
@@ -52,26 +48,61 @@ class MetadataCollection
     {
         $items = Request::getMetadataObjects($this::lookupField(), $this->metadata_value);
         $collection = Utility::orderCollection($items['body']);
-        $persistentIdentifier = urlencode(field . "/" . $this->metadata_value);
+        $persistentIdentifier = urlencode($this->field . "/" . $this->metadata_value);
         $iiif = new IIIF($persistentIdentifier, null, $collection, "info:fedora/islandora:collectionCModel");
-        $iiifCollection = $iiif->buildCollection();
+        $iiifCollection = $iiif->buildMetadataCollection();
         self::cacheCollection($iiifCollection);
         return $iiifCollection;
 
     }
 
     private function lookupField (){
-        if (in_array('contributor', $this->field)) :
+        if($this->field === 'contributor'):
             $field = "http://purl.org/dc/elements/1.1/contributor";
-        elseif (in_array('subject', $this->field)) :
+        elseif ($this->field === 'subject') :
             $field = "http://purl.org/dc/elements/1.1/subject";
-        elseif (in_array('type', $this->field)) :
+        elseif ($this->field  === 'type') :
             $field = "http://purl.org/dc/elements/1.1/type";
         else :
             $field = "http://purl.org/dc/elements/1.1/type";
         endif;
 
         return $field;
+
+    }
+
+    private function getNamespacePath ()
+    {
+
+        return '../cache/' . $this->persistentIdentifier[0];
+
+    }
+
+    private function getCollectionPath ($container)
+    {
+
+        return $container . '/' . $this->persistentIdentifier[1];
+
+    }
+
+    private function cacheCollection($manifest)
+    {
+
+        $namespace = self::getNamespacePath();
+        if (!is_dir($namespace)) {
+            mkdir($namespace);
+        }
+
+        $id = self::getCollectionPath($namespace);
+        if (!is_dir($id)) {
+            mkdir($id);
+        }
+
+        $path = $id . '/collection.json';
+
+        file_put_contents($path, $manifest);
+
+        return true;
 
     }
 }
