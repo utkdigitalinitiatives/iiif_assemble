@@ -21,12 +21,14 @@ class IIIF {
         }
 
         $this->pid = $pid;
-        $this->mods = $mods;
+        if ($mods != null) {
+            $this->mods = $mods;
+            $this->xpath = new XPath($mods);
+            $this->simplexpath = new SimpleXPath($mods);
+            $this->label = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
+        }
         $this->object = $object;
-        $this->xpath = new XPath($mods);
-        $this->simplexpath = new SimpleXPath($mods);
         $this->type = self::determineTypeByModel($model);
-        $this->label = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
         $this->url = Utility::getBaseUrl();
 
     }
@@ -48,6 +50,25 @@ class IIIF {
         $collection['metadata'] = self::buildMetadata();
         $collection['thumbnail'] = self::buildCollectionThumbnails();
         $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
+        $collection['items'] = self::buildCollectionItems();
+        $collection['provider'] = self::buildProvider();
+        $collection['homepage'] = [ self::buildHomepage($this->pid, $collection['label']) ];
+
+        return json_encode($collection);
+
+    }
+
+    public function buildMetadataCollection ()
+    {
+        $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
+
+        $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
+        $collection['id'] = $id;
+        $collection['type'] = 'Collection';
+        $collection['viewingDirection'] = 'left-to-right';
+        $collection['behavior'] = ['unordered'];
+        $collection['thumbnail'] = self::buildCollectionThumbnails();
+        $collection['label'] = (object)['none'=> [$this->pid]];
         $collection['items'] = self::buildCollectionItems();
         $collection['provider'] = self::buildProvider();
         $collection['homepage'] = [ self::buildHomepage($this->pid, $collection['label']) ];
