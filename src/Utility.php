@@ -133,12 +133,12 @@ class Utility {
             $new_value = "with Label";
         }
         elseif ($metadata_value[0] === "coverage") {
-            $new_value = "is near";
+            $new_value = "near";
         }
         elseif ($metadata_value[0] === "date") {
             $new_value = "associated with";
         }
-        return "Other Items "  . $new_value . " " . urldecode($metadata_value[1]);
+        return "Other Items "  . $new_value . " \"" . str_replace("%20", " ", urldecode($metadata_value[1])) . "\"";
     }
 
 }
