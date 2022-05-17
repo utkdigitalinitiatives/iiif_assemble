@@ -108,35 +108,50 @@ class Utility {
     public static function makeMetadataCollectionLabel ($identifier) {
         $metadata_value = explode('%2F', $identifier);
         $new_value = $metadata_value[0];
-        if ($metadata_value[0] === "subject") {
-            $new_value = "about";
-        }
-        elseif ($metadata_value[0] === "contributor") {
-            $new_value = "by";
-        }
-        elseif ($metadata_value[0] === "language") {
-            $new_value = "in";
-        }
-        elseif ($metadata_value[0] === "type") {
-            $new_value = "of Type";
-        }
-        elseif ($metadata_value[0] === "rights") {
-            $new_value = "with Rights Statement";
-        }
-        elseif ($metadata_value[0] === "format") {
-            $new_value = "with Format";
-        }
-        elseif ($metadata_value[0] === "relation") {
-            $new_value = "Related to";
-        }
-        elseif ($metadata_value[0] === "title") {
-            $new_value = "with Label";
+        if ($metadata_value[0] === "contributor") {
+            $new_value = "Associated with";
         }
         elseif ($metadata_value[0] === "coverage") {
             $new_value = "near";
         }
+        elseif ($metadata_value[0] === "creator") {
+            $new_value = "Created by";
+        }
         elseif ($metadata_value[0] === "date") {
-            $new_value = "associated with";
+            $new_value = "Associated with";
+        }
+        elseif ($metadata_value[0] === "description") {
+            $new_value = "with Description";
+        }
+        elseif ($metadata_value[0] === "format") {
+            $new_value = "with Format";
+        }
+        elseif ($metadata_value[0] === "identifier") {
+            $new_value = "Identified by";
+        }
+        elseif ($metadata_value[0] === "language") {
+            $new_value = "Written in";
+        }
+        elseif ($metadata_value[0] === "publisher") {
+            $new_value = "Published by";
+        }
+        elseif ($metadata_value[0] === "relation") {
+            $new_value = "Related to";
+        }
+        elseif ($metadata_value[0] === "rights") {
+            $new_value = "with Rights Statement";
+        }
+        elseif ($metadata_value[0] === "source") {
+            $new_value = "from";
+        }
+        elseif ($metadata_value[0] === "subject") {
+            $new_value = "about";
+        }
+        elseif ($metadata_value[0] === "title") {
+            $new_value = "with Label";
+        }
+        elseif ($metadata_value[0] === "type") {
+            $new_value = "of Type";
         }
         return "Other Items "  . $new_value . " \"" . str_replace("%20", " ", urldecode($metadata_value[1])) . "\"";
     }
