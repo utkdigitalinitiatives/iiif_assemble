@@ -71,9 +71,26 @@ class IIIF {
         $collection['label'] = (object)['none'=> [Utility::makeMetadataCollectionLabel($this->pid)]];
         $collection['items'] = self::buildCollectionItems();
         $collection['provider'] = self::buildProvider();
+        $collection['homepage'] = self::buildMetadataCollectionHomePage();
 
         return json_encode($collection);
 
+    }
+
+    private function buildMetadataCollectionHomePage () {
+        $id = "https://projectmirador.org/embed/?iiif-content=" . $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
+        return [
+            (object) [
+                "id" => $id,
+                "type" => "Text",
+                "label" => (object) [
+                    "en" => [
+                        "View Collection in Mirador"
+                    ]
+                ],
+                "format" => "text/html"
+            ]
+        ];
     }
 
 
