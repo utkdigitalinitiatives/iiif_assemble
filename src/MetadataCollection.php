@@ -57,17 +57,7 @@ class MetadataCollection
     }
 
     private function lookupField (){
-        if($this->field === 'contributor'):
-            $field = "http://purl.org/dc/elements/1.1/contributor";
-        elseif ($this->field === 'subject') :
-            $field = "http://purl.org/dc/elements/1.1/subject";
-        elseif ($this->field  === 'type') :
-            $field = "http://purl.org/dc/elements/1.1/type";
-        else :
-            $field = "http://purl.org/dc/elements/1.1/type";
-        endif;
-
-        return $field;
+        return "http://purl.org/dc/elements/1.1/" . $this->field;
 
     }
 
