@@ -153,7 +153,7 @@ class Utility {
         elseif ($metadata_value[0] === "type") {
             $new_value = "of Type";
         }
-        return "Other Items "  . $new_value . " \"" . str_replace("%20", " ", urldecode($metadata_value[1])) . "\"";
+        return "Items "  . $new_value . " \"" . str_replace("%20", " ", urldecode($metadata_value[1])) . "\"";
     }
 
 }
