@@ -154,6 +154,14 @@ class Utility {
             $new_value = "of Type";
         }
         return "Items "  . $new_value . " \"" . str_replace("%20", " ", urldecode($metadata_value[1])) . "\"";
+
+    public static function addAnchorsToReferences($references) {
+        $results = [];
+        foreach ($references as $reference){
+            $new_reference = '<a href="' . $reference . '">' . $reference . '</a>';
+            array_push($results, $new_reference);
+        }
+        return $results;
     }
 
 }

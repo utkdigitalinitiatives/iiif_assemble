@@ -114,7 +114,6 @@ class IIIF {
     }
 
     private function buildCollectionItems ($items = []) {
-
         foreach ($this->object as $item) {
             $items[] = (object) [
                 'id' => $this->url . '/assemble/manifest/' . str_replace(':', '/', $item->pid),
@@ -122,7 +121,7 @@ class IIIF {
                 'label' => (object) [
                     'none' => [$item->label]
                     ],
-                'thumbnail' => [self::useFedoraThumbnail($item->pid)],
+                'thumbnail' => self::useFedoraThumbnail($item->pid),
                 'homepage' => [
                     self::buildHomepage($item->pid, (object) [
                         'en' => [$item->label]
@@ -135,16 +134,16 @@ class IIIF {
 
     }
 
-    private function useFedoraThumbnail ($pid) {
-
+    private function useFedoraThumbnail ($pid, $model="") {
+        $items = [];
         $item = array();
         $item['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/TN/view';
         $item['height'] = 200;
         $item['width'] = 200;
         $item['type'] = 'Image';
         $item['format'] = 'image/jpeg';
-
-        return $item;
+        array_push($items, $item);
+        return $items;
     }
 
     private function buildCollectionThumbnails ($items = []) {
@@ -213,13 +212,18 @@ class IIIF {
     }
 
     public function buildMetadata () {
-
+        $date = $this->xpath->query('originInfo/dateCreated[not(@encoding)]');
+        if ($date == "") {
+            $date = $this->xpath->query('originInfo/dateCreated[@encoding]');
+        }
+        $related_resources = $this->xpath->query('relatedItem[@type="references"]/location/url');
+        $final_resources = Utility::addAnchorsToReferences($related_resources);
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
             'Publisher' => $this->xpath->query('originInfo/publisher'),
-            'Date' => $this->xpath->query('originInfo/dateCreated|originInfo/dateOther'),
-            'Publication Date' => $this->xpath->query('originInfo/dateIssued'),
+            'Date' => $date,
+            'Publication Date' => $this->xpath->query('originInfo/dateIssued[not(@encoding)]'),
             'Format' => $this->xpath->query('physicalDescription/form[not(@type="material")]'),
             'Extent' => $this->xpath->query('physicalDescription/extent'),
             'Subject' => $this->xpath->query('subject[not(@displayLabel="Narrator Class")]/topic'),
@@ -231,7 +235,8 @@ class IIIF {
             'Título' => $this->xpath->query('titleInfo[@lang="spa"]/title'),
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
             'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
-            'Language' => $this->xpath->query('language/languageTerm')
+            'Language' => $this->xpath->query('language/languageTerm'),
+            'Related Resource' => $final_resources
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
@@ -367,10 +372,11 @@ class IIIF {
         ];
     }
 
-    public function buildThumbnail ($width, $height, $pid="") {
+    public function buildThumbnail ($width, $height, $pid="", $model="") {
         if ($pid == "") {
             $pid = $this->pid;
         }
+        $items = array();
         $item = array();
         $iiifImage = self::getIIIFImageURI('TN', $pid);
         $thumbnail_details = Request::get_thumbnail_details($iiifImage);
@@ -392,10 +398,18 @@ class IIIF {
 
         $item['type'] = "Image";
         $item['format'] = "image/jpeg";
-
-        return [
-            $item
-        ];
+        array_push($items, $item);
+        if ( $this->type === "Video" || $model === "info:fedora/islandora:sp_videoCModel") {
+            $video = array();
+            $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/#t=60,75';
+            $video['type'] = 'Video';
+            $video['format'] = 'video/mp4';
+            $video['width'] = $width;
+            $video['height'] = $height;
+            $video['duration'] = 15;
+            array_push($items, $video);
+        }
+        return $items;
 
     }
 
@@ -552,8 +566,7 @@ class IIIF {
                 $canvas->height = 640;
                 $canvas->width = 360;
             endif;
-
-            $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid']);
+            $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid'], $data['type']);
             $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key, $canvasData);
             $annotations = self::prepareAnnotationPage($canvasId, $data['pid']);
             if (count($annotations->items) > 0) {
