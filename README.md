@@ -4,35 +4,41 @@
 
 <img src="https://digital.lib.utk.edu/iiif/2/collections~islandora~object~tenncities%3A343~datastream~OBJ/full/!400,400/0/default.jpg" alt="Cabin near Knoxville" />
 
-This app assembles and serves IIIF Presentation API 3.0 Manifest and Collections from a Fedora 3.8 objects with a MODS datastream. 
+This app assembles and serves IIIF Presentation API 3.0 Manifests and Collections from a Fedora 3.8 repository. 
 
-Where `namespace` is a string and `id` is positive integer:
+The application has three interfaces that are covered below:
 
 - **Manifest**: `/assemble/manifest/{namespace}/{id}` 
-- **Collection**: ```/assemble/collection/{namespace}/{id}```
+- **Collection**: `/assemble/collection/{namespace}/{id}`
+- **Metadata Collection**: `/assemble/metadata/{dc:field}/{value}`
 
-## Manifest
+## Manifest Interface
 
-The example route of `/assemble/manifest/tenncities/343` will correlate to **tenncities:343**, ex: https://digital.lib.utk.edu/assemble/manifest/tenncities/343
+The manifest interface generates, or pulls from cache, a IIIF manifest for the corresponding Fedora object. The manifest
+structure is determined by the work type of the corresponding object and is described in detail in 
+[UTK IIIF Recipes](https://utk-iiif-cookbook.readthedocs.io/en/latest/).
 
-## Collection
+The example route of `/assemble/manifest/tenncities/343` correlates to **tenncities:343**, ex: https://digital.lib.utk.edu/assemble/manifest/tenncities/343
 
-The path for a collection with the PID `gsmrc:thompson` would be `/assemble/collection/gsmrc/thompson`, ex: https://digital.lib.utk.edu/assemble/collection/gsmrc/thompson. Embedded collections are currently not supported.
+## Collection Interface
 
+The collection interface generates, or pulls from cache, a IIIF manifest for the corresponding Fedora colleciton.  The
+manifest structure is described in detail in the 
+[UTK IIIF Recipes: Collections Section](https://utk-iiif-cookbook.readthedocs.io/en/latest/contents/collections.html)
 
-## Notes and To Dos
+The path for a collection with the PID `gsmrc:thompson` would be `/assemble/collection/gsmrc/thompson`, ex: 
+https://digital.lib.utk.edu/assemble/collection/gsmrc/thompson.
 
-Note: This is not production ready.
+## Metadata Collection Interface
 
+The metadata collection interface generates a IIIF colleciton manifest based on results on a SPARQL query versus the 
+Fedora Resource Index. 
 
-### Notes
-- This only outputs manifests and metadata fields mapped for boutique purposes.
-- This is not currently intended as an access tool for all UT Libraries' collections in the wild.
-- This currently does not create collection lists of multiple manifests.
-- This generator caches a manifest for 180 days. If metadata or OBJ datastreams are updated, the directory for the manifest must be cleared at `./cache/namespace/id`
+The path for this follows the general pattern above but with the DublinCore field and an associated value.  Some examples:
 
-### To Do
-- Though possible at some point, this generator has no current way creating a manifest with referenced annotation lists.
+- [https://digital.lib.utk.edu/assemble/metadata/contributor/Wilson,%20Danny](https://digital.lib.utk.edu/assemble/metadata/contributor/Wilson,%20Danny)
+- [https://digital.lib.utk.edu/assemble/metadata/subject/Black%20bears](https://digital.lib.utk.edu/assemble/metadata/subject/Black%20bears)
+- [https://digital.lib.utk.edu/assemble/metadata/date/1991](https://digital.lib.utk.edu/assemble/metadata/date/1991)
 
 ## Requirements
 

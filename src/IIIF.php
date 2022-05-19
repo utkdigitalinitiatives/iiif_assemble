@@ -21,12 +21,14 @@ class IIIF {
         }
 
         $this->pid = $pid;
-        $this->mods = $mods;
+        if ($mods != null) {
+            $this->mods = $mods;
+            $this->xpath = new XPath($mods);
+            $this->simplexpath = new SimpleXPath($mods);
+            $this->label = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
+        }
         $this->object = $object;
-        $this->xpath = new XPath($mods);
-        $this->simplexpath = new SimpleXPath($mods);
         $this->type = self::determineTypeByModel($model);
-        $this->label = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
         $this->url = Utility::getBaseUrl();
 
     }
@@ -54,6 +56,41 @@ class IIIF {
 
         return json_encode($collection);
 
+    }
+
+    public function buildMetadataCollection ()
+    {
+        $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
+
+        $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
+        $collection['id'] = $id;
+        $collection['type'] = 'Collection';
+        $collection['viewingDirection'] = 'left-to-right';
+        $collection['behavior'] = ['unordered'];
+        $collection['thumbnail'] = self::buildCollectionThumbnails();
+        $collection['label'] = (object)['none'=> [Utility::makeMetadataCollectionLabel($this->pid)]];
+        $collection['items'] = self::buildCollectionItems();
+        $collection['provider'] = self::buildProvider();
+        $collection['homepage'] = self::buildMetadataCollectionHomePage();
+
+        return json_encode($collection);
+
+    }
+
+    private function buildMetadataCollectionHomePage () {
+        $id = "https://projectmirador.org/embed/?iiif-content=" . $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
+        return [
+            (object) [
+                "id" => $id,
+                "type" => "Text",
+                "label" => (object) [
+                    "en" => [
+                        "View Collection in Mirador"
+                    ]
+                ],
+                "format" => "text/html"
+            ]
+        ];
     }
 
 
