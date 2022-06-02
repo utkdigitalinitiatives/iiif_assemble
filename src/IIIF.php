@@ -236,7 +236,8 @@ class IIIF {
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
             'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
             'Language' => $this->xpath->query('language/languageTerm'),
-            'Related Resource' => $final_resources
+            'Related Resource' => $final_resources,
+            'Rights Information' => $this->buildRights()
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
