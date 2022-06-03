@@ -221,8 +221,10 @@ class IIIF {
         $rights_uri = $this->buildRights();
         $rights_data = new Rights($rights_uri);
         $rights_metadata = "";
+        $rights_usage = "";
         if ($rights_data->data) {
             $rights_metadata = '<a href="' . $rights_uri . '"><img src="' . $rights_data->data->badge . '"/></a>';
+            $rights_usage = '<a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition;
         }
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
@@ -243,7 +245,8 @@ class IIIF {
             'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
             'Language' => $this->xpath->query('language/languageTerm'),
             'Related Resource' => $final_resources,
-            'Rights Information' => $rights_metadata
+            'Rights' => $rights_metadata,
+            'Rights Usage' => $rights_usage,
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
