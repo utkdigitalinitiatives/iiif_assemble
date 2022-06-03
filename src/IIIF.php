@@ -218,6 +218,12 @@ class IIIF {
         }
         $related_resources = $this->xpath->query('relatedItem[@type="references"]/location/url');
         $final_resources = Utility::addAnchorsToReferences($related_resources);
+        $rights_uri = $this->buildRights();
+        $rights_data = new Rights($rights_uri);
+        $rights_metadata = "";
+        if ($rights_data->data) {
+            $rights_metadata = '<a href="' . $rights_uri . '"><img src="' . $rights_data->data->badge . '"/></a>';
+        }
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
@@ -237,7 +243,7 @@ class IIIF {
             'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
             'Language' => $this->xpath->query('language/languageTerm'),
             'Related Resource' => $final_resources,
-            'Rights Information' => $this->buildRights()
+            'Rights Information' => $rights_metadata
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);

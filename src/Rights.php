@@ -5,11 +5,13 @@ namespace Src;
 class Rights {
 
     private $uri;
+    public $data;
 
     public function __construct($uri)
     {
 
         $this->uri = $uri;
+        $this->data = $this->getRightsParts();
 
     }
 
@@ -20,7 +22,7 @@ class Rights {
                 "label" => "In Copyright",
                 "badge" => "https://rightsstatements.org/files/buttons/InC.dark-white-interior-blue-type.svg",
                 "description" => "This Rights Statement indicates that the Item labeled with this Rights Statement is in copyright.",
-                "definition" => "This Item is protected by copyright and/or related rights. You are free to use this Item in any way that is permitted by the copyright and related rights legislation that applies to your use. For other uses you need to obtain permission from the rights-holder(s).",
+                "definition" => "This Item is protected by copyright and/or related rights. You are free to use this Item in any way that is permitted by the copyright and related rights legislation that applies to your use. For other uses you need to obtain permission from the rights-holder(s)."
             ],
             "http://rightsstatements.org/vocab/InC-OW-EU/1.0/" => (object)[
                 "label" => "In Copyright - EU Orphan Work",
@@ -90,7 +92,8 @@ class Rights {
             ],
         ];
         if( array_key_exists($this->uri, $rights_values) ) {
-            return $rights_values[$this->uri];
+            $uri = $this->uri;
+            return $rights_values->$uri;
         }
         else {
             return null;
