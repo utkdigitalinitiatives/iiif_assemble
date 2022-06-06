@@ -92,7 +92,7 @@ class Rights {
             ],
         ];
         $uri = $this->uri;
-        if( isset($rights_values[$uri]) ) {
+        if( isset($rights_values->$uri) ) {
             return $rights_values->$uri;
         }
         else {
