@@ -91,7 +91,7 @@ class Rights {
                 "definition" => "The organization that has made the Item available reasonably believes that the Item is not restricted by copyright or related rights, but a conclusive determination could not be made. Please refer to the organization that has made the Item available for more information. You are free to use this Item in any way that is permitted by the copyright and related rights legislation that applies to your use.",
             ],
         ];
-        if( array_key_exists($this->uri, $rights_values) ) {
+        if( isset($rights_values[$this->uri]) ) {
             $uri = $this->uri;
             return $rights_values->$uri;
         }
