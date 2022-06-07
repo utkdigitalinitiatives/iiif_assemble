@@ -246,7 +246,7 @@ class IIIF {
             'Language' => $this->xpath->query('language/languageTerm'),
             'Related Resource' => $final_resources,
             'Rights' => [$rights_metadata],
-            'Rights Usage' => [$rights_usage],
+            'Rights Definition' => [$rights_usage],
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
