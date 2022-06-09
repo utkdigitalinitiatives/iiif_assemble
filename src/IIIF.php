@@ -245,10 +245,14 @@ class IIIF {
             'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
             'Language' => $this->xpath->query('language/languageTerm'),
             'Related Resource' => $final_resources,
-            'Rights' => [$rights_metadata],
-            'Rights Definition' => [$rights_usage],
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
+        if ($rights_metadata != "") {
+            $metadata_with_names['Rights'] = [$rights_metadata];
+        }
+        if ($rights_usage != "") {
+            $metadata_with_names['Rights Definition'] = [$rights_usage];
+        }
         return self::validateMetadata($metadata_with_names);
 
     }
