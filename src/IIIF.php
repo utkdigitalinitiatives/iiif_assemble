@@ -218,14 +218,6 @@ class IIIF {
         }
         $related_resources = $this->xpath->query('relatedItem[@type="references"]/location/url');
         $final_resources = Utility::addAnchorsToReferences($related_resources);
-        $rights_uri = $this->buildRights();
-        $rights_data = new Rights($rights_uri);
-        $rights_metadata = "";
-        $rights_usage = "";
-        if ($rights_data->data) {
-            $rights_metadata = '<a href="' . $rights_uri . '"><img src="' . $rights_data->data->badge . '"/></a>';
-            $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span>';
-        }
         $metadata = array(
             'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
             'Table of Contents' => $this->xpath->query('tableOfContents'),
@@ -247,14 +239,26 @@ class IIIF {
             'Related Resource' => $final_resources,
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
+        $metadata_with_rights = $this->add_rights_metadata($metadata_with_names);
+        return self::validateMetadata($metadata_with_rights);
+    }
+
+    private function add_rights_metadata($metadata_fields) {
+        $rights_uri = $this->buildRights();
+        $rights_data = new Rights($rights_uri);
+        $rights_metadata = "";
+        $rights_usage = "";
+        if ($rights_data->data) {
+            $rights_metadata = '<a href="' . $rights_uri . '"><img src="' . $rights_data->data->badge . '"/></a>';
+            $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span>';
+        }
         if ($rights_metadata != "") {
-            $metadata_with_names['Rights'] = [$rights_metadata];
+            $metadata_fields['Rights'] = [$rights_metadata];
         }
         if ($rights_usage != "") {
-            $metadata_with_names['Rights Definition'] = [$rights_usage];
+            $metadata_fields['Rights Definition'] = [$rights_usage];
         }
-        return self::validateMetadata($metadata_with_names);
-
+        return $metadata_fields;
     }
 
     private function browse_sanitize($value) {
