@@ -246,17 +246,15 @@ class IIIF {
     private function add_rights_metadata($metadata_fields) {
         $rights_uri = $this->buildRights();
         $rights_data = new Rights($rights_uri);
-        $rights_metadata = "";
-        $rights_usage = "";
         if ($rights_data->data) {
-            $rights_metadata = '<a href="' . $rights_uri . '"><img src="' . $rights_data->data->badge . '"/></a>';
-            $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span>';
-        }
-        if ($rights_metadata != "") {
-            $metadata_fields['Rights'] = [$rights_metadata];
-        }
-        if ($rights_usage != "") {
-            $metadata_fields['Rights Definition'] = [$rights_usage];
+            if ($rights_data->data->badge != "") {
+                $rights_metadata = '<a href="' . $rights_uri . '"><img src="' . $rights_data->data->badge . '"/></a>';
+                $metadata_fields['Rights'] = [$rights_metadata];
+            }
+            if ($rights_data->data->definition != "") {
+                $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span>';
+                $metadata_fields['Rights Definition'] = [$rights_usage];
+            }
         }
         return $metadata_fields;
     }
