@@ -203,6 +203,13 @@ class Request {
         return self::curlRequest($request);
     }
 
+    public static function getCreativeCommons($uri) {
+        $clean_url = str_replace("rdf", "", $uri);
+        $request = "http://api.creativecommons.org/rest/1.5/details?license-uri=" . $clean_url;
+
+        return self::curlRequest($request);
+    }
+
     public static function escapeQuery ($query) {
 
         $searchReplace = array(
