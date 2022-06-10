@@ -95,6 +95,15 @@ class Rights {
         if( isset($rights_values->$uri) ) {
             return $rights_values->$uri;
         }
+        elseif (str_contains($uri, 'creativecommons')){
+            $xml = Request::getCreativeCommons($uri);
+            $document = new XPath($xml['body']);
+            $badge = $document->query('//img/@src' )[0];
+            return (object)[
+                "label" => $document->query('license-name')[0],
+                "badge" => $badge
+            ];
+        }
         else {
             return null;
         }

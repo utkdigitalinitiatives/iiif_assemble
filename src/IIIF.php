@@ -247,13 +247,17 @@ class IIIF {
         $rights_uri = $this->buildRights();
         $rights_data = new Rights($rights_uri);
         if ($rights_data->data) {
-            if ($rights_data->data->badge != "") {
+            if (isset($rights_data->data->badge)) {
                 $rights_metadata = '<a href="' . $rights_uri . '"><img src="' . $rights_data->data->badge . '"/></a>';
                 $metadata_fields['Rights'] = [$rights_metadata];
             }
-            if ($rights_data->data->definition != "") {
+            if (isset($rights_data->data->definition)) {
                 $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span>';
                 $metadata_fields['Rights Definition'] = [$rights_usage];
+            }
+            elseif (isset($rights_data->data->label)) {
+                $cc_label = '<span>' . $rights_data->data->label . '</span>';
+                $metadata_fields['License'] = [$cc_label];
             }
         }
         return $metadata_fields;
