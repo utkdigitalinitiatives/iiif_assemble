@@ -204,8 +204,7 @@ class Request {
     }
 
     public static function getCreativeCommons($uri) {
-        $clean_url = str_replace("rdf", "", $uri);
-        $request = "http://api.creativecommons.org/rest/1.5/details?license-uri=" . $clean_url;
+        $request = "http://api.creativecommons.org/rest/1.5/details?license-uri=" . $uri;
 
         return self::curlRequest($request);
     }

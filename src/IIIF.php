@@ -248,7 +248,7 @@ class IIIF {
         $rights_data = new Rights($rights_uri);
         if ($rights_data->data) {
             if (isset($rights_data->data->badge)) {
-                $rights_metadata = '<a href="' . $rights_uri . '"><img src="' . $rights_data->data->badge . '"/></a>';
+                $rights_metadata = '<a href="' . str_replace('rdf', '', $rights_uri) . '"><img src="' . $rights_data->data->badge . '"/></a>';
                 $metadata_fields['Rights'] = [$rights_metadata];
             }
             if (isset($rights_data->data->definition)) {
@@ -256,7 +256,7 @@ class IIIF {
                 $metadata_fields['Rights Definition'] = [$rights_usage];
             }
             elseif (isset($rights_data->data->label)) {
-                $cc_label = '<span>' . $rights_data->data->label . '</span>';
+                $cc_label = '<span><a href="' . $rights_data->data->uri . '"/>' . $rights_data->data->label . '</a></span>';
                 $metadata_fields['License'] = [$cc_label];
             }
         }

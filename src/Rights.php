@@ -96,12 +96,14 @@ class Rights {
             return $rights_values->$uri;
         }
         elseif (str_contains($uri, 'creativecommons')){
-            $xml = Request::getCreativeCommons($uri);
+            $creative_commons_uri = str_replace("rdf", "", $uri);
+            $xml = Request::getCreativeCommons($creative_commons_uri);
             $document = new XPath($xml['body']);
             $badge = $document->query('//img/@src' )[0];
             return (object)[
                 "label" => $document->query('license-name')[0],
-                "badge" => $badge
+                "badge" => $badge,
+                "uri" => $creative_commons_uri,
             ];
         }
         else {
