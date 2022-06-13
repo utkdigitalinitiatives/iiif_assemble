@@ -97,6 +97,7 @@ class Rights {
         }
         elseif (str_contains($uri, 'creativecommons')){
             $creative_commons_uri = str_replace("rdf", "", $uri);
+            $creative_commons_uri = str_replace("https", "http", $creative_commons_uri);
             $xml = Request::getCreativeCommons($creative_commons_uri);
             $document = new XPath($xml['body']);
             $badge = $document->query('//img/@src' )[0];
