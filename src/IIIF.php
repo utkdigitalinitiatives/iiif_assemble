@@ -358,7 +358,7 @@ class IIIF {
         }
         return (object) [
             'label' => self::getLanguageArray('Rights', 'label'),
-            'value' => self::getLanguageArray($complete_value, 'value')
+            'value' => self::getLanguageArray([$complete_value], 'value')
         ];
 
     }
