@@ -968,11 +968,18 @@ class IIIF {
             $pid = $this->pid;
         }
         $durations = Request::getBibframeDuration($pid, $dsid, 'csv');
-        $duration = explode("\n", $durations['body'])[1];
-        $split_duration = explode(":", $duration);
-        $hours = intval($split_duration[0]) *  60 * 60;
-        $minutes = intval($split_duration[1]) * 60;
-        return $hours + $minutes + intval($split_duration[2]);
+        $response = explode("\n", $durations['body'])[1];
+        if ($response != "") {
+            print_r($response);
+            $duration = explode("\n", $durations['body'])[1];
+            $split_duration = explode(":", $duration);
+            $hours = intval($split_duration[0]) *  60 * 60;
+            $minutes = intval($split_duration[1]) * 60;
+            return $hours + $minutes + intval($split_duration[2]);
+        }
+        else {
+            return 400;
+        }
     }
 
     private static function determineTypeByModel ($islandoraModel) {
