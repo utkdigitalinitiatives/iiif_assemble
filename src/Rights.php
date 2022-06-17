@@ -15,6 +15,22 @@ class Rights {
 
     }
 
+    private function dereferenceCCRequirements($requirements) {
+        $results = [];
+        $cc_requirements = (object)[
+            "http://creativecommons.org/ns#Notice" => "copyright and license notices be kept intact",
+            "http://creativecommons.org/ns#Attribution" => "credit be given to copyright holder and/or author",
+            "http://creativecommons.org/ns#ShareAlike" => "derivative works be licensed under the same terms or compatible terms as the original work",
+            "http://creativecommons.org/ns#SourceCode" => "source code (the preferred form for making modifications) must be provided when exercising some rights granted by the license",
+            "http://creativecommons.org/ns#Copyleft" => "derivative and combined works must be licensed under specified terms, similar to those on the original work",
+            "http://creativecommons.org/ns#LesserCopyleft" => "derivative works must be licensed under specified terms, with at least the same conditions as the original work; combinations with the work may be licensed under different terms"
+        ];
+        foreach ($requirements as $value) {
+            $results[] = $cc_requirements->$value;
+        }
+        return $results;
+    }
+
     private function getRightsParts() {
 
         $rights_values = (object)[
@@ -103,6 +119,7 @@ class Rights {
             $document2 = new SimpleXPath($xml['body']);
             $badge = $document->query('//img/@src' )[0];
             $requires = $document2->getCreativeCommonsDetails("//cc:License/cc:requires/@rdf:resource");
+            $requires = $this->dereferenceCCRequirements($requires);
             $permits = $document2->getCreativeCommonsDetails("//cc:License/cc:permits/@rdf:resource");
             return (object)[
                 "label" => $document->query('license-name')[0],
