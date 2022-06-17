@@ -100,11 +100,16 @@ class Rights {
             $creative_commons_uri = str_replace("https", "http", $creative_commons_uri);
             $xml = Request::getCreativeCommons($creative_commons_uri);
             $document = new XPath($xml['body']);
+            $document2 = new SimpleXPath($xml['body']);
             $badge = $document->query('//img/@src' )[0];
+            $requires = $document2->getCreativeCommonsDetails("//cc:License/cc:requires/@rdf:resource");
+            $permits = $document2->getCreativeCommonsDetails("//cc:License/cc:permits/@rdf:resource");
             return (object)[
                 "label" => $document->query('license-name')[0],
                 "badge" => $badge,
                 "uri" => $creative_commons_uri,
+                "requires" => $requires,
+                "permits" => $permits
             ];
         }
         else {
