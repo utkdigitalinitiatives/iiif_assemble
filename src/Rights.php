@@ -31,6 +31,20 @@ class Rights {
         return $results;
     }
 
+    private function dereferenceCCPermissions($permissions) {
+        $results = [];
+        $cc_permissions = (object)[
+            "http://creativecommons.org/ns#Reproduction" => "making multiple copies",
+            "http://creativecommons.org/ns#Distribution" => "distribution, public display, and publicly performance",
+            "http://creativecommons.org/ns#DerivativeWorks" => "distribution of derivative works",
+            "http://creativecommons.org/ns#Sharing" => "permits commercial derivatives, but only non-commercial distribution",
+        ];
+        foreach ($permissions as $value) {
+            $results[] = $cc_permissions->$value;
+        }
+        return $results;
+    }
+
     private function getRightsParts() {
 
         $rights_values = (object)[
@@ -121,6 +135,7 @@ class Rights {
             $requires = $document2->getCreativeCommonsDetails("//cc:License/cc:requires/@rdf:resource");
             $requires = $this->dereferenceCCRequirements($requires);
             $permits = $document2->getCreativeCommonsDetails("//cc:License/cc:permits/@rdf:resource");
+            $permits = $this->dereferenceCCRequirements($permits);
             return (object)[
                 "label" => $document->query('license-name')[0],
                 "badge" => $badge,
