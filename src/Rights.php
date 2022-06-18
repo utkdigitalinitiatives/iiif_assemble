@@ -135,7 +135,7 @@ class Rights {
             $requires = $document2->getCreativeCommonsDetails("//cc:License/cc:requires/@rdf:resource");
             $requires = $this->dereferenceCCRequirements($requires);
             $permits = $document2->getCreativeCommonsDetails("//cc:License/cc:permits/@rdf:resource");
-            $permits = $this->dereferenceCCRequirements($permits);
+            $permits = $this->dereferenceCCPermissions($permits);
             return (object)[
                 "label" => $document->query('license-name')[0],
                 "badge" => $badge,

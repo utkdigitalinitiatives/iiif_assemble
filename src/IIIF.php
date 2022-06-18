@@ -344,16 +344,24 @@ class IIIF {
         $complete_value = "";
         if ($rights_data->data) {
             if (isset($rights_data->data->badge)) {
-                $rights_metadata = '<span><a href="' . str_replace('rdf', '', $rights_uri) . '"><img src="' . $rights_data->data->badge . '"/></a></span>';
+                $rights_metadata = '<span><a href="' . str_replace('rdf', '', $rights_uri) . '"><img src="' . $rights_data->data->badge . '"/></a></span><br/>';
                 $complete_value = $complete_value . $rights_metadata;
             }
             if (isset($rights_data->data->definition)) {
-                $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span>';
+                $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span><br/>';
                 $complete_value = $complete_value . $rights_usage;
             }
             elseif (isset($rights_data->data->label)) {
-                $cc_label = '<span><a href="' . $rights_data->data->uri . '"/>' . $rights_data->data->label . '</a></span>';
+                $cc_label = '<span><a href="' . $rights_data->data->uri . '"/>' . $rights_data->data->label . '</a></span><br/>';
                 $complete_value = $complete_value . $cc_label;
+                $complete_value = $complete_value . '<span>Requires:</span><br/>';
+                foreach ($rights_data->data->requires as $value) {
+                    $complete_value = $complete_value . '<small>' . $value . '</small><br/>';
+                }
+                $complete_value = $complete_value . '<span>Permits:</span><br/>';
+                foreach ($rights_data->data->permits as $value) {
+                    $complete_value = $complete_value . '<small>' . $value . '</small><br/>';
+                }
             }
         }
         return (object) [
