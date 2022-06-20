@@ -355,12 +355,16 @@ class IIIF {
                 $cc_label = '<span><a href="' . $rights_data->data->uri . '"/>' . $rights_data->data->label . '</a></span><br/>';
                 $complete_value = $complete_value . $cc_label;
                 $complete_value = $complete_value . '<span>Requires:</span><br/>';
+                $i = 1;
                 foreach ($rights_data->data->requires as $value) {
-                    $complete_value = $complete_value . '<small>' . $value . '</small><br/>';
+                    $complete_value = $complete_value . '<small>' . $i . '. ' . $value . '</small><br/>';
+                    $i += 1;
                 }
                 $complete_value = $complete_value . '<span>Permits:</span><br/>';
+                $i = 1;
                 foreach ($rights_data->data->permits as $value) {
-                    $complete_value = $complete_value . '<small>' . $value . '</small><br/>';
+                    $complete_value = $complete_value . '<small>' . $i . '. ' . $value . '</small><br/>';
+                    $i += 1;
                 }
             }
         }
