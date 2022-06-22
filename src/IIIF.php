@@ -236,11 +236,33 @@ class IIIF {
             'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
             'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
             'Language' => $this->xpath->query('language/languageTerm'),
-            'Related Resource' => $final_resources
+            'Provided by' => $this->xpath->query('recordInfo/recordContentSource'),
+            'Related Resource' => $final_resources,
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
+    }
 
+    private function add_rights_metadata($metadata_fields) {
+        $rights_uri = $this->buildRights();
+        $rights_data = new Rights($rights_uri);
+        $complete_value = "";
+        if ($rights_data->data) {
+            if (isset($rights_data->data->badge)) {
+                $rights_metadata = '<span><a href="' . str_replace('rdf', '', $rights_uri) . '"><img src="' . $rights_data->data->badge . '"/></a></span>';
+                $complete_value = $complete_value . $rights_metadata;
+            }
+            if (isset($rights_data->data->definition)) {
+                $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span>';
+                $complete_value = $complete_value . $rights_usage;
+            }
+            elseif (isset($rights_data->data->label)) {
+                $cc_label = '<span><a href="' . $rights_data->data->uri . '"/>' . $rights_data->data->label . '</a></span>';
+                $complete_value = $complete_value . $cc_label;
+            }
+            $metadata_fields['Rights'] = [ $complete_value ];
+        }
+        return $metadata_fields;
     }
 
     private function browse_sanitize($value) {
@@ -317,11 +339,38 @@ class IIIF {
     }
 
     public function buildRequiredStatement () {
-
-        $providing_institution = $this->xpath->query('recordInfo/recordContentSource');
+        $rights_uri = $this->buildRights();
+        $rights_data = new Rights($rights_uri);
+        $complete_value = "";
+        if ($rights_data->data) {
+            if (isset($rights_data->data->badge)) {
+                $rights_metadata = '<span><a href="' . str_replace('rdf', '', $rights_uri) . '"><img src="' . $rights_data->data->badge . '"/></a></span><br/>';
+                $complete_value = $complete_value . $rights_metadata;
+            }
+            if (isset($rights_data->data->definition)) {
+                $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span><br/>';
+                $complete_value = $complete_value . $rights_usage;
+            }
+            elseif (isset($rights_data->data->label)) {
+                $cc_label = '<span><a href="' . $rights_data->data->uri . '"/>' . $rights_data->data->label . '</a></span><br/>';
+                $complete_value = $complete_value . $cc_label;
+                $complete_value = $complete_value . '<span>Requires:</span><br/>';
+                $i = 1;
+                foreach ($rights_data->data->requires as $value) {
+                    $complete_value = $complete_value . '<small>' . $i . '. ' . $value . '</small><br/>';
+                    $i += 1;
+                }
+                $complete_value = $complete_value . '<span>Permits:</span><br/>';
+                $i = 1;
+                foreach ($rights_data->data->permits as $value) {
+                    $complete_value = $complete_value . '<small>' . $i . '. ' . $value . '</small><br/>';
+                    $i += 1;
+                }
+            }
+        }
         return (object) [
-            'label' => self::getLanguageArray('Provided by', 'label'),
-            'value' => self::getLanguageArray($providing_institution, 'value')
+            'label' => self::getLanguageArray('Rights', 'label'),
+            'value' => self::getLanguageArray([$complete_value], 'value')
         ];
 
     }
@@ -931,11 +980,18 @@ class IIIF {
             $pid = $this->pid;
         }
         $durations = Request::getBibframeDuration($pid, $dsid, 'csv');
-        $duration = explode("\n", $durations['body'])[1];
-        $split_duration = explode(":", $duration);
-        $hours = intval($split_duration[0]) *  60 * 60;
-        $minutes = intval($split_duration[1]) * 60;
-        return $hours + $minutes + intval($split_duration[2]);
+        $response = explode("\n", $durations['body'])[1];
+        if ($response != "") {
+            print_r($response);
+            $duration = explode("\n", $durations['body'])[1];
+            $split_duration = explode(":", $duration);
+            $hours = intval($split_duration[0]) *  60 * 60;
+            $minutes = intval($split_duration[1]) * 60;
+            return $hours + $minutes + intval($split_duration[2]);
+        }
+        else {
+            return 400;
+        }
     }
 
     private static function determineTypeByModel ($islandoraModel) {

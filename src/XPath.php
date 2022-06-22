@@ -138,6 +138,19 @@ class SimpleXPath
         }
         return $names;
     }
+
+    public function getCreativeCommonsDetails($expression) {
+        $this->doc->registerXPathNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+        $this->doc->registerXPathNamespace("cc", "http://creativecommons.org/ns#");
+        $results = $this->doc->xpath($expression);
+        $details = [];
+        foreach ($results as $value) {
+            if(!in_array((string)$value, $details) and str_contains((string)$value, '#')) {
+                array_push($details, (string)$value);
+            }
+        }
+        return $details;
+    }
 }
 
 ?>
