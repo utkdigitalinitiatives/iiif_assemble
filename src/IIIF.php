@@ -453,8 +453,8 @@ class IIIF {
             $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/#t=60,75';
             $video['type'] = 'Video';
             $video['format'] = 'video/mp4';
-            $video['width'] = $width;
-            $video['height'] = $height;
+            $video['width'] = 1920;
+            $video['height'] = 1080;
             $video['duration'] = 15;
             array_push($items, $video);
         }
