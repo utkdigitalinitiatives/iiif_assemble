@@ -225,10 +225,35 @@ class IIIF {
     private function buildnavPlace() {
         $coordinates = $this->xpath->query('subject/cartographics/coordinates');
         $navPlace  = (object) [
-            "id" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "featurecollection/1",
+            "id" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/1",
             "type" => "FeatureCollection",
             "features" => [],
         ];
+        $i = 1;
+        foreach ($coordinates as $thing) {
+//            if (array_key_exists($thing, $sanitize)) {
+//                array_push($finals, $sanitize[$thing]);
+//            }
+//            else {
+//                array_push($finals, $thing);
+//            }
+            $new_coordinates = explode(",", $thing);
+            $longitude = $new_coordinates[1];
+            $latitude = $new_coordinates[0];
+            $feature = (object) [
+                "id" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . $i,
+                "type" => "Feature",
+                "geometry" => (object) [
+                    "type" => "Point",
+                    "coordinates" => [
+                        floatval($longitude),
+                        floatval($latitude)
+                    ]
+                ]
+            ];
+            $i += 1;
+            array_push($navPlace->features, $feature);
+        }
         return $navPlace;
     }
 
