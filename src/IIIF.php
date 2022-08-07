@@ -231,18 +231,20 @@ class IIIF {
         ];
         $i = 1;
         foreach ($coordinates as $thing) {
-//            if (array_key_exists($thing, $sanitize)) {
-//                array_push($finals, $sanitize[$thing]);
-//            }
-//            else {
-//                array_push($finals, $thing);
-//            }
             $new_coordinates = explode(",", $thing);
             $longitude = $new_coordinates[1];
             $latitude = $new_coordinates[0];
             $feature = (object) [
                 "id" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . $i,
                 "type" => "Feature",
+                "properties" => (object) [
+                    "label" => (object) [
+                        "en" => [
+                            "Temporary Property Name"
+                        ]
+                    ],
+                    "manifest" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"])
+                ],
                 "geometry" => (object) [
                     "type" => "Point",
                     "coordinates" => [
