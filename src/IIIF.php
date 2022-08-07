@@ -193,6 +193,10 @@ class IIIF {
         if ($requiredStatement->value->en) {
             $manifest['requiredStatement'] = $requiredStatement;
         }
+        $coordinates = self::testFornavPlace();
+        if ($coordinates) {
+            $manifest['navPlace'] =self::buildnavPlace();
+        }
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
         $manifest['items'] = self::buildItems($id);
@@ -212,6 +216,20 @@ class IIIF {
         $presentation = self::buildStructures($manifest, $id);
         return json_encode($presentation);
 
+    }
+
+    private function testFornavPlace() {
+        return $this->xpath->query('subject/cartographics/coordinates');
+    }
+
+    private function buildnavPlace() {
+        $coordinates = $this->xpath->query('subject/cartographics/coordinates');
+        $navPlace  = (object) [
+            "id" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "featurecollection/1",
+            "type" => "FeatureCollection",
+            "features" => [],
+        ];
+        return $navPlace;
     }
 
     public function buildMetadata () {
