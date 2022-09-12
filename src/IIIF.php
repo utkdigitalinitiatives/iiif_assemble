@@ -529,7 +529,7 @@ class IIIF {
     }
 
     private function buildAccompanyingCanvas ($uri) {
-        $canvasId = $uri . '/canvas/accompanying';
+        $canvasId = str_replace('digital.lib', 'iiif.lib', $uri) . '/canvas/accompanying';
         $title = 'Accompanying canvas for ' . $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
             "id" => $canvasId,
@@ -557,7 +557,7 @@ class IIIF {
 
     public function buildCanvas ($index, $uri, $pid) {
 
-        $canvasId = $uri . '/canvas/' . $index;
+        $canvasId = str_replace('digital.lib', 'iiif.lib', $uri) . '/canvas/' . $index;
         $title = $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
                 "id" => $canvasId,
@@ -607,7 +607,7 @@ class IIIF {
     }
 
     public function buildCanvasWithPages ($index, $uri, $canvasData) {
-        $canvasId = $uri . '/canvas/' . $index;
+        $canvasId = str_replace('digital.lib', 'iiif.lib', $uri) . '/canvas/' . $index;
         $canvas = (object) [
             "id" => $canvasId,
             "type" => 'Canvas',
