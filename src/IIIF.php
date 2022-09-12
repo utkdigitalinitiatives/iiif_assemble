@@ -931,12 +931,12 @@ class IIIF {
                 $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
                 $ranges[$range]['items'][] = (object) [
                     'type' => 'Range',
-                    'id' => str_replace('digital.lib', 'iiif.lib', $uri). '/' . $range . '/' . $index,
+                    'id' => str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range . '/' . $index,
                     'label' => self::getLanguageArray($label[0]->textContent, 'label'),
                     'items' => [
                         (object) [
                             'type' => 'Canvas',
-                            'id' => $canvas . '#t=' . $startTime . ',' . $endTime
+                            'id' => str_replace('digital.lib', 'iiif.lib', $canvas) . '#t=' . $startTime . ',' . $endTime
                         ]
                     ]
                 ];
