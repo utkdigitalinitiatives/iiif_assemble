@@ -982,7 +982,6 @@ class IIIF {
         $durations = Request::getBibframeDuration($pid, $dsid, 'csv');
         $response = explode("\n", $durations['body'])[1];
         if ($response != "") {
-            print_r($response);
             $duration = explode("\n", $durations['body'])[1];
             $split_duration = explode(":", $duration);
             $hours = intval($split_duration[0]) *  60 * 60;
