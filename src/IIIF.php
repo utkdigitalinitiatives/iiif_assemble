@@ -936,7 +936,7 @@ class IIIF {
                     'items' => [
                         (object) [
                             'type' => 'Canvas',
-                            'id' => str_replace('digital.lib', 'iiif.lib', $canvas) . '#t=' . $startTime . ',' . $endTime
+                            'id' => str_replace('digital.lib', 'iiif.lib', $canvas) . '/0#t=' . $startTime . ',' . $endTime
                         ]
                     ]
                 ];
