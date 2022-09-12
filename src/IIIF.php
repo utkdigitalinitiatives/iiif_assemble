@@ -927,7 +927,7 @@ class IIIF {
                 $range = Utility::sanitizeLabel($partType);
 
                 $ranges[$range]['type'] = 'Range';
-                $ranges[$range]['id'] = $uri . '/' . $range;
+                $ranges[$range]['id'] = str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range;
                 $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
                 $ranges[$range]['items'][] = (object) [
                     'type' => 'Range',
