@@ -931,7 +931,7 @@ class IIIF {
                 $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
                 $ranges[$range]['items'][] = (object) [
                     'type' => 'Range',
-                    'id' => $uri . '/' . $range . '/' . $index,
+                    'id' => str_replace('digital.lib', 'iiif.lib', $uri). '/' . $range . '/' . $index,
                     'label' => self::getLanguageArray($label[0]->textContent, 'label'),
                     'items' => [
                         (object) [
