@@ -225,7 +225,7 @@ class IIIF {
     private function buildnavPlace() {
         $coordinates = $this->xpath->query('subject/cartographics/coordinates');
         $navPlace  = (object) [
-            "id" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/1",
+            "id" => str_replace('digital.lib', 'iiif.lib', $this->url) . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/1",
             "type" => "FeatureCollection",
             "features" => [],
         ];
@@ -235,7 +235,7 @@ class IIIF {
             $longitude = $new_coordinates[1];
             $latitude = $new_coordinates[0];
             $feature = (object) [
-                "id" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . $i,
+                "id" => str_replace('digital.lib', 'iiif.lib', $this->url) . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . $i,
                 "type" => "Feature",
                 "properties" => (object) [
                     "label" => (object) [
