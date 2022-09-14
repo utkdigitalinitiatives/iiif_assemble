@@ -555,7 +555,7 @@ class IIIF {
     }
 
     private function buildAccompanyingCanvas ($uri) {
-        $canvasId = $uri . '/canvas/accompanying';
+        $canvasId = str_replace('digital.lib', 'iiif.lib', $uri) . '/canvas/accompanying';
         $title = 'Accompanying canvas for ' . $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
             "id" => $canvasId,
@@ -583,7 +583,7 @@ class IIIF {
 
     public function buildCanvas ($index, $uri, $pid) {
 
-        $canvasId = $uri . '/canvas/' . $index;
+        $canvasId = str_replace('digital.lib', 'iiif.lib', $uri) . '/canvas/' . $index;
         $title = $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
                 "id" => $canvasId,
@@ -633,7 +633,7 @@ class IIIF {
     }
 
     public function buildCanvasWithPages ($index, $uri, $canvasData) {
-        $canvasId = $uri . '/canvas/' . $index;
+        $canvasId = str_replace('digital.lib', 'iiif.lib', $uri) . '/canvas/' . $index;
         $canvas = (object) [
             "id" => $canvasId,
             "type" => 'Canvas',
@@ -953,16 +953,16 @@ class IIIF {
                 $range = Utility::sanitizeLabel($partType);
 
                 $ranges[$range]['type'] = 'Range';
-                $ranges[$range]['id'] = $uri . '/' . $range;
+                $ranges[$range]['id'] = str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range;
                 $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
                 $ranges[$range]['items'][] = (object) [
                     'type' => 'Range',
-                    'id' => $uri . '/' . $range . '/' . $index,
+                    'id' => str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range . '/' . $index,
                     'label' => self::getLanguageArray($label[0]->textContent, 'label'),
                     'items' => [
                         (object) [
                             'type' => 'Canvas',
-                            'id' => $canvas . '#t=' . $startTime . ',' . $endTime
+                            'id' => str_replace('digital.lib', 'iiif.lib', $canvas) . '/0#t=' . $startTime . ',' . $endTime
                         ]
                     ]
                 ];
@@ -1008,7 +1008,6 @@ class IIIF {
         $durations = Request::getBibframeDuration($pid, $dsid, 'csv');
         $response = explode("\n", $durations['body'])[1];
         if ($response != "") {
-            print_r($response);
             $duration = explode("\n", $durations['body'])[1];
             $split_duration = explode(":", $duration);
             $hours = intval($split_duration[0]) *  60 * 60;
