@@ -124,3 +124,11 @@ Authentication is controlled by a .env file
 ```
 mv /vhosts/digital/web/assemble/.env.example /vhosts/digital/web/assemble/.env
 ```
+
+### 6. Add cache directory
+
+In order to ensure that requests aren't made after initial generation, each doc is written to cache.
+
+```
+mkdir /vhosts/digital/web/assemble/cache
+```
