@@ -10,6 +10,7 @@ class Navplace
     private $coordinates;
     private $geographic;
     private $url;
+    private $underefenceable_uri;
 
     public function __construct($mods, $url)
     {
@@ -18,6 +19,7 @@ class Navplace
         $this->url = $url;
         $this->coordinates = $mods->query('subject/cartographics/coordinates');
         $this->geographic = $mods->query('subject[@authority="geonames"]/geographic');
+        $this->underefenceable_uri = str_replace('digital.lib', 'iiif.lib', $this->url);
 
     }
 
@@ -25,9 +27,9 @@ class Navplace
         return $this->data->query('subject/cartographics/coordinates');
     }
 
-    private function initNavPlace() {
+    private function initFeatureCollection() {
         return (object) [
-            "id" => str_replace('digital.lib', 'iiif.lib', $this->url) . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/1",
+            "id" => $this->underefenceable_uri  . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/1",
             "type" => "FeatureCollection",
             "features" => [],
         ];
@@ -38,7 +40,7 @@ class Navplace
         $longitude = $new_coordinates[1];
         $latitude = $new_coordinates[0];
         return (object) [
-            "id" => str_replace('digital.lib', 'iiif.lib', $this->url) . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . $identifier,
+            "id" => $this->underefenceable_uri . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . $identifier,
             "type" => "Feature",
             "properties" => (object) [
                 "label" => (object) [
@@ -59,7 +61,7 @@ class Navplace
     }
 
     public function buildnavPlace() {
-        $navPlace = $this->initNavPlace();
+        $navPlace = $this->initFeatureCollection();
         $i = 1;
         foreach ($this->coordinates as $coordinate) {
             $feature = $this->buildFeature($coordinate, $i);
