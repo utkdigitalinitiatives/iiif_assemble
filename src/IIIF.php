@@ -170,7 +170,10 @@ class IIIF {
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
 
-        $manifest['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
+        $manifest['@context'] = [
+            "http://iiif.io/api/extension/navplace/context.json",
+            'https://iiif.io/api/presentation/3/context.json'
+        ];
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
         $manifest['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")][not(@lang)]'), 'value');
@@ -189,6 +192,11 @@ class IIIF {
         $requiredStatement = self::buildRequiredStatement();
         if ($requiredStatement->value->en) {
             $manifest['requiredStatement'] = $requiredStatement;
+        }
+        $navPlace = new Navplace($this->xpath, $this->url);
+        $coordinates = $navPlace->checkFornavPlace();
+        if ($coordinates) {
+            $manifest['navPlace'] = $navPlace->buildnavPlace();
         }
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
@@ -241,28 +249,6 @@ class IIIF {
         );
         $metadata_with_names = $this->add_names_to_metadata($metadata);
         return self::validateMetadata($metadata_with_names);
-    }
-
-    private function add_rights_metadata($metadata_fields) {
-        $rights_uri = $this->buildRights();
-        $rights_data = new Rights($rights_uri);
-        $complete_value = "";
-        if ($rights_data->data) {
-            if (isset($rights_data->data->badge)) {
-                $rights_metadata = '<span><a href="' . str_replace('rdf', '', $rights_uri) . '"><img src="' . $rights_data->data->badge . '"/></a></span>';
-                $complete_value = $complete_value . $rights_metadata;
-            }
-            if (isset($rights_data->data->definition)) {
-                $rights_usage = '<span><a href="' . $rights_uri . '">' . $rights_data->data->label . '</a>:  ' . $rights_data->data->definition . '</span>';
-                $complete_value = $complete_value . $rights_usage;
-            }
-            elseif (isset($rights_data->data->label)) {
-                $cc_label = '<span><a href="' . $rights_data->data->uri . '"/>' . $rights_data->data->label . '</a></span>';
-                $complete_value = $complete_value . $cc_label;
-            }
-            $metadata_fields['Rights'] = [ $complete_value ];
-        }
-        return $metadata_fields;
     }
 
     private function browse_sanitize($value) {
