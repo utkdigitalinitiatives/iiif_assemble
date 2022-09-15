@@ -24,7 +24,7 @@ class Navplace
     }
 
     public function checkFornavPlace() {
-        return $this->data->query('subject/cartographics/coordinates');
+        return $this->data->query('subject[@authority="geonames"]/cartographics/coordinates');
     }
 
     private function initFeatureCollection() {
