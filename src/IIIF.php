@@ -193,9 +193,10 @@ class IIIF {
         if ($requiredStatement->value->en) {
             $manifest['requiredStatement'] = $requiredStatement;
         }
-        $coordinates = self::testFornavPlace();
+        $navPlace = new Navplace($this->xpath, $this->url);
+        $coordinates = $navPlace->checkFornavPlace();
         if ($coordinates) {
-            $manifest['navPlace'] =self::buildnavPlace();
+            $manifest['navPlace'] = $navPlace->buildnavPlace();
         }
         $manifest['provider'] = self::buildProvider();
         $manifest['thumbnail'] = self::buildThumbnail(200, 200);
@@ -216,48 +217,6 @@ class IIIF {
         $presentation = self::buildStructures($manifest, $id);
         return json_encode($presentation);
 
-    }
-
-    private function testFornavPlace() {
-        return $this->xpath->query('subject/cartographics/coordinates');
-    }
-
-    private function buildnavPlace() {
-        $coordinates = $this->xpath->query('subject/cartographics/coordinates');
-        $geographic = $this->xpath->query('subject[@authority="geonames"]/geographic');
-        $navPlace  = (object) [
-            "id" => str_replace('digital.lib', 'iiif.lib', $this->url) . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/1",
-            "type" => "FeatureCollection",
-            "features" => [],
-        ];
-        $i = 1;
-        foreach ($coordinates as $thing) {
-            $new_coordinates = explode(",", $thing);
-            $longitude = $new_coordinates[1];
-            $latitude = $new_coordinates[0];
-            $feature = (object) [
-                "id" => str_replace('digital.lib', 'iiif.lib', $this->url) . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . $i,
-                "type" => "Feature",
-                "properties" => (object) [
-                    "label" => (object) [
-                        "en" => [
-                            $geographic[$i - 1]
-                        ]
-                    ],
-                    "manifest" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"])
-                ],
-                "geometry" => (object) [
-                    "type" => "Point",
-                    "coordinates" => [
-                        floatval($longitude),
-                        floatval($latitude)
-                    ]
-                ]
-            ];
-            $i += 1;
-            array_push($navPlace->features, $feature);
-        }
-        return $navPlace;
     }
 
     public function buildMetadata () {
