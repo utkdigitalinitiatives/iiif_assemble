@@ -224,6 +224,7 @@ class IIIF {
 
     private function buildnavPlace() {
         $coordinates = $this->xpath->query('subject/cartographics/coordinates');
+        $geographic = $this->xpath->query('subject[@authority="geonames"]/geographic');
         $navPlace  = (object) [
             "id" => str_replace('digital.lib', 'iiif.lib', $this->url) . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/1",
             "type" => "FeatureCollection",
@@ -240,7 +241,7 @@ class IIIF {
                 "properties" => (object) [
                     "label" => (object) [
                         "en" => [
-                            "Temporary Property Name"
+                            $geographic[$i - 1]
                         ]
                     ],
                     "manifest" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"])
