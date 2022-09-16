@@ -907,8 +907,14 @@ class IIIF {
                 $label = $part->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcoreTitle');
                 $startTime = $part->getAttribute('startTime');
                 $endTime = $part->getAttribute('endTime');
+                $rangeNavPlace = (object) [];
                 if ($partType == 'geographic'):
                     $partType = 'Places Mentioned';
+                    $navPlace = new Navplace($this->xpath, $this->url);
+                    $coordinates = $navPlace->checkFornavPlace();
+                    if ($coordinates) {
+                        $rangeNavPlace = $navPlace->buildNavPlaceRange($label[0]->textContent);
+                    }
                 endif;
                 $range = Utility::sanitizeLabel($partType);
 
@@ -919,6 +925,7 @@ class IIIF {
                     'type' => 'Range',
                     'id' => str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range . '/' . $index,
                     'label' => self::getLanguageArray($label[0]->textContent, 'label'),
+                    'navPlace' => $rangeNavPlace,
                     'items' => [
                         (object) [
                             'type' => 'Canvas',
