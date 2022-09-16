@@ -27,9 +27,9 @@ class Navplace
         return $this->data->query('subject[@authority="geonames"]/cartographics/coordinates');
     }
 
-    private function initFeatureCollection() {
+    private function initFeatureCollection($identifier="") {
         return (object) [
-            "id" => $this->underefenceable_uri  . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/1",
+            "id" => $this->underefenceable_uri  . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/" . $identifier . "/1",
             "type" => "FeatureCollection",
             "features" => [],
         ];
@@ -69,6 +69,39 @@ class Navplace
             array_push($navPlace->features, $feature);
         }
         return $navPlace;
+    }
+
+    public function buildNavPlaceRange($label) {
+        $current_coordinates = ($this->coordinates[array_search($label, $this->geographic)]);
+        $featureCollection = $this->initFeatureCollection(str_replace(" ", "", $label));
+        $feature = $this->buildRangeFeature($current_coordinates, trim($label, " ") . "/1", $label);
+        array_push($featureCollection->features, $feature);
+        return $featureCollection;
+    }
+
+    private function buildRangeFeature ($coordinate, $identifier, $label) {
+        $new_coordinates = explode(",", $coordinate);
+        $longitude = $new_coordinates[1];
+        $latitude = $new_coordinates[0];
+        $title = $this->data->query('titleInfo/title');
+        return (object) [
+            "id" => $this->underefenceable_uri . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . str_replace(" ", "", $identifier),
+            "type" => "Feature",
+            "properties" => (object) [
+                "label" => (object) [
+                    "en" => [
+                        $label . " discussed in " . $title[0],
+                    ]
+                ],
+            ],
+            "geometry" => (object) [
+                "type" => "Point",
+                "coordinates" => [
+                    floatval($longitude),
+                    floatval($latitude)
+                ]
+            ]
+        ];
     }
 
 }
