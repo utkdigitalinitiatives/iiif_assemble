@@ -48,7 +48,6 @@ class Navplace
                         $this->geographic[$identifier - 1]
                     ]
                 ],
-                "manifest" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"])
             ],
             "geometry" => (object) [
                 "type" => "Point",
