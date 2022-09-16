@@ -19,6 +19,7 @@ class Navplace
         $this->url = $url;
         $this->coordinates = $mods->query('subject[@authority="geonames"]/cartographics/coordinates');
         $this->geographic = $mods->query('subject[@authority="geonames"]/geographic');
+        $this->title = $mods->query('titleInfo/title')[0];
         $this->underefenceable_uri = str_replace('digital.lib', 'iiif.lib', $this->url);
 
     }
@@ -45,7 +46,7 @@ class Navplace
             "properties" => (object) [
                 "label" => (object) [
                     "en" => [
-                        $this->geographic[$identifier - 1]
+                        $this->title . " -- " . $this->geographic[$identifier - 1]
                     ]
                 ],
             ],
@@ -82,14 +83,13 @@ class Navplace
         $new_coordinates = explode(",", $coordinate);
         $longitude = $new_coordinates[1];
         $latitude = $new_coordinates[0];
-        $title = $this->data->query('titleInfo/title');
         return (object) [
             "id" => $this->underefenceable_uri . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . str_replace(" ", "", $identifier),
             "type" => "Feature",
             "properties" => (object) [
                 "label" => (object) [
                     "en" => [
-                        $label . " discussed in " . $title[0],
+                        $label . " discussed in " . $this->title,
                     ]
                 ],
             ],
