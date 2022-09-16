@@ -917,22 +917,35 @@ class IIIF {
                     }
                 endif;
                 $range = Utility::sanitizeLabel($partType);
-
                 $ranges[$range]['type'] = 'Range';
                 $ranges[$range]['id'] = str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range;
                 $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
-                $ranges[$range]['items'][] = (object) [
-                    'type' => 'Range',
-                    'id' => str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range . '/' . $index,
-                    'label' => self::getLanguageArray($label[0]->textContent, 'label'),
-                    'navPlace' => $rangeNavPlace,
-                    'items' => [
-                        (object) [
-                            'type' => 'Canvas',
-                            'id' => str_replace('digital.lib', 'iiif.lib', $canvas) . '/0#t=' . $startTime . ',' . $endTime
+                if ($rangeNavPlace != (object)[]):
+                    $ranges[$range]['items'][] = (object) [
+                        'type' => 'Range',
+                        'id' => str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range . '/' . $index,
+                        'label' => self::getLanguageArray($label[0]->textContent, 'label'),
+                        'navPlace' => $rangeNavPlace,
+                        'items' => [
+                            (object) [
+                                'type' => 'Canvas',
+                                'id' => str_replace('digital.lib', 'iiif.lib', $canvas) . '/0#t=' . $startTime . ',' . $endTime
+                            ]
                         ]
-                    ]
-                ];
+                    ];
+                else:
+                    $ranges[$range]['items'][] = (object) [
+                        'type' => 'Range',
+                        'id' => str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range . '/' . $index,
+                        'label' => self::getLanguageArray($label[0]->textContent, 'label'),
+                        'items' => [
+                            (object) [
+                                'type' => 'Canvas',
+                                'id' => str_replace('digital.lib', 'iiif.lib', $canvas) . '/0#t=' . $startTime . ',' . $endTime
+                            ]
+                        ]
+                    ];
+                endif;
 
             endif;
 
