@@ -20,7 +20,7 @@ class Navplace
         $this->coordinates = $mods->query('subject[@authority="geonames"]/cartographics/coordinates');
         $this->geographic = $mods->query('subject[@authority="geonames"]/geographic');
         $this->title = $mods->query('titleInfo/title')[0];
-        $this->underefenceable_uri = str_replace('digital.lib', 'iiif.lib', $this->url);
+        $this->underefenceable_uri = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $this->url);
 
     }
 
