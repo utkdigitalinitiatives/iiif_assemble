@@ -10,7 +10,7 @@ class Navplace
     private $coordinates;
     private $geographic;
     private $url;
-    private $underefenceable_uri;
+    private $undereferenceable_uri;
 
     public function __construct($mods, $url)
     {
@@ -20,7 +20,7 @@ class Navplace
         $this->coordinates = $mods->query('subject[@authority="geonames"]/cartographics/coordinates');
         $this->geographic = $mods->query('subject[@authority="geonames"]/geographic');
         $this->title = $mods->query('titleInfo/title')[0];
-        $this->underefenceable_uri = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $this->url);
+        $this->undereferenceable_uri = str_replace('digital.lib.utk.edu', 'digital.lib.utk.edu/notdereferenceable', $this->url);
 
     }
 
@@ -30,7 +30,7 @@ class Navplace
 
     private function initFeatureCollection($identifier="") {
         return (object) [
-            "id" => str_replace('?update=1', '', $this->underefenceable_uri) . "/featurecollection/" . $identifier . "/1",
+            "id" => str_replace('?update=1', '', $this->undereferenceable_uri ) . "/featurecollection/" . $identifier . "/1",
             "type" => "FeatureCollection",
             "features" => [],
         ];
@@ -41,7 +41,7 @@ class Navplace
         $longitude = $new_coordinates[1];
         $latitude = $new_coordinates[0];
         return (object) [
-            "id" => $this->underefenceable_uri . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . $identifier,
+            "id" => str_replace('?update=1', '', $this->undereferenceable_uri ) . "/feature/" . $identifier,
             "type" => "Feature",
             "properties" => (object) [
                 "label" => (object) [
@@ -84,7 +84,7 @@ class Navplace
         $longitude = $new_coordinates[1];
         $latitude = $new_coordinates[0];
         return (object) [
-            "id" => $this->underefenceable_uri . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . str_replace(" ", "", $identifier),
+            "id" => str_replace('?update=1', '', $this->undereferenceable_uri ) . "/feature/" . str_replace(" ", "", $identifier),
             "type" => "Feature",
             "properties" => (object) [
                 "label" => (object) [
