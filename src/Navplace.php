@@ -20,7 +20,7 @@ class Navplace
         $this->coordinates = $mods->query('subject[@authority="geonames"]/cartographics/coordinates');
         $this->geographic = $mods->query('subject[@authority="geonames"]/geographic');
         $this->title = $mods->query('titleInfo/title')[0];
-        $this->underefenceable_uri = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $this->url);
+        $this->underefenceable_uri = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $this->url);
 
     }
 
@@ -30,7 +30,7 @@ class Navplace
 
     private function initFeatureCollection($identifier="") {
         return (object) [
-            "id" => $this->underefenceable_uri  . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/" . $identifier . "/1",
+            "id" => str_replace('?update=1', '', $this->underefenceable_uri) . "/featurecollection/" . $identifier . "/1",
             "type" => "FeatureCollection",
             "features" => [],
         ];

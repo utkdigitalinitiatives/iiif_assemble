@@ -515,7 +515,7 @@ class IIIF {
     }
 
     private function buildAccompanyingCanvas ($uri) {
-        $canvasId = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $uri) . '/canvas/accompanying';
+        $canvasId = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/canvas/accompanying';
         $title = 'Accompanying canvas for ' . $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
             "id" => $canvasId,
@@ -543,7 +543,7 @@ class IIIF {
 
     public function buildCanvas ($index, $uri, $pid) {
 
-        $canvasId = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $uri) . '/canvas/' . $index;
+        $canvasId = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/canvas/' . $index;
         $title = $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
                 "id" => $canvasId,
@@ -593,7 +593,7 @@ class IIIF {
     }
 
     public function buildCanvasWithPages ($index, $uri, $canvasData) {
-        $canvasId = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $uri) . '/canvas/' . $index;
+        $canvasId = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/canvas/' . $index;
         $canvas = (object) [
             "id" => $canvasId,
             "type" => 'Canvas',
@@ -918,30 +918,30 @@ class IIIF {
                 endif;
                 $range = Utility::sanitizeLabel($partType);
                 $ranges[$range]['type'] = 'Range';
-                $ranges[$range]['id'] = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $uri) . '/' . $range;
+                $ranges[$range]['id'] = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/' . $range;
                 $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
                 if ($rangeNavPlace != (object)[]):
                     $ranges[$range]['items'][] = (object) [
                         'type' => 'Range',
-                        'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $uri) . '/' . $range . '/' . $index,
+                        'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/' . $range . '/' . $index,
                         'label' => self::getLanguageArray($label[0]->textContent, 'label'),
                         'navPlace' => $rangeNavPlace,
                         'items' => [
                             (object) [
                                 'type' => 'Canvas',
-                                'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $canvas) . '/0#t=' . $startTime . ',' . $endTime
+                                'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $canvas) . '/0#t=' . $startTime . ',' . $endTime
                             ]
                         ]
                     ];
                 else:
                     $ranges[$range]['items'][] = (object) [
                         'type' => 'Range',
-                        'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $uri) . '/' . $range . '/' . $index,
+                        'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/' . $range . '/' . $index,
                         'label' => self::getLanguageArray($label[0]->textContent, 'label'),
                         'items' => [
                             (object) [
                                 'type' => 'Canvas',
-                                'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notderferenceable/', $canvas) . '/0#t=' . $startTime . ',' . $endTime
+                                'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $canvas) . '/0#t=' . $startTime . ',' . $endTime
                             ]
                         ]
                     ];
