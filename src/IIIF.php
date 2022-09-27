@@ -37,7 +37,7 @@ class IIIF {
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
 
-        $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
+        $collection['@context'] = ['http://iiif.io/api/presentation/3/context.json'];
         $collection['id'] = $id;
         $collection['type'] = 'Collection';
         $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
@@ -62,7 +62,7 @@ class IIIF {
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
 
-        $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
+        $collection['@context'] = ['http://iiif.io/api/presentation/3/context.json'];
         $collection['id'] = $id;
         $collection['type'] = 'Collection';
         $collection['viewingDirection'] = 'left-to-right';
@@ -172,7 +172,7 @@ class IIIF {
 
         $manifest['@context'] = [
             "http://iiif.io/api/extension/navplace/context.json",
-            'https://iiif.io/api/presentation/3/context.json'
+            'http://iiif.io/api/presentation/3/context.json'
         ];
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
