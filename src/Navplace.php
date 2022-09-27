@@ -10,7 +10,7 @@ class Navplace
     private $coordinates;
     private $geographic;
     private $url;
-    private $underefenceable_uri;
+    private $undereferenceable_uri;
 
     public function __construct($mods, $url)
     {
@@ -19,7 +19,8 @@ class Navplace
         $this->url = $url;
         $this->coordinates = $mods->query('subject[@authority="geonames"]/cartographics/coordinates');
         $this->geographic = $mods->query('subject[@authority="geonames"]/geographic');
-        $this->underefenceable_uri = str_replace('digital.lib', 'iiif.lib', $this->url);
+        $this->title = $mods->query('titleInfo/title')[0];
+        $this->undereferenceable_uri = str_replace('digital.lib.utk.edu', 'digital.lib.utk.edu/notdereferenceable', $this->url);
 
     }
 
@@ -27,9 +28,9 @@ class Navplace
         return $this->data->query('subject[@authority="geonames"]/cartographics/coordinates');
     }
 
-    private function initFeatureCollection() {
+    private function initFeatureCollection($identifier="") {
         return (object) [
-            "id" => $this->underefenceable_uri  . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/featurecollection/1",
+            "id" => str_replace('?update=1', '', $this->undereferenceable_uri ) . "/featurecollection/" . $identifier . "/1",
             "type" => "FeatureCollection",
             "features" => [],
         ];
@@ -40,15 +41,14 @@ class Navplace
         $longitude = $new_coordinates[1];
         $latitude = $new_coordinates[0];
         return (object) [
-            "id" => $this->underefenceable_uri . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]) . "/feature/" . $identifier,
+            "id" => str_replace('?update=1', '', $this->undereferenceable_uri ) . "/feature/" . $identifier,
             "type" => "Feature",
             "properties" => (object) [
                 "label" => (object) [
                     "en" => [
-                        $this->geographic[$identifier - 1]
+                        $this->title . " -- " . $this->geographic[$identifier - 1]
                     ]
                 ],
-                "manifest" => $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"])
             ],
             "geometry" => (object) [
                 "type" => "Point",
@@ -69,6 +69,38 @@ class Navplace
             array_push($navPlace->features, $feature);
         }
         return $navPlace;
+    }
+
+    public function buildNavPlaceRange($label) {
+        $current_coordinates = ($this->coordinates[array_search($label, $this->geographic)]);
+        $featureCollection = $this->initFeatureCollection(str_replace(" ", "", $label));
+        $feature = $this->buildRangeFeature($current_coordinates, trim($label, " ") . "/1", $label);
+        array_push($featureCollection->features, $feature);
+        return $featureCollection;
+    }
+
+    private function buildRangeFeature ($coordinate, $identifier, $label) {
+        $new_coordinates = explode(",", $coordinate);
+        $longitude = $new_coordinates[1];
+        $latitude = $new_coordinates[0];
+        return (object) [
+            "id" => str_replace('?update=1', '', $this->undereferenceable_uri ) . "/feature/" . str_replace(" ", "", $identifier),
+            "type" => "Feature",
+            "properties" => (object) [
+                "label" => (object) [
+                    "en" => [
+                        $label . " discussed in " . $this->title,
+                    ]
+                ],
+            ],
+            "geometry" => (object) [
+                "type" => "Point",
+                "coordinates" => [
+                    floatval($longitude),
+                    floatval($latitude)
+                ]
+            ]
+        ];
     }
 
 }

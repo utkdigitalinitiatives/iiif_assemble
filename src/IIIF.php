@@ -515,7 +515,7 @@ class IIIF {
     }
 
     private function buildAccompanyingCanvas ($uri) {
-        $canvasId = str_replace('digital.lib', 'iiif.lib', $uri) . '/canvas/accompanying';
+        $canvasId = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/canvas/accompanying';
         $title = 'Accompanying canvas for ' . $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
             "id" => $canvasId,
@@ -543,7 +543,7 @@ class IIIF {
 
     public function buildCanvas ($index, $uri, $pid) {
 
-        $canvasId = str_replace('digital.lib', 'iiif.lib', $uri) . '/canvas/' . $index;
+        $canvasId = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/canvas/' . $index;
         $title = $this->xpath->query('titleInfo[not(@type="alternative")]')[0];
         $canvas = (object) [
                 "id" => $canvasId,
@@ -593,7 +593,7 @@ class IIIF {
     }
 
     public function buildCanvasWithPages ($index, $uri, $canvasData) {
-        $canvasId = str_replace('digital.lib', 'iiif.lib', $uri) . '/canvas/' . $index;
+        $canvasId = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/canvas/' . $index;
         $canvas = (object) [
             "id" => $canvasId,
             "type" => 'Canvas',
@@ -907,25 +907,45 @@ class IIIF {
                 $label = $part->getElementsByTagNameNS('http://www.pbcore.org/PBCore/PBCoreNamespace.html', 'pbcoreTitle');
                 $startTime = $part->getAttribute('startTime');
                 $endTime = $part->getAttribute('endTime');
+                $rangeNavPlace = (object) [];
                 if ($partType == 'geographic'):
                     $partType = 'Places Mentioned';
+                    $navPlace = new Navplace($this->xpath, $this->url);
+                    $coordinates = $navPlace->checkFornavPlace();
+                    if ($coordinates) {
+                        $rangeNavPlace = $navPlace->buildNavPlaceRange($label[0]->textContent);
+                    }
                 endif;
                 $range = Utility::sanitizeLabel($partType);
-
                 $ranges[$range]['type'] = 'Range';
-                $ranges[$range]['id'] = str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range;
+                $ranges[$range]['id'] = str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/' . $range;
                 $ranges[$range]['label'] = self::getLanguageArray($partType, 'label');
-                $ranges[$range]['items'][] = (object) [
-                    'type' => 'Range',
-                    'id' => str_replace('digital.lib', 'iiif.lib', $uri) . '/' . $range . '/' . $index,
-                    'label' => self::getLanguageArray($label[0]->textContent, 'label'),
-                    'items' => [
-                        (object) [
-                            'type' => 'Canvas',
-                            'id' => str_replace('digital.lib', 'iiif.lib', $canvas) . '/0#t=' . $startTime . ',' . $endTime
+                if ($rangeNavPlace != (object)[]):
+                    $ranges[$range]['items'][] = (object) [
+                        'type' => 'Range',
+                        'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/' . $range . '/' . $index,
+                        'label' => self::getLanguageArray($label[0]->textContent, 'label'),
+                        'navPlace' => $rangeNavPlace,
+                        'items' => [
+                            (object) [
+                                'type' => 'Canvas',
+                                'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $canvas) . '/0#t=' . $startTime . ',' . $endTime
+                            ]
                         ]
-                    ]
-                ];
+                    ];
+                else:
+                    $ranges[$range]['items'][] = (object) [
+                        'type' => 'Range',
+                        'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $uri) . '/' . $range . '/' . $index,
+                        'label' => self::getLanguageArray($label[0]->textContent, 'label'),
+                        'items' => [
+                            (object) [
+                                'type' => 'Canvas',
+                                'id' => str_replace('digital.lib.utk.edu/', 'digital.lib.utk.edu/notdereferenceable/', $canvas) . '/0#t=' . $startTime . ',' . $endTime
+                            ]
+                        ]
+                    ];
+                endif;
 
             endif;
 
