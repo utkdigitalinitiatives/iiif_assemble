@@ -628,6 +628,10 @@ class IIIF {
             $part_rights = self::buildRights();
             $part_requiredstatement = self::buildRequiredStatement();
             $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+            $part_duration = 0;
+            if (array_key_exists('duration', $canvas->items[0]->items[0]->body)) {
+                $part_duration = $canvas->items[0]->items[0]->body["duration"];
+            }
             if (is_array($summary->en) && $summary->en[0] != "") {
                 $canvas->summary = $summary;
             }
@@ -639,6 +643,9 @@ class IIIF {
             }
             if ($part_requiredstatement->value->en !== null ) {
                 $canvas->requiredStatement = $part_requiredstatement;
+            }
+            if ($part_duration > 0) {
+                $canvas->duration = $part_duration;
             }
         }
 
