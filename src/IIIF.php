@@ -37,7 +37,7 @@ class IIIF {
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
 
-        $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
+        $collection['@context'] = ['http://iiif.io/api/presentation/3/context.json'];
         $collection['id'] = $id;
         $collection['type'] = 'Collection';
         $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
@@ -62,7 +62,7 @@ class IIIF {
     {
         $id = $this->url . str_replace('?update=1', '', $_SERVER["REQUEST_URI"]);
 
-        $collection['@context'] = ['https://iiif.io/api/presentation/3/context.json'];
+        $collection['@context'] = ['http://iiif.io/api/presentation/3/context.json'];
         $collection['id'] = $id;
         $collection['type'] = 'Collection';
         $collection['viewingDirection'] = 'left-to-right';
@@ -172,7 +172,7 @@ class IIIF {
 
         $manifest['@context'] = [
             "http://iiif.io/api/extension/navplace/context.json",
-            'https://iiif.io/api/presentation/3/context.json'
+            'http://iiif.io/api/presentation/3/context.json'
         ];
         $manifest['id'] = $id;
         $manifest['type'] = 'Manifest';
@@ -628,6 +628,10 @@ class IIIF {
             $part_rights = self::buildRights();
             $part_requiredstatement = self::buildRequiredStatement();
             $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
+            $part_duration = 0;
+            if (array_key_exists('duration', $canvas->items[0]->items[0]->body)) {
+                $part_duration = $canvas->items[0]->items[0]->body["duration"];
+            }
             if (is_array($summary->en) && $summary->en[0] != "") {
                 $canvas->summary = $summary;
             }
@@ -639,6 +643,9 @@ class IIIF {
             }
             if ($part_requiredstatement->value->en !== null ) {
                 $canvas->requiredStatement = $part_requiredstatement;
+            }
+            if ($part_duration > 0) {
+                $canvas->duration = $part_duration;
             }
         }
 
