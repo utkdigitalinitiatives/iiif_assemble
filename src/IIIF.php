@@ -842,7 +842,7 @@ class IIIF {
             $item['width'] = 640;
             $item['height'] = 360;
             $item['duration'] = self::getBibframeDuration('PROXY_MP3');
-            $item['format'] = "audio/mpeg";
+            $item['format'] = "audio/mp3";
 
         elseif ($this->type === 'Video') :
             $item['id'] = $datastream . 'MP4';
