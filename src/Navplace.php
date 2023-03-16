@@ -17,15 +17,15 @@ class Navplace
 
         $this->data = $mods;
         $this->url = $url;
-        $this->coordinates = $mods->query('subject[@authority="geonames"]/cartographics/coordinates');
-        $this->geographic = $mods->query('subject[@authority="geonames"]/geographic');
+        $this->coordinates = $mods->query('subject/cartographics/coordinates');
+        $this->geographic = $mods->query('subject/geographic');
         $this->title = $mods->query('titleInfo/title')[0];
         $this->undereferenceable_uri = str_replace('digital.lib.utk.edu', 'digital.lib.utk.edu/notdereferenceable', $this->url);
 
     }
 
     public function checkFornavPlace() {
-        return $this->data->query('subject[@authority="geonames"]/cartographics/coordinates');
+        return $this->data->query('subject/cartographics/coordinates');
     }
 
     private function initFeatureCollection($identifier="") {
@@ -81,8 +81,9 @@ class Navplace
 
     private function buildRangeFeature ($coordinate, $identifier, $label) {
         $new_coordinates = explode(",", $coordinate);
-        $longitude = $new_coordinates[1];
-        $latitude = $new_coordinates[0];
+        $characters_to_remove = array("S", "E", "N", "W");
+        $longitude = str_replace($characters_to_remove, "", $new_coordinates[1]);
+        $latitude = str_replace($characters_to_remove, "", $new_coordinates[1]);
         return (object) [
             "id" => str_replace('?update=1', '', $this->undereferenceable_uri ) . "/feature/" . str_replace(" ", "", $identifier),
             "type" => "Feature",
