@@ -79,11 +79,19 @@ class Navplace
         return $featureCollection;
     }
 
+    private function convert_letter_values ($coordinate) {
+        $characters_to_remove = array("S", "E", "N", "W");
+        $negative_signs = array('S', 'W');
+        if (in_array(substr($coordinate, -1), $negative_signs)) {
+            $coordinate = '-' . $coordinate;
+        }
+        return str_replace($characters_to_remove, "", $coordinate);;
+    }
+
     private function buildRangeFeature ($coordinate, $identifier, $label) {
         $new_coordinates = explode(",", $coordinate);
-        $characters_to_remove = array("S", "E", "N", "W");
-        $longitude = str_replace($characters_to_remove, "", $new_coordinates[1]);
-        $latitude = str_replace($characters_to_remove, "", $new_coordinates[1]);
+        $longitude = $this->convert_letter_values($new_coordinates[1]);
+        $latitude = $this->convert_letter_values($new_coordinates[0]);
         return (object) [
             "id" => str_replace('?update=1', '', $this->undereferenceable_uri ) . "/feature/" . str_replace(" ", "", $identifier),
             "type" => "Feature",
