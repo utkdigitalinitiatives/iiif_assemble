@@ -83,7 +83,7 @@ class Navplace
         $characters_to_remove = array("S", "E", "N", "W");
         $negative_signs = array('S', 'W');
         if (in_array(substr($coordinate, -1), $negative_signs)) {
-            $coordinate = '-' . $coordinate;
+            $coordinate = '-' . str_replace(" ", "", $coordinate);
         }
         return str_replace($characters_to_remove, "", $coordinate);;
     }
