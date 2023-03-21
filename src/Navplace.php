@@ -38,8 +38,8 @@ class Navplace
 
     private function buildFeature ($coordinate, $identifier) {
         $new_coordinates = explode(",", $coordinate);
-        $longitude = $new_coordinates[1];
-        $latitude = $new_coordinates[0];
+        $longitude = $this->convert_letter_values($new_coordinates[1]);
+        $latitude = $this->convert_letter_values($new_coordinates[0]);
         return (object) [
             "id" => str_replace('?update=1', '', $this->undereferenceable_uri ) . "/feature/" . $identifier,
             "type" => "Feature",
