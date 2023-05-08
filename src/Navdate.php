@@ -2,6 +2,8 @@
 
 namespace Src;
 
+use DateTime;
+
 class Navdate
 {
     public function __construct($mods)
