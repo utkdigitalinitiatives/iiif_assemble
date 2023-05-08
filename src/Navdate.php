@@ -7,7 +7,7 @@ class Navdate
     public function __construct($mods)
     {
         $this->data = $mods;
-        $this->date = $this->select_best_date();
+        $this->date = $this->__select_best_date();
     }
 
 
