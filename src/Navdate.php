@@ -16,7 +16,7 @@ class Navdate
     private function __select_best_date()
     {
         $date_created = $this->data->query('originInfo/dateCreated[@encoding="edtf"]');
-        return $date_created;
+        return reset($date_created);
     }
 
     public function format() {
