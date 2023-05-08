@@ -193,6 +193,8 @@ class IIIF {
         if ($requiredStatement->value->en) {
             $manifest['requiredStatement'] = $requiredStatement;
         }
+        $navDate = new Navdate($this->xpath);
+        $manifest['navDate'] = $navDate->format();
         $navPlace = new Navplace($this->xpath, $this->url);
         $coordinates = $navPlace->checkFornavPlace();
         if ($coordinates) {
