@@ -31,10 +31,9 @@ class Navdate
 
     private function __get_middle_date($date1, $date2)
     {
-        $datetime_1 = $this->format($date1);
-        $datetime_2 = $this->format($date2);
-        $interval = $datetime_1->diff($datetime_2);
-        $middleDate = $datetime_1->add($interval->divide(2));
-        return $middleDate->form('Y-m-d\TH:i:s');
+        $timestamp1 = strtotime($date1);
+        $timestamp2 = strtotime($date2);
+        $middleTimestamp = ($timestamp1 + $timestamp2) / 2;
+        return date('Y-m-d\TH:i:s', $middleTimestamp);
     }
 }
