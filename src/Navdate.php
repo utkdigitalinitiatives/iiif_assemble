@@ -27,7 +27,6 @@ class Navdate
         }
     }
 
-
     private function process_best_date($date_created)
     {
         if (count($date_created) == 2) {
@@ -54,8 +53,7 @@ class Navdate
             }
         }
         if ($current_date !== false) {
-            $formattedDate = $current_date->format('Y-m-d\TH:i:s');
-            return $formattedDate;
+            return $current_date->format('Y-m-d\TH:i:s\Z');
         }
         return $current_date;
     }
@@ -65,6 +63,6 @@ class Navdate
         $timestamp1 = strtotime($date1);
         $timestamp2 = strtotime($date2);
         $middleTimestamp = ($timestamp1 + $timestamp2) / 2;
-        return date('Y-m-d\TH:i:s', $middleTimestamp);
+        return date('Y-m-d\TH:i:s\Z', $middleTimestamp);
     }
 }
