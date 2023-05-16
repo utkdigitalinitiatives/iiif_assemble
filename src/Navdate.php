@@ -6,59 +6,57 @@ use DateTime;
 
 class Navdate
 {
+    private $data;
     public function __construct($mods)
     {
         $this->data = $mods;
-        $this->date = $this->select_best_date();
+        $this->date = $this->selectBestDate();
     }
 
-    private function select_best_date()
+    private function selectBestDate()
     {
-        $date_created = $this->data->query('originInfo/dateCreated[@encoding="edtf"]');
-        $date_issued = $this->data->query('originInfo/dateIssued[@encoding="edtf"]');
-        if (is_array($date_created)) {
-            return $this->process_best_date($date_created);
-        }
-        elseif (is_array($date_issued)) {
-            return $this->process_best_date($date_issued);
-        }
-        else {
+        $dateCreated = $this->data->query('originInfo/dateCreated[@encoding="edtf"]');
+        $dateIssued = $this->data->query('originInfo/dateIssued[@encoding="edtf"]');
+
+        if (is_array($dateCreated)) {
+            return $this->processBestDate($dateCreated);
+        } elseif (is_array($dateIssued)) {
+            return $this->processBestDate($dateIssued);
+        } else {
             return null;
         }
     }
 
-    private function process_best_date($date_created)
+    private function processBestDate($dates)
     {
-        if (count($date_created) == 2) {
-            $start = $this->choose_format($date_created[0]);
-            $end = $this->choose_format($date_created[1]);
-            return $this->__get_middle_date($start, $end);
-        }
-        else {
-            return $this->choose_format($date_created[0]);
+        if (count($dates) == 2) {
+            $start = $this->chooseFormat($dates[0]);
+            $end = $this->chooseFormat($dates[1]);
+            return $this->getMiddleDate($start, $end);
+        } else {
+            return $this->chooseFormat($dates[0]);
         }
     }
 
-    private function choose_format($date) {
+    private function chooseFormat($date)
+    {
         $formats = [
             'Y',
             'Y-m',
             'Y-m-d'
         ];
-        $current_date = null;
+
         foreach ($formats as $format) {
-            $current_date = DateTime::createFromFormat($format, $date);
-            if ($current_date !== false) {
-                break;
+            $currentDate = DateTime::createFromFormat($format, $date);
+            if ($currentDate !== false) {
+                return $currentDate->format('Y-m-d\TH:i:s\Z');
             }
         }
-        if ($current_date !== false) {
-            return $current_date->format('Y-m-d\TH:i:s\Z');
-        }
-        return $current_date;
+
+        return null;
     }
 
-    private function __get_middle_date($date1, $date2)
+    private function getMiddleDate($date1, $date2)
     {
         $timestamp1 = strtotime($date1);
         $timestamp2 = strtotime($date2);
