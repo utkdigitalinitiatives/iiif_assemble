@@ -590,7 +590,8 @@ class IIIF {
     private function buildOCR ($pid) {
         return (object) [
             "id" => $this->url . "/collections/islandora/object/" . $pid . '/datastream/HOCR',
-            "motivation"=> "supplementing",
+            "type" => "Dataset",
+            "label" => self::getLanguageArray("HOCR", 'label', 'none'),
             "format"=> "text/vnd.hocr+html",
             "profile"=> "http://kba.cloud/hocr-spec/1.2/"
         ];
