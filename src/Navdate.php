@@ -9,13 +9,27 @@ class Navdate
     public function __construct($mods)
     {
         $this->data = $mods;
-        $this->date = $this->__select_best_date();
+        $this->date = $this->select_best_date();
+    }
+
+    private function select_best_date()
+    {
+        $date_created = $this->data->query('originInfo/dateCreated[@encoding="edtf"]');
+        $date_issued = $this->data->query('originInfo/dateIssued[@encoding="edtf"]');
+        if (is_array($date_created)) {
+            return $this->process_best_date($date_created);
+        }
+        elseif (is_array($date_issued)) {
+            return $this->process_best_date($date_issued);
+        }
+        else {
+            return null;
+        }
     }
 
 
-    private function __select_best_date()
+    private function process_best_date($date_created)
     {
-        $date_created = $this->data->query('originInfo/dateCreated[@encoding="edtf"]');
         if (count($date_created) == 2) {
             $start = $this->choose_format($date_created[0]);
             $end = $this->choose_format($date_created[1]);

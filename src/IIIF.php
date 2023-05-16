@@ -194,7 +194,9 @@ class IIIF {
             $manifest['requiredStatement'] = $requiredStatement;
         }
         $navDate = new Navdate($this->xpath);
-        $manifest['navDate'] = $navDate->date;
+        if ($navDate->date !== null) {
+            $manifest['navDate'] = $navDate->date;
+        }
         $navPlace = new Navplace($this->xpath, $this->url);
         $coordinates = $navPlace->checkFornavPlace();
         if ($coordinates) {
