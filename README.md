@@ -36,8 +36,8 @@ Fedora Resource Index.
 
 The path for this follows the general pattern above but with the DublinCore field and an associated value.  Some examples:
 
-- [https://digital.lib.utk.edu/assemble/metadata/contributor/Wilson,%20Danny](https://digital.lib.utk.edu/assemble/metadata/contributor/Wilson,%20Danny)
-- [https://digital.lib.utk.edu/assemble/metadata/subject/Black%20bears](https://digital.lib.utk.edu/assemble/metadata/subject/Black%20bears)
+- [https://digital.lib.utk.edu/assemble/metadata/contributor/Wilson,%20Danny](https://digital.lib.utk.edu/assemble/metadata/contributor/Wilson,+Danny)
+- [https://digital.lib.utk.edu/assemble/metadata/subject/Black%20bears](https://digital.lib.utk.edu/assemble/metadata/subject/Black+bears)
 - [https://digital.lib.utk.edu/assemble/metadata/date/1991](https://digital.lib.utk.edu/assemble/metadata/date/1991)
 
 ## Requirements
