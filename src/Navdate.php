@@ -7,6 +7,7 @@ use DateTime;
 class Navdate
 {
     private $data;
+    public $date;
     public function __construct($mods)
     {
         $this->data = $mods;
