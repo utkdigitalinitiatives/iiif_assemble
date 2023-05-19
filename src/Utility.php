@@ -60,7 +60,7 @@ class Utility {
                 $pageNumber = $item[1];
                 $index[$pageNumber]['pid'] = str_replace('info:fedora/', '', $item[0]);
                 $index[$pageNumber]['title'] = $item[2];
-                $index[$pageNumber]['type'] = $item[3];
+                $index[$pageNumber]['type'] = "Image";
             }
         }
 
