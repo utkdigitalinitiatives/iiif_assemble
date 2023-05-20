@@ -4,6 +4,7 @@ namespace Src;
 
 class Thumbnail
 {
+    public $iiifImageUri;
     private $model;
     public $pid;
     public $thumbnailSource;
@@ -13,7 +14,8 @@ class Thumbnail
         $this->model = $model;
         $this->pid = $pid;
         $this->url = $url;
-        $this->thumbnailSouce = $this->getBestThumbnail();
+        $this->thumbnailSource = $this->getBestThumbnail();
+        $this->iiifImageUri = $this->getIiifImageUri();
     }
 
     private function getBestThumbnail()
@@ -27,6 +29,17 @@ class Thumbnail
         }
     }
 
+    private function buildIdentifier()
+    {
+        if ($this->thumbnailSource == "TN") {
+            return $this->url . '/iiif/2/collections~islandora~object~' . $this->pid . '~datastream~TN/full/full/0/default.jpg';
+        }
+        else {
+            $sizes = $this->findIdealWidthAndHeight();
+            return $this->url . '/iiif/2/collections~islandora~object~' . $this->pid . '~datastream~' . this->thumbnailSource . '/full/' . $sizes->width . ',' . $sizes->height . '/0/default.jpg';
+        }
+    }
+
     private function buildService()
     {
         return [
@@ -36,5 +49,34 @@ class Thumbnail
                 'profile' => 'http://iiif.io/api/image/2/level2.json'
             ]
         ];
+    }
+
+    private function buildResponse()
+    {
+        return (object) [
+            'id' => $this->buildIdentifier(),
+            'type' => 'Image',
+            'format' => 'image/jpeg',
+            'service' => $this->buildService()
+        ];
+    }
+
+    private function getIiifImageUri()
+    {
+        $uri = $this->url . '/iiif/2/';
+        $uri .= 'collections~islandora~object~' . $this->pid;
+        $uri .= '~datastream~' . $this->thumbnailSource;
+        $uri .= '/info.json';
+        return $uri;
+
+    }
+
+    private function findIdealWidthAndHeight()
+    {
+        $sizes = (object)[];
+        $responseImageBody = json_decode(Request::responseBody($this->iiifImageUri));
+        $sizes->width = $responseImageBody->sizes[2]->width;
+        $sizes->height = $responseImageBody->sizes[2]->height;
+        return $sizes;
     }
 }
