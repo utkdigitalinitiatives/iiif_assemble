@@ -615,7 +615,8 @@ class IIIF {
                 $canvas->height = 640;
                 $canvas->width = 360;
             endif;
-            $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid'], $data['type']);
+            $canvasThumbnail = new Thumbnail($data['pid'], $data['type'], $this->url);
+            $canvas->thumbnail = $canvasThumbnail->buildResponse();
             $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key, $canvasData);
             $annotations = self::prepareAnnotationPage($canvasId, $data['pid']);
             if (count($annotations->items) > 0) {

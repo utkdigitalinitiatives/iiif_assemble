@@ -51,7 +51,7 @@ class Thumbnail
         ];
     }
 
-    private function buildResponse()
+    public function buildResponse()
     {
         return (object) [
             'id' => $this->buildIdentifier(),
