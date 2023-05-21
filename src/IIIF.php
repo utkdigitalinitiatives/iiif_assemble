@@ -553,7 +553,6 @@ class IIIF {
                 "id" => $canvasId,
                 "type" => 'Canvas',
                 "label" => self::getLanguageArray($title, 'label', 'none'),
-                "thumbnail" => self::buildThumbnail(200, 200)
         ];
 
         if (in_array($this->type, ['Sound','Video'])) :
@@ -561,6 +560,7 @@ class IIIF {
             $canvas->height = 640;
             $canvas->width = 360;
             $canvas->duration = self::getBibframeDuration(self::findProxyDatastream());
+            $canvas->thumbnail = self::buildThumbnail(200, 200);
 
         else :
 
@@ -570,9 +570,12 @@ class IIIF {
                 $responseImageBody = json_decode(Request::responseBody($iiifImage));
                 $canvas->width = $responseImageBody->width;
                 $canvas->height = $responseImageBody->height;
+                $canvasThumbnail = new Thumbnail($pid, $this->type, $this->url);
+                $canvas->thumbnail = $canvasThumbnail->buildResponse();
             else :
                 $canvas->height = 640;
                 $canvas->width = 360;
+                $canvas->thumbnail = self::buildThumbnail(200, 200);
             endif;
 
         endif;

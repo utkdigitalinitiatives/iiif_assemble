@@ -23,7 +23,6 @@ class Thumbnail
         switch ($this->model) {
             case 'Image':
                 return 'JP2';
-                break;
             default:
                 return 'TN';
         }
