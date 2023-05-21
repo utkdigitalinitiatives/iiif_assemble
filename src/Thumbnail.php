@@ -36,7 +36,7 @@ class Thumbnail
         }
         else {
             $sizes = $this->findIdealWidthAndHeight();
-            return $this->url . '/iiif/2/collections~islandora~object~' . $this->pid . '~datastream~' . this->thumbnailSource . '/full/' . $sizes->width . ',' . $sizes->height . '/0/default.jpg';
+            return $this->url . '/iiif/2/collections~islandora~object~' . $this->pid . '~datastream~' . $this->thumbnailSource . '/full/' . $sizes->width . ',' . $sizes->height . '/0/default.jpg';
         }
     }
 
