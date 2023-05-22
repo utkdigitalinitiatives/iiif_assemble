@@ -52,11 +52,13 @@ class Thumbnail
 
     public function buildResponse()
     {
-        return (object) [
-            'id' => $this->buildIdentifier(),
-            'type' => 'Image',
-            'format' => 'image/jpeg',
-            'service' => $this->buildService()
+        return [
+            (object) [
+                'id' => $this->buildIdentifier(),
+                'type' => 'Image',
+                'format' => 'image/jpeg',
+                'service' => $this->buildService()
+            ]
         ];
     }
 
