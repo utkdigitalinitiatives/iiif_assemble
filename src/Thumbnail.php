@@ -53,7 +53,7 @@ class Thumbnail
     {
         return [
             (object) [
-                '@id' => $this->url . '/iiif/2/collections~islandora~object~' . $this->pid . '~datastream~' . $this->thumbnailSource . '/info.json',
+                '@id' => $this->url . '/iiif/2/collections~islandora~object~' . $this->pid . '~datastream~' . $this->thumbnailSource,
                 '@type' => "http://iiif.io/api/image/2/context.json",
                 'profile' => 'http://iiif.io/api/image/2/level2.json'
             ]
