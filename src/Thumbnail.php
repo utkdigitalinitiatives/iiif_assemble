@@ -14,6 +14,8 @@ class Thumbnail
         $this->model = $model;
         $this->pid = $pid;
         $this->url = $url;
+        $this->width = 200;
+        $this->height = 200;
         $this->thumbnailSource = $this->getBestThumbnail();
         $this->iiifImageUri = $this->getIiifImageUri();
     }
@@ -41,6 +43,8 @@ class Thumbnail
         }
         else {
             $sizes = $this->findIdealWidthAndHeight();
+            $this->width = intval($sizes->width);
+            $this->height = intval($sizes->height);
             return $this->url . '/iiif/2/collections~islandora~object~' . $this->pid . '~datastream~' . $this->thumbnailSource . '/full/' . $sizes->width . ',' . $sizes->height . '/0/default.jpg';
         }
     }
@@ -61,6 +65,8 @@ class Thumbnail
         return [
             (object) [
                 'id' => $this->buildIdentifier(),
+                'width' => $this->width,
+                'height' => $this->height,
                 'type' => 'Image',
                 'format' => 'image/jpeg',
                 'service' => $this->buildService()
