@@ -417,26 +417,23 @@ class IIIF {
         }
         $items = array();
         $item = array();
-        $iiifImage = self::getIIIFImageURI('TN', $pid);
+        $iiifImage = self::getIIIFImageURI('JP2', $pid);
         $thumbnail_details = Request::get_thumbnail_details($iiifImage);
 
         if ($thumbnail_details['is_iiif']) :
-            $item['id'] = $thumbnail_details['thumbnail_uri'];
-            $item['width'] = $thumbnail_details['width'];
-            $item['height'] = $thumbnail_details['height'];
-            $item['service'] = $thumbnail_details['service'];
+            $thumbnail = new Thumbnail($pid, $this->type, $this->url);
+            $item = $thumbnail->buildResponse()[0];
         else :
             $item['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/' . 'TN';
             $item['width'] = $width;
             $item['height'] = $height;
+            $item['type'] = "Image";
+            $item['format'] = "image/jpeg";
         endif;
 
         if ( $this->type === "Sound" or $this->type === "Video") {
             $item['duration'] = self::getBibframeDuration(self::findProxyDatastream());
         }
-
-        $item['type'] = "Image";
-        $item['format'] = "image/jpeg";
         array_push($items, $item);
         if ( $this->type === "Video" || $model === "info:fedora/islandora:sp_videoCModel") {
             $video = array();
