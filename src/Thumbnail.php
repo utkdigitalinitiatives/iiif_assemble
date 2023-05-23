@@ -22,7 +22,13 @@ class Thumbnail
     {
         switch ($this->model) {
             case 'Image':
-                return 'JP2';
+                $thumbnail_details = Request::get_thumbnail_details($this->getIiifImageUri('JP2'));
+                if ($thumbnail_details['is_iiif']){
+                    return 'JP2';
+                }
+                else {
+                    return 'TN';
+                }
             default:
                 return 'TN';
         }
@@ -62,11 +68,14 @@ class Thumbnail
         ];
     }
 
-    private function getIiifImageUri()
+    private function getIiifImageUri($dsid="")
     {
+        if ($dsid == "") {
+            $dsid = $this->thumbnailSource;
+        }
         $uri = $this->url . '/iiif/2/';
         $uri .= 'collections~islandora~object~' . $this->pid;
-        $uri .= '~datastream~' . $this->thumbnailSource;
+        $uri .= '~datastream~' . $dsid;
         $uri .= '/info.json';
         return $uri;
 
