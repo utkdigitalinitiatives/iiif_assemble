@@ -82,7 +82,6 @@ class Thumbnail
         $uri = $this->url . '/iiif/2/';
         $uri .= 'collections~islandora~object~' . $this->pid;
         $uri .= '~datastream~' . $dsid;
-        $uri .= '/info.json';
         return $uri;
 
     }
