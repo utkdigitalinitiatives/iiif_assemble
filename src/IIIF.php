@@ -417,7 +417,12 @@ class IIIF {
         }
         $items = array();
         $item = array();
-        $iiifImage = self::getIIIFImageURI('JP2', $pid);
+        // Quick fix for Video Thumbnails
+        $preferredSource = 'JP2';
+        if ($this->type === "Sound" or $this->type === "Video") {
+            $preferredSource = 'TN';
+        }
+        $iiifImage = self::getIIIFImageURI($preferredSource, $pid);
         $thumbnail_details = Request::get_thumbnail_details($iiifImage);
 
         if ($thumbnail_details['is_iiif']) :
