@@ -417,26 +417,28 @@ class IIIF {
         }
         $items = array();
         $item = array();
-        $iiifImage = self::getIIIFImageURI('TN', $pid);
+        // Quick fix for Video Thumbnails
+        $preferredSource = 'JP2';
+        if ($this->type === "Sound" or $this->type === "Video") {
+            $preferredSource = 'TN';
+        }
+        $iiifImage = self::getIIIFImageURI($preferredSource, $pid);
         $thumbnail_details = Request::get_thumbnail_details($iiifImage);
 
         if ($thumbnail_details['is_iiif']) :
-            $item['id'] = $thumbnail_details['thumbnail_uri'];
-            $item['width'] = $thumbnail_details['width'];
-            $item['height'] = $thumbnail_details['height'];
-            $item['service'] = $thumbnail_details['service'];
+            $thumbnail = new Thumbnail($pid, $this->type, $this->url);
+            $item = $thumbnail->buildResponse()[0];
         else :
             $item['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/' . 'TN';
             $item['width'] = $width;
             $item['height'] = $height;
+            $item['type'] = "Image";
+            $item['format'] = "image/jpeg";
         endif;
 
         if ( $this->type === "Sound" or $this->type === "Video") {
-            $item['duration'] = self::getBibframeDuration(self::findProxyDatastream());
+            $item->duration = self::getBibframeDuration(self::findProxyDatastream());
         }
-
-        $item['type'] = "Image";
-        $item['format'] = "image/jpeg";
         array_push($items, $item);
         if ( $this->type === "Video" || $model === "info:fedora/islandora:sp_videoCModel") {
             $video = array();
@@ -553,7 +555,6 @@ class IIIF {
                 "id" => $canvasId,
                 "type" => 'Canvas',
                 "label" => self::getLanguageArray($title, 'label', 'none'),
-                "thumbnail" => self::buildThumbnail(200, 200)
         ];
 
         if (in_array($this->type, ['Sound','Video'])) :
@@ -561,6 +562,7 @@ class IIIF {
             $canvas->height = 640;
             $canvas->width = 360;
             $canvas->duration = self::getBibframeDuration(self::findProxyDatastream());
+            $canvas->thumbnail = self::buildThumbnail(200, 200);
 
         else :
 
@@ -570,9 +572,12 @@ class IIIF {
                 $responseImageBody = json_decode(Request::responseBody($iiifImage));
                 $canvas->width = $responseImageBody->width;
                 $canvas->height = $responseImageBody->height;
+                $canvasThumbnail = new Thumbnail($pid, $this->type, $this->url);
+                $canvas->thumbnail = $canvasThumbnail->buildResponse();
             else :
                 $canvas->height = 640;
                 $canvas->width = 360;
+                $canvas->thumbnail = self::buildThumbnail(200, 200);
             endif;
 
         endif;
@@ -615,7 +620,8 @@ class IIIF {
                 $canvas->height = 640;
                 $canvas->width = 360;
             endif;
-            $canvas->thumbnail = self::buildThumbnail(200, 200, $data['pid'], $data['type']);
+            $canvasThumbnail = new Thumbnail($data['pid'], $data['type'], $this->url);
+            $canvas->thumbnail = $canvasThumbnail->buildResponse();
             $canvas->items[$key] = self::preparePage($canvasId, $data['pid'], $key, $canvasData);
             $annotations = self::prepareAnnotationPage($canvasId, $data['pid']);
             if (count($annotations->items) > 0) {
