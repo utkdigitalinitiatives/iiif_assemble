@@ -437,7 +437,7 @@ class IIIF {
         endif;
 
         if ( $this->type === "Sound" or $this->type === "Video") {
-            $item['duration'] = self::getBibframeDuration(self::findProxyDatastream());
+            $item->duration = self::getBibframeDuration(self::findProxyDatastream());
         }
         array_push($items, $item);
         if ( $this->type === "Video" || $model === "info:fedora/islandora:sp_videoCModel") {
