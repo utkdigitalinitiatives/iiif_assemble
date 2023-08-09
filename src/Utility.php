@@ -55,11 +55,11 @@ class Utility {
         $index = [];
 
         foreach ($result as $string) {
-            if (strpos($string, "info:fedora/fedora-system:FedoraObject-3.0") !== true) {
-                $item = explode(',', $string);
-                $pageNumber = $item[1];
-                $index[$pageNumber]['pid'] = str_replace('info:fedora/', '', $item[0]);
-                $index[$pageNumber]['title'] = $item[2];
+            $data = str_getcsv($string);
+            if ($data[3] !== "info:fedora/fedora-system:FedoraObject-3.0"){
+                $pageNumber = $data[1];
+                $index[$pageNumber]['pid'] = str_replace('info:fedora/', '', $data[0]);
+                $index[$pageNumber]['title'] = $data[2];
                 $index[$pageNumber]['type'] = "Image";
             }
         }
