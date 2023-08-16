@@ -633,9 +633,10 @@ class IIIF {
         }
         if ($this->type === "Compound") {
             $mods = Request::getDatastream('MODS', $data['pid']);
+            $compound_metadata = new MetadataProperty($this->xpath, $this->simplexpath);
             $this->xpath = new XPath($mods['body']);
             $this->simplexpath = new SimpleXPath($mods['body']);
-            $part_metadata = self::buildMetadata();
+            $part_metadata = $compound_metadata->buildCanvas($this->xpath, $this->simplexpath);
             $part_rights = self::buildRights();
             $part_requiredstatement = self::buildRequiredStatement();
             $summary = self::getLanguageArray($this->xpath->query('abstract[not(@lang)]'), 'value');
