@@ -47,7 +47,8 @@ class IIIF {
         $collection['viewingDirection'] = 'left-to-right';
         $collection['behavior'] = ['unordered'];
         $collection['partOf'] = self::getPartOf();
-        $collection['metadata'] = self::buildMetadata();
+        $collectionMetadata = new MetadataProperty($this->xpath, $this->simplexpath);;
+        $collection['metadata'] = $collectionMetadata->validated_primary_metadata;
         $collection['thumbnail'] = self::buildCollectionThumbnails();
         $collection['label'] = self::getLanguageArray($this->xpath->query('titleInfo[not(@type="alternative")]'), 'value');
         $collection['items'] = self::buildCollectionItems();
@@ -181,7 +182,8 @@ class IIIF {
         if ($summary->en) {
             $manifest['summary'] = $summary;
         }
-        $metadata = self::buildMetadata();
+        $manifestMetadata = new MetadataProperty($this->xpath, $this->simplexpath);;
+        $metadata = $manifestMetadata->validated_primary_metadata;
         if (count($metadata) > 0) {
             $manifest['metadata'] = $metadata;
         }
@@ -220,92 +222,6 @@ class IIIF {
         }
         $presentation = self::buildStructures($manifest, $id);
         return json_encode($presentation);
-
-    }
-
-    public function buildMetadata () {
-        $date = $this->xpath->query('originInfo/dateCreated[not(@encoding)]');
-        if ($date == "") {
-            $date = $this->xpath->query('originInfo/dateCreated[@encoding]');
-        }
-        $related_resources = $this->xpath->query('relatedItem[@type="references"]/location/url');
-        $final_resources = Utility::addAnchorsToReferences($related_resources);
-        $metadata = array(
-            'Alternative Title' => $this->xpath->query('titleInfo[@type="alternative"]'),
-            'Table of Contents' => $this->xpath->query('tableOfContents'),
-            'Publisher' => $this->xpath->query('originInfo/publisher'),
-            'Date' => $date,
-            'Publication Date' => $this->xpath->query('originInfo/dateIssued[not(@encoding)]'),
-            'Format' => $this->xpath->query('physicalDescription/form[not(@type="material")]'),
-            'Extent' => $this->xpath->query('physicalDescription/extent'),
-            'Subject' => $this->xpath->query('subject[not(@displayLabel="Narrator Class")]/topic'),
-            'Narrator Role' => $this->xpath->query('subject[@displayLabel="Narrator Class"]/topic'),
-            'Place' => $this->browse_sanitize($this->xpath->query('subject/geographic')),
-            'Time Period' => $this->xpath->query('subject/temporal'),
-            'Description' => $this->xpath->query('abstract[not(@lang)]'),
-            'Descripción' => $this->xpath->query('abstract[@lang="spa"]'),
-            'Título' => $this->xpath->query('titleInfo[@lang="spa"]/title'),
-            'Publication Identifier' => $this->xpath->queryFilterByAttribute('identifier', false, 'type', ['issn','isbn']),
-            'Browse' => $this->browse_sanitize($this->xpath->query('note[@displayLabel="Browse"]')),
-            'Language' => $this->xpath->query('language/languageTerm'),
-            'Provided by' => $this->xpath->query('recordInfo/recordContentSource'),
-            'Related Resource' => $final_resources,
-        );
-        $metadata_with_names = $this->add_names_to_metadata($metadata);
-        return self::validateMetadata($metadata_with_names);
-    }
-
-    private function browse_sanitize($value) {
-        $sanitize = array(
-            'Medical Personnel & First Responders' => 'Medical Personnel and First Responders',
-            'Educators and Public or Government officials or employees' => 'Public or Government Employees',
-            'Meterologists & Environmentalists' => 'Meterologists and Environmentalists',
-            'Disaster Response & Recovery' => 'Disaster Response and Recovery',
-            'Arrowmont School of Arts & Crafts' => 'Arrowmont School of Arts and Crafts'
-            );
-        $finals = array();
-        if($value) {
-            foreach ($value as $thing) {
-                if (array_key_exists($thing, $sanitize)) {
-                    array_push($finals, $sanitize[$thing]);
-                }
-                else {
-                    array_push($finals, $thing);
-                }
-            }
-        }
-        return $finals;
-    }
-
-    private function add_names_to_metadata($current_metadata) {
-        $names = $this->simplexpath->get_names();
-        foreach ($names as $k => $v) {
-            $current_metadata[$k] = $v;
-        }
-        return $current_metadata;
-    }
-
-    public function validateMetadata ($array) {
-
-        $sets = array();
-        $spanish_labels = array('spa_sample_1', 'spa_sample_2');
-
-        foreach ($array as $label => $value) :
-            if ($value !== null and empty($value) !== true) :
-                if (in_array($label, $spanish_labels)) :
-                    $lang = 'es';
-                else :
-                    $lang = 'en';
-                endif;
-                $sets[] = self::getLabelValuePair(
-                    $label,
-                    $value,
-                    $lang
-                );
-            endif;
-        endforeach;
-
-        return $sets;
 
     }
 
@@ -971,20 +887,6 @@ class IIIF {
         endforeach;
 
         return array_values($ranges);
-
-    }
-
-    public function getLabelValuePair ($label, $value, $language="en") {
-
-        if ($value !== null) {
-            return (object) [
-                'label' => self::getLanguageArray($label, 'label', $language),
-                'value' => self::getLanguageArray($value, 'value', $language)
-            ];
-        } else {
-            return null;
-
-        }
 
     }
 
