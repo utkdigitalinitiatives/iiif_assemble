@@ -116,10 +116,11 @@ class MetadataProperty
         $new_data = array();
         foreach ($canvas_data as $key => $value) {
             if (array_key_exists($key, $this->primary_metadata)) {
+                $new_data[$key] = array();
                 if ($this->primary_metadata[$key] !== null and $canvas_data[$key] !== null) {
                     foreach($value as $piece) {
                         if (!in_array($piece, $this->primary_metadata[$key])) {
-                            $new_data[$key] = array($piece);
+                            array_push($new_data[$key], $piece);
                         }
                     }
                 }
