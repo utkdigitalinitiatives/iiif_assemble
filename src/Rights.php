@@ -125,7 +125,11 @@ class Rights {
         if( isset($rights_values->$uri) ) {
             return $rights_values->$uri;
         }
-        elseif (str_contains($uri, 'creativecommons')){
+        elseif(gettype($this->uri) == Null) {
+            $cne_uri = "http://rightsstatements.org/vocab/CNE/1.0/";
+            return $rights_values->$cne_uri;
+        }
+        elseif (strpos($uri, 'creativecommons')){
             $creative_commons_uri = str_replace("rdf", "", $uri);
             $creative_commons_uri = str_replace("https", "http", $creative_commons_uri);
             $xml = Request::getCreativeCommons($creative_commons_uri);
@@ -145,7 +149,8 @@ class Rights {
             ];
         }
         else {
-            return null;
+            $cne_uri = "http://rightsstatements.org/vocab/CNE/1.0/";
+            return $rights_values->$cne_uri;
         }
 
     }
