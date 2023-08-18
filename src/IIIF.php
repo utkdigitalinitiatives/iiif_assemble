@@ -711,12 +711,10 @@ class IIIF {
         elseif ($this->type === 'Book') :
             $exploded = explode('/', $target);
             $canvasId = (int)end($exploded);
-            $page_annotations = [];
             if (isset($this->annotations->{$canvasId})) {
                 $annotation = new Annotation($target, $this->annotations->{$canvasId}, $canvasId);
-                array_push($page_annotations, $annotation->body);
+                return $annotation->body;
             }
-            return $page_annotations;
         endif;
         return (object) [
             "id" => $page . '/' . $pid,

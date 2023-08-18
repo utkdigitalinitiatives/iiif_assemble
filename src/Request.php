@@ -205,7 +205,6 @@ class Request {
                     $canvasNumb = (int)explode("\n", $part)[0] - 1;
                     $text =preg_split("/\d+\n/", $part, -1, PREG_SPLIT_NO_EMPTY);
                     $annotationText = trim($text[0]);
-//                    $canvasNumb = (string)$canvasNumb;
                     $canvasAnnotations->$canvasNumb = $annotationText;
                 }
             }

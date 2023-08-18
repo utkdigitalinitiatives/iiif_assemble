@@ -15,7 +15,7 @@ class Annotation
     }
 
     private function build() {
-        return array(
+        return (object)[
             "id" => $this->canvas . "/annopage-" . $this->page,
             "type" => "AnnotationPage",
             "items" => [
@@ -32,6 +32,6 @@ class Annotation
                     "target" => $this->canvas,
                 )
             ]
-        );
+        ];
     }
 }
