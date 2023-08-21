@@ -86,11 +86,10 @@ class Utility {
         $index = [];
 
         foreach ($result as $string) {
-            $item = explode(',', $string);
-            $label = str_replace('"', '', $item[1]);
+            $data = str_getcsv($string);
             $index[] = (object) [
-                'pid' => str_replace('info:fedora/', '', $item[0]),
-                'label' => $label,
+                'pid' => str_replace('info:fedora/', '', $data[0]),
+                'label' => $data[1],
             ];
         }
 
