@@ -57,9 +57,12 @@ class Utility {
         foreach ($result as $string) {
             $data = str_getcsv($string);
             $pageNumber = $data[1];
+            if (!isset($data[3])) {
+                $data[3] = "Image";
+            }
             $index[$pageNumber]['pid'] = str_replace('info:fedora/', '', $data[0]);
             $index[$pageNumber]['title'] = $data[2];
-            $index[$pageNumber]['type'] = "Image";
+            $index[$pageNumber]['type'] = $data[3];
         }
 
         ksort($index);
