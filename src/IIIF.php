@@ -358,16 +358,16 @@ class IIIF {
             $item->duration = self::getBibframeDuration(self::findProxyDatastream());
         }
         array_push($items, $item);
-        if ( $this->type === "Video" || $model === "info:fedora/islandora:sp_videoCModel") {
-            $video = array();
-            $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/#t=60,75';
-            $video['type'] = 'Video';
-            $video['format'] = 'video/mp4';
-            $video['width'] = 1920;
-            $video['height'] = 1080;
-            $video['duration'] = 15;
-            array_push($items, $video);
-        }
+//        if ( $this->type === "Video" || $model === "info:fedora/islandora:sp_videoCModel") {
+//            $video = array();
+//            $video['id'] = $this->url . '/collections/islandora/object/' . $pid . '/datastream/MP4/#t=60,75';
+//            $video['type'] = 'Video';
+//            $video['format'] = 'video/mp4';
+//            $video['width'] = 1920;
+//            $video['height'] = 1080;
+//            $video['duration'] = 15;
+//            array_push($items, $video);
+//        }
         return $items;
 
     }
