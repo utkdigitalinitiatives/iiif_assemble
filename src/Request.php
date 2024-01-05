@@ -195,6 +195,23 @@ class Request {
 
     }
 
+    public static function getTextTranscript($dsid, $pid) {
+        $transcript = Request::getDatastream($dsid, $pid);
+        $canvasAnnotations = (object)[];
+        if ($transcript['status'] == 200) {
+            $new_transcript = explode('Page ', $transcript['body']);
+            foreach ($new_transcript as $part) {
+                if ($part !== ""){
+                    $canvasNumb = (int)explode("\n", $part)[0] - 1;
+                    $text =preg_split("/\d+\n/", $part, -1, PREG_SPLIT_NO_EMPTY);
+                    $annotationText = trim($text[0]);
+                    $canvasAnnotations->$canvasNumb = $annotationText;
+                }
+            }
+        }
+        return $canvasAnnotations;
+    }
+
     public static function getMetadataObjects ($field, $value, $format = 'csv') {
         $request = $_ENV['FEDORA_URL'] . '/risearch?type=tuples&lang=sparql&limit=100&format=' . $format .'&query=';
         $query = "SELECT \$pid \$label FROM <#ri> WHERE {{ \$pid <" . $field . "> '"  . $value . "' ; <info:fedora/fedora-system:def/model#label> \$label . }}";

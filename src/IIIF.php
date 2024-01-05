@@ -13,6 +13,8 @@ class IIIF {
     private $type;
     private $url;
 
+    private $annotations;
+
     public function __construct($pid, $mods, $object, $model = null)
     {
 
@@ -383,6 +385,7 @@ class IIIF {
 
     public function buildItems ($uri) {
         if (in_array($this->type, ['Book'])) :
+            $this->annotations = Request::getTextTranscript('TRANSCRIPT', $this->pid);
 
             $items = Request::getBookPages($this->pid, 'csv');
 
@@ -705,6 +708,13 @@ class IIIF {
             foreach ($transcripts as &$transcript) :
                 array_push($items, $transcript);
             endforeach;
+        elseif ($this->type === 'Book') :
+            $exploded = explode('/', $target);
+            $canvasId = (int)end($exploded);
+            if (isset($this->annotations->{$canvasId})) {
+                $annotation = new Annotation($target, $this->annotations->{$canvasId}, $canvasId);
+                return $annotation->body;
+            }
         endif;
         return (object) [
             "id" => $page . '/' . $pid,

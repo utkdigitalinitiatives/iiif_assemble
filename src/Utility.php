@@ -56,12 +56,13 @@ class Utility {
 
         foreach ($result as $string) {
             $data = str_getcsv($string);
-            if ($data[3] !== "info:fedora/fedora-system:FedoraObject-3.0"){
-                $pageNumber = $data[1];
-                $index[$pageNumber]['pid'] = str_replace('info:fedora/', '', $data[0]);
-                $index[$pageNumber]['title'] = $data[2];
-                $index[$pageNumber]['type'] = "Image";
+            $pageNumber = $data[1];
+            if (!isset($data[3])) {
+                $data[3] = "Image";
             }
+            $index[$pageNumber]['pid'] = str_replace('info:fedora/', '', $data[0]);
+            $index[$pageNumber]['title'] = $data[2];
+            $index[$pageNumber]['type'] = $data[3];
         }
 
         ksort($index);
@@ -88,11 +89,10 @@ class Utility {
         $index = [];
 
         foreach ($result as $string) {
-            $item = explode(',', $string);
-            $label = str_replace('"', '', $item[1]);
+            $data = str_getcsv($string);
             $index[] = (object) [
-                'pid' => str_replace('info:fedora/', '', $item[0]),
-                'label' => $label,
+                'pid' => str_replace('info:fedora/', '', $data[0]),
+                'label' => $data[1],
             ];
         }
 
